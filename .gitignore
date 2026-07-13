@@ -1,0 +1,23 @@
+# Archivos con credenciales
+.env
+backend/.env
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archivos de configuración local
+config.local.*
+
+# Archivos temporales y de prueba
+newfile.py
+data_base_test.py
+*.tmp
