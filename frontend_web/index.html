@@ -291,28 +291,34 @@
         }
 
         /* ============================================
-           BOTÓN SUPER ADMIN (OCULTO)
+           BOTÓN SUPER ADMIN (SIEMPRE VISIBLE)
            ============================================ */
-        .admin-link {
-            display: inline-block;
-            margin-top: 8px;
-            color: var(--text-muted);
-            font-size: 11px;
+        .admin-entry {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
             text-decoration: none;
-            opacity: 0.15;
-            transition: opacity 0.3s ease;
-            letter-spacing: 0.5px;
-            font-weight: 400;
         }
 
-        .admin-link:hover {
-            opacity: 0.8;
-            color: var(--cyan);
+        .admin-entry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(236, 72, 153, 0.3);
         }
 
-        .admin-link i {
-            font-size: 12px;
-            margin-right: 4px;
+        .admin-entry i {
+            font-size: 16px;
         }
 
         /* ============================================
@@ -346,10 +352,6 @@
         @media (max-width: 480px) {
             .logo {
                 max-width: 180px;
-            }
-            .admin-link {
-                font-size: 10px;
-                opacity: 0.2;
             }
         }
     </style>
@@ -402,14 +404,15 @@
                 </a>
             </div>
 
-            <!-- Footer con botón oculto para Super Admin -->
+            <!-- Botón Super Admin (SIEMPRE VISIBLE) -->
+            <div style="display: flex; justify-content: center;">
+                <a href="Super_admi/index.html" class="admin-entry">
+                    <i class="fas fa-crown"></i> Panel Super Admin
+                </a>
+            </div>
+
             <div class="footer">
                 <i class="fas fa-heart"></i> Hecho con pasión para la comunidad fitness
-                <br>
-                <!-- 🔐 BOTÓN OCULTO PARA SUPER ADMIN -->
-                <a href="super_admin/login.html" class="admin-link" title="Acceso Super Admin">
-                    <i class="fas fa-crown"></i> Admin
-                </a>
             </div>
         </div>
     </div>
