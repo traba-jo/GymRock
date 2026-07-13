@@ -291,10 +291,10 @@
         }
 
         /* ============================================
-           BOTÓN SUPER ADMIN (SIEMPRE VISIBLE)
+           BOTÓN SUPER ADMIN (OCULTO POR DEFECTO)
            ============================================ */
         .admin-entry {
-            display: inline-flex;
+            display: none;
             align-items: center;
             justify-content: center;
             gap: 10px;
@@ -312,6 +312,10 @@
             text-decoration: none;
         }
 
+        .admin-entry.show {
+            display: inline-flex;
+        }
+
         .admin-entry:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(236, 72, 153, 0.3);
@@ -319,6 +323,184 @@
 
         .admin-entry i {
             font-size: 16px;
+        }
+
+        /* ============================================
+           LINK "ADMIN" (abre el modal)
+           ============================================ */
+        .admin-link {
+            display: inline-block;
+            margin-top: 12px;
+            color: var(--text-gray);
+            font-size: 13px;
+            text-decoration: none;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .admin-link:hover {
+            opacity: 1;
+            color: var(--cyan);
+        }
+
+        .admin-link i {
+            margin-right: 4px;
+        }
+
+        /* ============================================
+           MODAL DE LOGIN
+           ============================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-login {
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 40px 36px;
+            max-width: 420px;
+            width: 90%;
+            animation: modalIn 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-login .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-login .close-btn:hover {
+            color: var(--text-white);
+            transform: rotate(90deg);
+        }
+
+        .modal-login .modal-icon {
+            text-align: center;
+            font-size: 40px;
+            color: var(--cyan);
+            margin-bottom: 8px;
+        }
+
+        .modal-login h2 {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-white);
+        }
+
+        .modal-login .subtitle {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .modal-login .form-group {
+            margin-bottom: 16px;
+        }
+
+        .modal-login .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-gray);
+            margin-bottom: 4px;
+        }
+
+        .modal-login .form-group label i {
+            margin-right: 6px;
+            color: var(--cyan);
+        }
+
+        .modal-login .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: var(--text-white);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .modal-login .form-group input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.06);
+        }
+
+        .modal-login .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .modal-login .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .modal-login .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+        }
+
+        .modal-login .mensaje-error {
+            margin-top: 14px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            display: none;
+            text-align: center;
+            background: rgba(220, 38, 38, 0.08);
+            color: #F87171;
+            border: 1px solid rgba(220, 38, 38, 0.08);
+        }
+
+        .modal-login .mensaje-error.show {
+            display: block;
         }
 
         /* ============================================
@@ -347,11 +529,20 @@
             .choice-card .icon {
                 font-size: 32px;
             }
+            .modal-login {
+                padding: 30px 24px;
+            }
         }
 
         @media (max-width: 480px) {
             .logo {
                 max-width: 180px;
+            }
+            .modal-login {
+                padding: 24px 18px;
+            }
+            .modal-login h2 {
+                font-size: 19px;
             }
         }
     </style>
@@ -404,17 +595,129 @@
                 </a>
             </div>
 
-            <!-- Botón Super Admin (SIEMPRE VISIBLE) -->
+            <!-- Botón Super Admin (oculto hasta login) -->
             <div style="display: flex; justify-content: center;">
-                <a href="Super_admi/index.html" class="admin-entry">
+                <a href="Super_admi/index.html" class="admin-entry" id="adminBtn">
                     <i class="fas fa-crown"></i> Panel Super Admin
                 </a>
             </div>
 
+            <!-- Link para abrir el modal de login -->
             <div class="footer">
+                <button class="admin-link" onclick="abrirLoginAdmin()">
+                    <i class="fas fa-crown"></i> Admin
+                </button>
+                <br>
                 <i class="fas fa-heart"></i> Hecho con pasión para la comunidad fitness
             </div>
         </div>
     </div>
+
+    <!-- ============================================
+    MODAL DE LOGIN SUPER ADMIN
+    ============================================ -->
+    <div class="modal-overlay" id="modalAdmin">
+        <div class="modal-login">
+            <button class="close-btn" onclick="cerrarLoginAdmin()"><i class="fas fa-times"></i></button>
+            
+            <div class="modal-icon"><i class="fas fa-crown"></i></div>
+            <h2>GYM<span style="color: var(--cyan);">ROCK</span></h2>
+            <p class="subtitle"><i class="fas fa-shield-alt"></i> Acceso Super Admin</p>
+
+            <form id="loginAdminForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Usuario</label>
+                    <input type="text" id="adminUser" placeholder="Ingresa tu usuario" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Contraseña</label>
+                    <input type="password" id="adminPass" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-arrow-right"></i> Acceder
+                </button>
+            </form>
+
+            <div class="mensaje-error" id="adminError">❌ Usuario o contraseña incorrectos</div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // GYMROCK · SCRIPT PRINCIPAL CON LOGIN ADMIN
+        // ============================================
+
+        // 🔐 CREDENCIALES DE SUPER ADMIN 
+        const ADMIN_USER = 'gymrock';
+        const ADMIN_PASS = 'SuperAdmin2026';
+
+        // --- ABRIR MODAL ---
+        function abrirLoginAdmin() {
+            document.getElementById('modalAdmin').classList.add('show');
+            document.getElementById('adminUser').value = '';
+            document.getElementById('adminPass').value = '';
+            document.getElementById('adminError').classList.remove('show');
+            document.getElementById('adminUser').focus();
+        }
+
+        // --- CERRAR MODAL ---
+        function cerrarLoginAdmin() {
+            document.getElementById('modalAdmin').classList.remove('show');
+        }
+
+        // --- CERRAR MODAL AL HACER CLIC FUERA ---
+        document.getElementById('modalAdmin').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarLoginAdmin();
+            }
+        });
+
+        // --- CERRAR CON ESC ---
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                cerrarLoginAdmin();
+            }
+        });
+
+        // --- LOGIN ---
+        document.getElementById('loginAdminForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const user = document.getElementById('adminUser').value.trim();
+            const pass = document.getElementById('adminPass').value.trim();
+
+            if (!user || !pass) {
+                mostrarError('⚠️ Completa todos los campos');
+                return;
+            }
+
+            if (user === ADMIN_USER && pass === ADMIN_PASS) {
+                // ✅ Login exitoso
+                localStorage.setItem('super_admin', 'true');
+                document.getElementById('adminBtn').classList.add('show');
+                cerrarLoginAdmin();
+                alert('✅ Acceso concedido. El botón "Panel Super Admin" ya está visible.');
+            } else {
+                mostrarError('❌ Usuario o contraseña incorrectos');
+            }
+        });
+
+        function mostrarError(mensaje) {
+            const el = document.getElementById('adminError');
+            el.textContent = mensaje;
+            el.classList.add('show');
+            setTimeout(() => {
+                el.classList.remove('show');
+            }, 4000);
+        }
+
+        // --- VERIFICAR SESIÓN AL CARGAR ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // Si ya está logueado, mostrar el botón
+            if (localStorage.getItem('super_admin') === 'true') {
+                document.getElementById('adminBtn').classList.add('show');
+            }
+        });
+    </script>
 </body>
 </html>
