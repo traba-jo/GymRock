@@ -185,7 +185,7 @@
         }
 
         .brand h1 {
-            display: none; /* Oculto porque el logo ya tiene el nombre */
+            display: none;
         }
 
         .brand .subtitle {
@@ -418,9 +418,6 @@
             display: none;
         }
 
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
         @media (max-width: 640px) {
             .card {
                 padding: 30px 20px;
@@ -563,10 +560,11 @@
 
     <script>
         // ============================================
-        // GYMROCK · SCRIPT CLIENTE (TODO EN UNO)
+        // GYMROCK · SCRIPT CLIENTE
         // ============================================
 
-        const API_URL = 'http://192.168.101.9:5000'; // 🔴 CAMBIA POR TU IP
+        // 🔴 CAMBIAR ESTA URL POR LA DE RENDER
+        const API_URL = 'https://gymrock.onrender.com';
 
         document.getElementById('btnMostrarRegistro').addEventListener('click', function(e) {
             e.preventDefault();
@@ -673,3 +671,4 @@
     </script>
 </body>
 </html>
+     
