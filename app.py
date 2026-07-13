@@ -287,15 +287,32 @@ def admin_dashboard():
         return jsonify({'error': str(e)}), 500
 
 # =====================================================
-# SERVIR FRONTEND
+# SERVIR FRONTEND (CON DEBUG)
 # =====================================================
+import os
+
 @app.route('/')
 def serve_index():
-    return send_from_directory('frontend_web', 'index.html')
+    try:
+        # Mostrar qué archivos hay en la raíz
+        files = os.listdir('.')
+        print(f"Archivos en raíz: {files}")
+        
+        # Intentar servir index.html
+        return send_from_directory('frontend_web', 'index.html')
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'files': os.listdir('.'),
+            'cwd': os.getcwd()
+        }), 404
 
 @app.route('/<path:path>')
 def serve_static(path):
-    return send_from_directory('frontend_web', path)
+    try:
+        return send_from_directory('frontend_web', path)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 404
 
 # =====================================================
 # INICIO
