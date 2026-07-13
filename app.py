@@ -7,8 +7,7 @@ import os
 import sys
 import hashlib
 import jwt
-import datetime
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from functools import wraps
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -17,7 +16,6 @@ from supabase import create_client, Client
 # =====================================================
 # CONFIGURACIÓN DE RUTAS
 # =====================================================
-# Obtener la ruta absoluta del directorio donde está app.py
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Cargar variables de entorno desde .env
@@ -35,25 +33,27 @@ except ImportError:
 app = Flask(__name__)
 CORS(app)
 
-# Variables de entorno (con fallback para local)
+# Variables de entorno
 SUPABASE_URL = os.getenv('SUPABASE_URL')
 SUPABASE_KEY = os.getenv('SUPABASE_KEY')
 SECRET_KEY = os.getenv('SECRET_KEY', 'gymrock_secret_key_2026')
 JWT_EXPIRATION = int(os.getenv('JWT_EXPIRATION', 7))
 ADMIN_TOKEN = os.getenv('ADMIN_TOKEN', 'GymRock2026')
 
-# Verificar credenciales y mostrar error claro
+# Verificar credenciales
 if not SUPABASE_URL or not SUPABASE_KEY:
     print("❌ ERROR: Faltan SUPABASE_URL o SUPABASE_KEY")
-    print("   En local: asegúrate de que el archivo .env exista")
-    print("   En Render: agrega las variables en el panel")
-    print(f"   Directorio actual: {BASE_DIR}")
-    print(f"   Archivos en directorio: {os.listdir(BASE_DIR)}")
-    sys.exit(1)
-
-# Inicializar Supabase
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-print("✅ Conexión a Supabase establecida")
+    print("   En Render: agrega las variables en Environment")
+    # No usar sys.exit(1) en Render, mejor mostrar error en ruta
+    # pero inicializar igual para que no crashee
+    supabase = None
+else:
+    try:
+        supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        print("✅ Conexión a Supabase establecida")
+    except Exception as e:
+        print(f"❌ Error conectando a Supabase: {e}")
+        supabase = None
 
 # =====================================================
 # FUNCIONES AUXILIARES
@@ -64,7 +64,7 @@ def hash_password(password):
 def generate_token(user_id, email, rol):
     payload = {
         'user': {'id': user_id, 'email': email, 'rol': rol},
-        'exp': datetime.utcnow() + timedelta(days=JWT_EXPIRATION)
+        'exp': datetime.now(timezone.utc) + timedelta(days=JWT_EXPIRATION)
     }
     return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -93,12 +93,15 @@ def health_check():
     return jsonify({
         'status': 'ok',
         'message': 'GymRock API funcionando correctamente',
-        'timestamp': datetime.now().isoformat(),
-        'version': '1.0.3'
+        'timestamp': datetime.now(timezone.utc).isoformat(),
+        'version': '1.0.4',
+        'supabase': 'conectado' if supabase else 'no configurado'
     }), 200
 
 @app.route('/api/test/db', methods=['GET'])
 def test_db():
+    if not supabase:
+        return jsonify({'status': 'error', 'message': 'Supabase no configurado'}), 500
     try:
         result = supabase.table('gimnasios').select('id', count='exact').limit(1).execute()
         return jsonify({
@@ -111,6 +114,8 @@ def test_db():
 
 @app.route('/api/gimnasios', methods=['GET'])
 def listar_gimnasios():
+    if not supabase:
+        return jsonify({'error': 'Supabase no configurado'}), 500
     try:
         result = supabase.table('gimnasios').select('*').eq('visible_publico', True).eq('estado_licencia', 'activa').execute()
         return jsonify({'status': 'success', 'data': result.data, 'total': len(result.data)}), 200
@@ -119,6 +124,8 @@ def listar_gimnasios():
 
 @app.route('/api/registro/gimnasio', methods=['POST'])
 def registrar_gimnasio():
+    if not supabase:
+        return jsonify({'error': 'Supabase no configurado'}), 500
     try:
         data = request.get_json()
         required = ['nombre', 'email', 'password', 'estado', 'municipio']
@@ -127,7 +134,7 @@ def registrar_gimnasio():
                 return jsonify({'error': f'Campo {field} requerido'}), 400
         
         hashed = hash_password(data['password'])
-        fecha_corte = datetime.now() + timedelta(days=30)
+        fecha_corte = datetime.now(timezone.utc) + timedelta(days=30)
         
         new_gym = {
             'nombre': data['nombre'],
@@ -141,7 +148,7 @@ def registrar_gimnasio():
             'licencia_fecha_corte': fecha_corte.isoformat(),
             'estado_licencia': 'activa',
             'visible_publico': True,
-            'fecha_registro': datetime.now().isoformat()
+            'fecha_registro': datetime.now(timezone.utc).isoformat()
         }
         
         result = supabase.table('gimnasios').insert(new_gym).execute()
@@ -165,6 +172,8 @@ def registrar_gimnasio():
 
 @app.route('/api/registro/cliente', methods=['POST'])
 def registrar_cliente():
+    if not supabase:
+        return jsonify({'error': 'Supabase no configurado'}), 500
     try:
         data = request.get_json()
         required = ['nombre', 'email', 'password', 'estado', 'municipio']
@@ -181,7 +190,7 @@ def registrar_cliente():
             'estado': data['estado'],
             'municipio': data['municipio'],
             'telefono': data.get('telefono', ''),
-            'fecha_registro': datetime.now().isoformat()
+            'fecha_registro': datetime.now(timezone.utc).isoformat()
         }
         
         result = supabase.table('usuarios').insert(new_user).execute()
@@ -205,6 +214,8 @@ def registrar_cliente():
 
 @app.route('/api/login', methods=['POST'])
 def login():
+    if not supabase:
+        return jsonify({'error': 'Supabase no configurado'}), 500
     try:
         data = request.get_json()
         email = data.get('email')
@@ -254,6 +265,8 @@ def verify_admin_token():
 
 @app.route('/api/admin/dashboard', methods=['GET'])
 def admin_dashboard():
+    if not supabase:
+        return jsonify({'error': 'Supabase no configurado'}), 500
     try:
         token = request.args.get('token')
         if token != ADMIN_TOKEN:
@@ -274,15 +287,40 @@ def admin_dashboard():
         return jsonify({'error': str(e)}), 500
 
 # =====================================================
-# SERVIR FRONTEND
+# SERVIR FRONTEND (VERSIÓN DEFINITIVA)
 # =====================================================
-@app.route('/')
-def serve_index():
-    return send_from_directory('frontend_web', 'index.html')
+import os
 
+@app.route('/')
 @app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory('frontend_web', path)
+def serve_frontend(path=''):
+    try:
+        # Si la ruta está vacía, servir index.html
+        if not path:
+            return send_from_directory('frontend_web', 'index.html')
+        
+        # Si la ruta es un archivo HTML, servirlo
+        if path.endswith('.html'):
+            return send_from_directory('frontend_web', path)
+        
+        # Si la ruta es una carpeta, servir el index.html de esa carpeta
+        if os.path.exists(os.path.join('frontend_web', path, 'index.html')):
+            return send_from_directory('frontend_web', os.path.join(path, 'index.html'))
+        
+        # Si la ruta es un archivo estático (CSS, JS, etc.)
+        if '.' in path:
+            return send_from_directory('frontend_web', path)
+        
+        # Si no, servir index.html
+        return send_from_directory('frontend_web', 'index.html')
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'path': path,
+            'cwd': os.getcwd(),
+            'files': os.listdir('.'),
+            'frontend_files': os.listdir('frontend_web') if os.path.exists('frontend_web') else 'frontend_web no existe'
+        }), 404
 
 # =====================================================
 # INICIO
