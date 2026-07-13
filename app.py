@@ -287,32 +287,40 @@ def admin_dashboard():
         return jsonify({'error': str(e)}), 500
 
 # =====================================================
-# SERVIR FRONTEND (CON DEBUG)
+# SERVIR FRONTEND (VERSIÓN DEFINITIVA)
 # =====================================================
 import os
 
 @app.route('/')
-def serve_index():
+@app.route('/<path:path>')
+def serve_frontend(path=''):
     try:
-        # Mostrar qué archivos hay en la raíz
-        files = os.listdir('.')
-        print(f"Archivos en raíz: {files}")
+        # Si la ruta está vacía, servir index.html
+        if not path:
+            return send_from_directory('frontend_web', 'index.html')
         
-        # Intentar servir index.html
+        # Si la ruta es un archivo HTML, servirlo
+        if path.endswith('.html'):
+            return send_from_directory('frontend_web', path)
+        
+        # Si la ruta es una carpeta, servir el index.html de esa carpeta
+        if os.path.exists(os.path.join('frontend_web', path, 'index.html')):
+            return send_from_directory('frontend_web', os.path.join(path, 'index.html'))
+        
+        # Si la ruta es un archivo estático (CSS, JS, etc.)
+        if '.' in path:
+            return send_from_directory('frontend_web', path)
+        
+        # Si no, servir index.html
         return send_from_directory('frontend_web', 'index.html')
     except Exception as e:
         return jsonify({
             'error': str(e),
+            'path': path,
+            'cwd': os.getcwd(),
             'files': os.listdir('.'),
-            'cwd': os.getcwd()
+            'frontend_files': os.listdir('frontend_web') if os.path.exists('frontend_web') else 'frontend_web no existe'
         }), 404
-
-@app.route('/<path:path>')
-def serve_static(path):
-    try:
-        return send_from_directory('frontend_web', path)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 404
 
 # =====================================================
 # INICIO
