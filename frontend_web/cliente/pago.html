@@ -56,6 +56,11 @@
             text-decoration: none;
             font-size: 14px;
         }
+        .error {
+            color: #DC2626;
+            margin-top: 12px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -65,45 +70,64 @@
         <div class="plan-info">
             <strong id="planNombre">Plan Mensual</strong><br>
             <span class="precio" id="planPrecio">$450</span> MXN<br>
-            <small style="color: #8A8AA8;" id="gymNombre">Gimnasio</small>
+            <small id="gymNombre">Gimnasio</small>
         </div>
         <button class="btn-pagar" onclick="pagar()">Pagar con Mercado Pago</button>
-        <a href="gimnasios.html" class="btn-volver">Volver</a>
+        <p class="error" id="errorMsg"></p>
+        <a href="gimnasios.html" class="btn-volver">Volver a Gimnasios</a>
     </div>
     <script>
         const API_URL = window.location.origin;
         const params = new URLSearchParams(window.location.search);
+        
         document.getElementById('planNombre').textContent = 'Plan ' + (params.get('plan') || 'Mensual');
         document.getElementById('planPrecio').textContent = '$' + (params.get('precio') || '450');
         document.getElementById('gymNombre').textContent = params.get('nombre') || 'Gimnasio';
+        
         async function pagar() {
             const token = localStorage.getItem('gymrock_token');
             const userData = JSON.parse(localStorage.getItem('gymrock_user') || '{}');
+            
             if (!token) {
-                alert('Inicia sesion primero');
-                window.location.href = 'index.html';
+                document.getElementById('errorMsg').textContent = 'Debes iniciar sesion como cliente primero';
+                document.getElementById('errorMsg').style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
                 return;
             }
+            
+            document.getElementById('errorMsg').style.display = 'none';
+            
             try {
                 const res = await fetch(API_URL + '/api/crear-preferencia', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        descripcion: 'Suscripcion GymRock',
+                        descripcion: 'Suscripcion GymRock - ' + (params.get('nombre') || 'Gimnasio'),
                         monto: parseFloat(params.get('precio') || '450'),
                         gimnasio_id: params.get('gym') || '',
                         nombre: userData.nombre || 'Cliente',
                         email: userData.email || 'cliente@test.com'
                     })
                 });
+                
+                if (!res.ok) {
+                    throw new Error('Error del servidor: ' + res.status);
+                }
+                
                 const data = await res.json();
+                
                 if (data.status === 'success') {
                     window.location.href = data.init_point;
                 } else {
-                    alert('Error: ' + (data.error || 'Intenta de nuevo'));
+                    document.getElementById('errorMsg').textContent = 'Error: ' + (data.error || 'Intenta de nuevo');
+                    document.getElementById('errorMsg').style.display = 'block';
                 }
             } catch (error) {
-                alert('Error de conexion');
+                console.error('Error:', error);
+                document.getElementById('errorMsg').textContent = 'Error de conexion. Verifica tu internet.';
+                document.getElementById('errorMsg').style.display = 'block';
             }
         }
     </script>
