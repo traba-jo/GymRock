@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GymRock · Gimnasios</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#0D0D1A;--card:rgba(255,255,255,0.03);--side:#111128;--border:rgba(255,255,255,0.06);--white:#F0F0F5;--gray:#8A8AA8;--gold:#D4AF37;--green:#22C55E;--red:#DC2626}
+        :root{--bg:#0D0D1A;--card:rgba(255,255,255,0.03);--side:#111128;--border:rgba(255,255,255,0.06);--white:#F0F0F5;--gray:#8A8AA8;--gold:#D4AF37;--red:#DC2626}
         body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
-        .sidebar{width:260px;background:var(--side);border-right:1px solid var(--border);padding:24px 16px;position:fixed;top:0;left:0;height:100vh;z-index:100}
+        .sidebar{width:260px;background:var(--side);border-right:1px solid var(--border);padding:24px 16px;position:fixed;top:0;left:0;height:100vh;z-index:100;display:flex;flex-direction:column}
         .sidebar .logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
         .sidebar .logo img{width:40px;height:40px;border-radius:8px}
         .sidebar .logo span{font-size:20px;font-weight:800}.sidebar .logo span span{color:var(--gold)}
@@ -37,8 +35,8 @@
         .card .badge{display:inline-block;font-size:11px;padding:4px 12px;border-radius:50px;background:rgba(212,175,55,0.12);color:var(--gold);margin-bottom:12px}
         .card button{width:100%;padding:10px;background:linear-gradient(135deg,var(--gold),#B8941E);border:none;border-radius:10px;color:#0D0D1A;font-size:14px;font-weight:700;cursor:pointer}
         .empty{text-align:center;padding:60px;color:var(--gray);grid-column:1/-1}
-        .empty i{font-size:48px;opacity:0.2;display:block;margin-bottom:16px}
-        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:16px}.grid{grid-template-columns:1fr}}
+        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}
+        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:16px}.grid{grid-template-columns:1fr}.hamburger{display:block}}
     </style>
 </head>
 <body>
@@ -48,24 +46,27 @@
             <a href="#" class="active"><i class="fas fa-dumbbell"></i> Gimnasios</a>
             <a href="suscripciones.html"><i class="fas fa-receipt"></i> Mis Suscripciones</a>
             <a href="extras.html"><i class="fas fa-gem"></i> Extras</a>
-            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
         </nav>
     </aside>
     <main class="main">
         <div class="header">
-            <div><h1><i class="fas fa-dumbbell" style="color:var(--gold)"></i> Gimnasios</h1><p>Encuentra tu gimnasio ideal</p></div>
+            <div style="display:flex;align-items:center;gap:12px">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+                <div><h1><i class="fas fa-dumbbell" style="color:var(--gold)"></i> Gimnasios</h1><p>Encuentra tu gimnasio ideal</p></div>
+            </div>
             <div class="user"><div class="avatar" id="ua">CL</div><div class="info" id="ui">Cargando...</div></div>
         </div>
         <div class="search"><i class="fas fa-search" style="color:var(--gray)"></i><input type="text" id="buscar" placeholder="Buscar gimnasio..."></div>
-        <div class="grid" id="grid"><div class="empty"><i class="fas fa-spinner fa-spin"></i><p>Cargando gimnasios...</p></div></div>
+        <div class="grid" id="grid"><div class="empty"><i class="fas fa-spinner fa-spin"></i><p>Cargando...</p></div></div>
     </main>
     <script>
         const API=window.location.origin;let gimnasios=[];
         function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
         async function cargar(){try{const r=await fetch(API+'/api/gimnasios');const d=await r.json();if(d.status==='success'){gimnasios=d.data||[];render()}}catch(e){document.getElementById('grid').innerHTML='<div class="empty"><i class="fas fa-plug"></i><p>Error de conexion</p><button onclick="cargar()" style="margin-top:12px;padding:8px 20px;background:var(--gold);border:none;border-radius:8px;cursor:pointer;font-weight:600">Reintentar</button></div>'}}
-        function render(){const g=document.getElementById('grid'),b=document.getElementById('buscar').value.toLowerCase();let f=gimnasios;if(b)f=gimnasios.filter(x=>(x.nombre||'').toLowerCase().includes(b)||(x.estado||'').toLowerCase().includes(b)||(x.municipio||'').toLowerCase().includes(b));if(!f.length){g.innerHTML='<div class="empty"><i class="fas fa-dumbbell"></i><p style="font-size:18px;color:var(--white)">No hay gimnasios</p></div>';return}
-        g.innerHTML=f.map(x=>{const p=x.plan||'basico',pr=p==='basico'?500:p==='pro'?800:1200;return`<div class="card"><span class="badge">${p.toUpperCase()}</span><h3>${x.nombre||'Gimnasio'}</h3><div class="dir"><i class="fas fa-map-pin"></i> ${x.estado||''}, ${x.municipio||''}</div><div class="info"><span><i class="fas fa-phone"></i> ${x.telefono||'N/A'}</span><span><i class="fas fa-tag"></i> $${pr}/mes</span></div><button onclick="pagar('${x.id}')"><i class="fas fa-credit-card"></i> Suscribirse</button></div>`}).join('')}
-        function pagar(id){const x=gimnasios.find(g=>g.id===id);if(!x)return;const p=x.plan||'basico',pr=p==='basico'?500:p==='pro'?800:1200,n=encodeURIComponent(x.nombre||'Gimnasio');window.location.href=`pago.html?gym=${id}&plan=${p}&precio=${pr}&nombre=${n}`}
+        function render(){const g=document.getElementById('grid'),b=document.getElementById('buscar').value.toLowerCase();let f=gimnasios;if(b)f=gimnasios.filter(x=>(x.nombre||'').toLowerCase().includes(b));if(!f.length){g.innerHTML='<div class="empty"><i class="fas fa-dumbbell" style="font-size:48px;opacity:0.2;display:block;margin-bottom:16px"></i><p style="font-size:18px;color:var(--white)">No hay gimnasios</p></div>';return}
+        g.innerHTML=f.map(x=>{const p=x.plan||'basico',pr=p==='basico'?500:p==='pro'?800:1200;return'<div class="card"><span class="badge">'+p.toUpperCase()+'</span><h3>'+x.nombre+'</h3><div class="dir"><i class="fas fa-map-pin"></i> '+(x.estado||'')+', '+(x.municipio||'')+'</div><div class="info"><span><i class="fas fa-phone"></i> '+(x.telefono||'N/A')+'</span><span><i class="fas fa-tag"></i> $'+pr+'/mes</span></div><button onclick="pagar(\''+x.id+'\')"><i class="fas fa-credit-card"></i> Suscribirse</button></div>'}).join('')}
+        function pagar(id){const x=gimnasios.find(g=>g.id===id);if(!x)return;const p=x.plan||'basico',pr=p==='basico'?500:p==='pro'?800:1200;window.location.href='pago.html?gym='+id+'&plan='+p+'&precio='+pr+'&nombre='+encodeURIComponent(x.nombre||'Gimnasio')}
         document.getElementById('buscar').addEventListener('input',render);
         document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='cliente'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Cliente</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}cargar()});
     </script>
