@@ -5,77 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GymRock · Pagar</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0D0D1A;
-            color: #F0F0F5;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
-        }
-        h1 { font-size: 28px; margin-bottom: 8px; }
-        h1 span { color: #D4AF37; }
-        p { color: #8A8AA8; margin-bottom: 20px; }
-        .plan-info {
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-        .precio { font-size: 40px; font-weight: 800; color: #D4AF37; }
-        .btn-pagar {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #D4AF37, #B8941E);
-            border: none;
-            border-radius: 12px;
-            color: #0D0D1A;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .btn-pagar:hover { transform: translateY(-2px); }
-        .btn-volver {
-            display: inline-block;
-            margin-top: 16px;
-            color: #8A8AA8;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .error {
-            color: #DC2626;
-            margin-top: 12px;
-            display: none;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#0D0D1A;color:#F0F0F5;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+        .container{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:40px;max-width:500px;width:100%}
+        h1{font-size:28px;margin-bottom:8px;text-align:center}
+        h1 span{color:#D4AF37}
+        p{color:#8A8AA8;margin-bottom:20px;text-align:center}
+        .plan-info{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.15);border-radius:12px;padding:20px;margin-bottom:24px;text-align:center}
+        .precio{font-size:40px;font-weight:800;color:#D4AF37}
+        .btn-pagar{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#D4AF37,#B8941E);border:none;border-radius:12px;color:#0D0D1A;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px}
+        .btn-transferencia{display:block;width:100%;padding:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#F0F0F5;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px}
+        .transferencia-info{display:none;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;margin-bottom:24px;text-align:left}
+        .transferencia-info.show{display:block}
+        .transferencia-info h3{color:#D4AF37;margin-bottom:12px}
+        .transferencia-info .dato{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
+        .transferencia-info .dato span:first-child{color:#8A8AA8}
+        .transferencia-info .dato span:last-child{color:#F0F0F5;font-weight:600}
+        .btn-copiar{background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.2);color:#D4AF37;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+        .btn-volver{display:block;text-align:center;margin-top:16px;color:#8A8AA8;text-decoration:none;font-size:14px}
+        .error{color:#DC2626;text-align:center;margin-top:12px;display:none}
     </style>
 </head>
 <body>
     <div class="container">
         <h1>GYM<span>ROCK</span></h1>
         <p>Completa tu suscripcion</p>
+        
         <div class="plan-info">
             <strong id="planNombre">Plan Mensual</strong><br>
             <span class="precio" id="planPrecio">$450</span> MXN<br>
-            <small id="gymNombre">Gimnasio</small>
+            <small style="color:#8A8AA8" id="gymNombre">Gimnasio</small>
         </div>
-        <button class="btn-pagar" onclick="pagar()">Pagar con Mercado Pago</button>
+        
+        <button class="btn-pagar" onclick="pagarMP()">💳 Pagar con Mercado Pago</button>
+        <button class="btn-transferencia" onclick="toggleTransferencia()">🏦 Pagar por Transferencia</button>
+        
+        <div class="transferencia-info" id="transferenciaInfo">
+            <h3>📋 Datos para Transferencia</h3>
+            <div class="dato"><span>Banco:</span><span>BBVA</span></div>
+            <div class="dato"><span>Titular:</span><span>GymRock Plataforma Fitness</span></div>
+            <div class="dato"><span>Cuenta CLABE:</span><span>0123 4567 8901 2345 67 <button class="btn-copiar" onclick="copiar('012345678901234567')">Copiar</button></span></div>
+            <div class="dato"><span>Número de Cuenta:</span><span>1234567890</span></div>
+            <div class="dato"><span>Referencia:</span><span id="referenciaPago">GR-000000</span></div>
+            <div class="dato"><span>Monto:</span><span id="montoTransferencia">$450 MXN</span></div>
+            <p style="margin-top:12px;font-size:13px;color:#8A8AA8">⚠️ Usa la referencia al hacer la transferencia. Tu suscripcion se activara en cuanto validemos el pago (max 24 horas).</p>
+        </div>
+        
         <p class="error" id="errorMsg"></p>
-        <a href="gimnasios.html" class="btn-volver">Volver a Gimnasios</a>
+        <a href="gimnasios.html" class="btn-volver">← Volver a Gimnasios</a>
     </div>
+
     <script>
         const API_URL = window.location.origin;
         const params = new URLSearchParams(window.location.search);
@@ -83,41 +62,46 @@
         document.getElementById('planNombre').textContent = 'Plan ' + (params.get('plan') || 'Mensual');
         document.getElementById('planPrecio').textContent = '$' + (params.get('precio') || '450');
         document.getElementById('gymNombre').textContent = params.get('nombre') || 'Gimnasio';
+        document.getElementById('montoTransferencia').textContent = '$' + (params.get('precio') || '450') + ' MXN';
         
-        async function pagar() {
+        // Generar referencia unica
+        const ref = 'GR-' + Date.now().toString().slice(-6);
+        document.getElementById('referenciaPago').textContent = ref;
+        
+        function toggleTransferencia() {
+            document.getElementById('transferenciaInfo').classList.toggle('show');
+        }
+        
+        function copiar(texto) {
+            navigator.clipboard.writeText(texto);
+            alert('✅ Copiado al portapapeles');
+        }
+        
+        async function pagarMP() {
             const token = localStorage.getItem('gymrock_token');
             const userData = JSON.parse(localStorage.getItem('gymrock_user') || '{}');
             
             if (!token) {
-                document.getElementById('errorMsg').textContent = 'Debes iniciar sesion como cliente primero';
+                document.getElementById('errorMsg').textContent = 'Debes iniciar sesion primero';
                 document.getElementById('errorMsg').style.display = 'block';
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2000);
+                setTimeout(() => window.location.href = 'index.html', 2000);
                 return;
             }
-            
-            document.getElementById('errorMsg').style.display = 'none';
             
             try {
                 const res = await fetch(API_URL + '/api/crear-preferencia', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        descripcion: 'Suscripcion GymRock - ' + (params.get('nombre') || 'Gimnasio'),
+                        descripcion: 'Suscripcion GymRock',
                         monto: parseFloat(params.get('precio') || '450'),
                         gimnasio_id: params.get('gym') || '',
                         nombre: userData.nombre || 'Cliente',
-                        email: userData.email || 'cliente@test.com'
+                        email: userData.email || ''
                     })
                 });
                 
-                if (!res.ok) {
-                    throw new Error('Error del servidor: ' + res.status);
-                }
-                
                 const data = await res.json();
-                
                 if (data.status === 'success') {
                     window.location.href = data.init_point;
                 } else {
@@ -125,8 +109,7 @@
                     document.getElementById('errorMsg').style.display = 'block';
                 }
             } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('errorMsg').textContent = 'Error de conexion. Verifica tu internet.';
+                document.getElementById('errorMsg').textContent = 'Error de conexion';
                 document.getElementById('errorMsg').style.display = 'block';
             }
         }
