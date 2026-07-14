@@ -486,6 +486,12 @@
             box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
         }
 
+        .modal-login .btn-login:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .modal-login .mensaje-error {
             margin-top: 14px;
             padding: 10px;
@@ -501,6 +507,40 @@
 
         .modal-login .mensaje-error.show {
             display: block;
+        }
+
+        .modal-login .mensaje-exito {
+            margin-top: 14px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            display: none;
+            text-align: center;
+            background: rgba(16, 185, 129, 0.08);
+            color: #10B981;
+            border: 1px solid rgba(16, 185, 129, 0.08);
+        }
+
+        .modal-login .mensaje-exito.show {
+            display: block;
+        }
+
+        /* ============================================
+           SPINNER DE CARGA
+           ============================================ */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* ============================================
@@ -558,7 +598,7 @@
         <div class="card">
             <!-- Badge de estado -->
             <div class="live-badge">
-                <span class="dot"></span> Plataforma en vivo · v2.0
+                <span class="dot"></span> Plataforma en vivo · v2.1
             </div>
 
             <!-- Logo y marca -->
@@ -574,7 +614,7 @@
                 </p>
             </div>
 
-            <!-- Opciones -->
+            <!-- Opciones principales -->
             <div class="choices">
                 <!-- Opción: Gimnasio -->
                 <a href="gimnasio/index.html" class="choice-card gym">
@@ -595,7 +635,7 @@
                 </a>
             </div>
 
-            <!-- Botón Super Admin (oculto hasta login) -->
+            <!-- Botón Super Admin (visible solo después de login exitoso) -->
             <div style="display: flex; justify-content: center;">
                 <a href="Super_admi/index.html" class="admin-entry" id="adminBtn">
                     <i class="fas fa-crown"></i> Panel Super Admin
@@ -627,29 +667,29 @@
             <form id="loginAdminForm">
                 <div class="form-group">
                     <label><i class="fas fa-user"></i> Usuario</label>
-                    <input type="text" id="adminUser" placeholder="Ingresa tu usuario" required>
+                    <input type="text" id="adminUser" placeholder="Ingresa tu usuario" required autocomplete="username">
                 </div>
                 <div class="form-group">
                     <label><i class="fas fa-lock"></i> Contraseña</label>
-                    <input type="password" id="adminPass" placeholder="••••••••" required>
+                    <input type="password" id="adminPass" placeholder="••••••••" required autocomplete="current-password">
                 </div>
-                <button type="submit" class="btn-login">
-                    <i class="fas fa-arrow-right"></i> Acceder
+                <button type="submit" class="btn-login" id="btnLoginSubmit">
+                    <i class="fas fa-arrow-right"></i> <span id="btnLoginText">Acceder</span>
+                    <div class="spinner" id="btnLoginSpinner"></div>
                 </button>
             </form>
 
-            <div class="mensaje-error" id="adminError">❌ Usuario o contraseña incorrectos</div>
+            <div class="mensaje-error" id="adminError"></div>
+            <div class="mensaje-exito" id="adminSuccess"></div>
         </div>
     </div>
 
     <script>
         // ============================================
-        // GYMROCK · SCRIPT PRINCIPAL CON LOGIN ADMIN
+        // GYMROCK · LOGIN ADMIN SEGURO (API REAL)
         // ============================================
 
-        // 🔐 CREDENCIALES DE SUPER ADMIN 
-        const ADMIN_USER = 'gymrock';
-        const ADMIN_PASS = 'SuperAdmin2026';
+        const API_URL = window.location.origin;
 
         // --- ABRIR MODAL ---
         function abrirLoginAdmin() {
@@ -657,6 +697,7 @@
             document.getElementById('adminUser').value = '';
             document.getElementById('adminPass').value = '';
             document.getElementById('adminError').classList.remove('show');
+            document.getElementById('adminSuccess').classList.remove('show');
             document.getElementById('adminUser').focus();
         }
 
@@ -679,43 +720,130 @@
             }
         });
 
-        // --- LOGIN ---
+        // --- MOSTRAR ERROR ---
+        function mostrarError(mensaje) {
+            const el = document.getElementById('adminError');
+            const success = document.getElementById('adminSuccess');
+            success.classList.remove('show');
+            el.textContent = mensaje;
+            el.classList.add('show');
+        }
+
+        // --- MOSTRAR ÉXITO ---
+        function mostrarExito(mensaje) {
+            const el = document.getElementById('adminSuccess');
+            const error = document.getElementById('adminError');
+            error.classList.remove('show');
+            el.textContent = mensaje;
+            el.classList.add('show');
+        }
+
+        // --- ACTIVAR/DESACTIVAR BOTÓN DE CARGA ---
+        function setLoading(loading) {
+            const btn = document.getElementById('btnLoginSubmit');
+            const text = document.getElementById('btnLoginText');
+            const spinner = document.getElementById('btnLoginSpinner');
+            
+            if (loading) {
+                btn.disabled = true;
+                text.textContent = 'Verificando...';
+                spinner.style.display = 'inline-block';
+            } else {
+                btn.disabled = false;
+                text.textContent = 'Acceder';
+                spinner.style.display = 'none';
+            }
+        }
+
+        // --- LOGIN CONTRA LA API REAL ---
         document.getElementById('loginAdminForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const user = document.getElementById('adminUser').value.trim();
-            const pass = document.getElementById('adminPass').value.trim();
+            const usuario = document.getElementById('adminUser').value.trim();
+            const password = document.getElementById('adminPass').value.trim();
 
-            if (!user || !pass) {
+            // Validar campos
+            if (!usuario || !password) {
                 mostrarError('⚠️ Completa todos los campos');
+                document.getElementById('adminUser').focus();
                 return;
             }
 
-            if (user === ADMIN_USER && pass === ADMIN_PASS) {
-                // ✅ Login exitoso
-                localStorage.setItem('super_admin', 'true');
-                document.getElementById('adminBtn').classList.add('show');
-                cerrarLoginAdmin();
-                alert('✅ Acceso concedido. El botón "Panel Super Admin" ya está visible.');
-            } else {
-                mostrarError('❌ Usuario o contraseña incorrectos');
-            }
+            // Activar loading
+            setLoading(true);
+            document.getElementById('adminError').classList.remove('show');
+            document.getElementById('adminSuccess').classList.remove('show');
+
+            // Llamar a la API real
+            fetch(API_URL + '/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    usuario: usuario, 
+                    password: password 
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                setLoading(false);
+                
+                if (data.status === 'success') {
+                    // ✅ Login exitoso
+                    localStorage.setItem('adminToken', data.data.token);
+                    localStorage.setItem('adminUser', JSON.stringify(data.data));
+                    
+                    // Mostrar botón de acceso
+                    document.getElementById('adminBtn').classList.add('show');
+                    
+                    // Mostrar mensaje de éxito
+                    mostrarExito('✅ Acceso concedido. Redirigiendo...');
+                    
+                    // Redirigir al panel después de 1 segundo
+                    setTimeout(() => {
+                        window.location.href = 'Super_admi/index.html';
+                    }, 1000);
+                } else {
+                    // ❌ Error de credenciales
+                    mostrarError('❌ ' + (data.error || 'Usuario o contraseña incorrectos'));
+                    document.getElementById('adminPass').value = '';
+                    document.getElementById('adminPass').focus();
+                }
+            })
+            .catch(err => {
+                // ❌ Error de conexión
+                setLoading(false);
+                mostrarError('❌ Error de conexión. Verifica tu internet.');
+                console.error('Error de conexión:', err);
+            });
         });
 
-        function mostrarError(mensaje) {
-            const el = document.getElementById('adminError');
-            el.textContent = mensaje;
-            el.classList.add('show');
-            setTimeout(() => {
-                el.classList.remove('show');
-            }, 4000);
-        }
-
-        // --- VERIFICAR SESIÓN AL CARGAR ---
+        // --- VERIFICAR SESIÓN AL CARGAR LA PÁGINA ---
         document.addEventListener('DOMContentLoaded', function() {
-            // Si ya está logueado, mostrar el botón
-            if (localStorage.getItem('super_admin') === 'true') {
-                document.getElementById('adminBtn').classList.add('show');
+            const token = localStorage.getItem('adminToken');
+            
+            if (token) {
+                // Verificar que el token siga siendo válido
+                fetch(API_URL + '/api/admin/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.valid) {
+                        // Token válido → mostrar botón
+                        document.getElementById('adminBtn').classList.add('show');
+                    } else {
+                        // Token inválido → limpiar sesión
+                        localStorage.removeItem('adminToken');
+                        localStorage.removeItem('adminUser');
+                    }
+                })
+                .catch(() => {
+                    // Si el servidor no responde, mostrar el botón igual
+                    // (el panel de admin volverá a verificar)
+                    document.getElementById('adminBtn').classList.add('show');
+                });
             }
         });
     </script>

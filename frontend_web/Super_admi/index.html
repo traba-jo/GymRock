@@ -208,7 +208,7 @@
         }
 
         .header .greeting h1 i {
-            color: var(--azul-claro);
+            color: var(--dorado);
         }
 
         .header .greeting p {
@@ -455,6 +455,47 @@
             background: rgba(34, 197, 94, 0.1);
         }
 
+        .actions-bar .btn-action.danger {
+            color: var(--rojo);
+        }
+
+        .actions-bar .btn-action.danger:hover {
+            background: rgba(220, 38, 38, 0.08);
+            border-color: rgba(220, 38, 38, 0.1);
+        }
+
+        /* ============================================
+           LOADING
+           ============================================ */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 14, 26, 0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(37, 99, 235, 0.2);
+            border-top-color: var(--azul);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* ============================================
            RESPONSIVE
            ============================================ */
@@ -566,6 +607,14 @@
 <body>
 
     <!-- ============================================
+    LOADING OVERLAY
+    ============================================ -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p style="color: var(--text-gray);">Verificando acceso...</p>
+    </div>
+
+    <!-- ============================================
     SIDEBAR
     ============================================ -->
     <aside class="sidebar" id="sidebar">
@@ -577,17 +626,17 @@
         <div class="user">
             <div class="avatar">SA</div>
             <div class="info">
-                Super Admin
+                <span id="adminNombre">Super Admin</span>
                 <small>Acceso completo</small>
             </div>
         </div>
 
         <nav class="nav">
-            <a href="#" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a href="#gimnasios"><i class="fas fa-dumbbell"></i> Gimnasios</a>
-            <a href="#suscripciones"><i class="fas fa-user-check"></i> Suscripciones</a>
-            <a href="#"><i class="fas fa-cog"></i> Configuración</a>
-            <a href="../index.html" class="logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="#" class="active" onclick="scrollToSection('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a href="#gimnasios" onclick="scrollToSection('gimnasios')"><i class="fas fa-dumbbell"></i> Gimnasios</a>
+            <a href="#suscripciones" onclick="scrollToSection('suscripciones')"><i class="fas fa-user-check"></i> Suscripciones</a>
+            <a href="#" onclick="mostrarToast('🔧 Configuración próximamente', 'success')"><i class="fas fa-cog"></i> Configuración</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
         </nav>
     </aside>
 
@@ -600,38 +649,38 @@
             <div style="display: flex; align-items: center; gap: 12px;">
                 <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
                 <div class="greeting">
-                    <h1><i class="fas fa-crown" style="color: var(--dorado);"></i> Super Admin</h1>
+                    <h1 id="dashboard"><i class="fas fa-crown"></i> Super Admin</h1>
                     <p>Panel de control global de GymRock</p>
                 </div>
             </div>
-            <span class="badge-version"><i class="fas fa-shield-alt"></i> v1.0 · Acceso restringido</span>
+            <span class="badge-version"><i class="fas fa-shield-alt"></i> v2.1 · Acceso restringido</span>
         </div>
 
         <!-- Estadísticas -->
         <div class="stats-grid" id="statsGrid">
             <div class="stat-card">
                 <div class="icon-stat"><i class="fas fa-dumbbell"></i></div>
-                <div class="number" id="totalGimnasios">0</div>
+                <div class="number" id="totalGimnasios">--</div>
                 <div class="label">Gimnasios Registrados</div>
                 <div class="sub-label">Total en la plataforma</div>
             </div>
             <div class="stat-card">
-                <div class="icon-stat"><i class="fas fa-user-check"></i></div>
-                <div class="number" id="totalSuscriptores">0</div>
-                <div class="label">Suscripciones Activas</div>
-                <div class="sub-label">En todos los gimnasios</div>
+                <div class="icon-stat"><i class="fas fa-users"></i></div>
+                <div class="number" id="totalUsuarios">--</div>
+                <div class="label">Usuarios Registrados</div>
+                <div class="sub-label">Clientes en la plataforma</div>
             </div>
             <div class="stat-card">
-                <div class="icon-stat"><i class="fas fa-credit-card"></i></div>
-                <div class="number" id="licenciasActivas">0</div>
+                <div class="icon-stat"><i class="fas fa-check-circle"></i></div>
+                <div class="number" id="licenciasActivas">--</div>
                 <div class="label">Licencias Activas</div>
                 <div class="sub-label">Gimnasios con pago al día</div>
             </div>
             <div class="stat-card">
-                <div class="icon-stat"><i class="fas fa-dollar-sign"></i></div>
-                <div class="number" id="ingresosTotales">$0</div>
-                <div class="label">Ingresos Totales</div>
-                <div class="sub-label">Comisiones + licencias</div>
+                <div class="icon-stat"><i class="fas fa-clock"></i></div>
+                <div class="number" id="ultimaActualizacion">--</div>
+                <div class="label">Última Actualización</div>
+                <div class="sub-label">Datos del servidor</div>
             </div>
         </div>
 
@@ -655,7 +704,9 @@
                     </thead>
                     <tbody id="tablaGimnasios">
                         <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-gray);">Cargando gimnasios...</td>
+                            <td colspan="6" style="text-align: center; color: var(--text-gray);">
+                                <i class="fas fa-spinner fa-pulse"></i> Cargando gimnasios...
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -682,7 +733,9 @@
                     </thead>
                     <tbody id="tablaSuscripciones">
                         <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-gray);">Cargando suscripciones...</td>
+                            <td colspan="6" style="text-align: center; color: var(--text-gray);">
+                                Próximamente...
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -701,10 +754,10 @@
                         <i class="fas fa-sync"></i> Recargar datos
                     </button>
                     <button class="btn-action success" onclick="verificarTodo()">
-                        <i class="fas fa-check-circle"></i> Verificar todo
+                        <i class="fas fa-check-circle"></i> Verificar sistema
                     </button>
-                    <button class="btn-action" onclick="cerrarSesion()" style="color: var(--rojo);">
-                        <i class="fas fa-sign-out-alt"></i> Salir
+                    <button class="btn-action danger" onclick="cerrarSesion()">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
                     </button>
                 </div>
             </div>
@@ -716,40 +769,69 @@
 
     <script>
         // ============================================
-        // GYMROCK · SUPER ADMIN SCRIPT
+        // GYMROCK · SUPER ADMIN v2.1
         // ============================================
 
-        const API_URL = 'http://127.0.0.1:5000';
-        const ADMIN_TOKEN = 'GymRock2026';
+        const API_URL = window.location.origin;
 
         // ============================================
-        // VERIFICAR ACCESO
+        // VERIFICAR ACCESO CON JWT
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
-            // Verificar token en la URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
+            const token = localStorage.getItem('adminToken');
+            const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
             
-            // Verificar si hay sesión guardada
-            const session = localStorage.getItem('super_admin_mode');
+            // Mostrar loading
+            document.getElementById('loadingOverlay').classList.add('show');
             
-            if (token === ADMIN_TOKEN) {
-                localStorage.setItem('super_admin_mode', 'true');
-                cargarDatos();
-            } else if (session === 'true') {
-                cargarDatos();
-            } else {
-                // Redirigir al login
-                window.location.href = '../index.html';
+            // Mostrar nombre del admin
+            if (adminUser.usuario) {
+                document.getElementById('adminNombre').textContent = adminUser.usuario;
             }
+            
+            if (!token) {
+                redirigirAlLogin();
+                return;
+            }
+            
+            // Verificar que el token sea válido
+            fetch(API_URL + '/api/admin/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: token })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loadingOverlay').classList.remove('show');
+                
+                if (data.valid) {
+                    // ✅ Token válido → cargar datos
+                    cargarDatos();
+                } else {
+                    // ❌ Token inválido
+                    mostrarToast('🔒 Sesión expirada. Inicia sesión de nuevo.', 'error');
+                    setTimeout(redirigirAlLogin, 2000);
+                }
+            })
+            .catch(err => {
+                document.getElementById('loadingOverlay').classList.remove('show');
+                console.error('Error de verificación:', err);
+                mostrarToast('⚠️ No se pudo verificar la sesión. Intenta recargar.', 'error');
+            });
         });
+
+        function redirigirAlLogin() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = '../index.html';
+        }
 
         // ============================================
         // TOAST
         // ============================================
         function mostrarToast(mensaje, tipo = 'success') {
             const toast = document.getElementById('toast');
-            toast.textContent = mensaje;
+            toast.innerHTML = mensaje;
             toast.className = 'mensaje-toast ' + tipo + ' show';
             setTimeout(() => {
                 toast.classList.remove('show');
@@ -761,9 +843,11 @@
         // ============================================
         async function cargarDatos() {
             try {
-                mostrarToast('🔄 Cargando datos...', 'success');
+                mostrarToast('🔄 Actualizando datos...', 'success');
                 
-                const res = await fetch(`${API_URL}/api/admin/dashboard?token=${ADMIN_TOKEN}`);
+                const token = localStorage.getItem('adminToken');
+                
+                const res = await fetch(`${API_URL}/api/admin/dashboard?token=${encodeURIComponent(token)}`);
                 const data = await res.json();
                 
                 if (data.status === 'success') {
@@ -771,23 +855,30 @@
                     
                     // Actualizar estadísticas
                     document.getElementById('totalGimnasios').textContent = d.total_gimnasios || 0;
-                    document.getElementById('totalSuscriptores').textContent = d.suscripciones_activas || 0;
+                    document.getElementById('totalUsuarios').textContent = d.total_usuarios || 0;
                     document.getElementById('licenciasActivas').textContent = d.total_gimnasios || 0;
-                    document.getElementById('ingresosTotales').textContent = '$' + (d.ingresos_totales || 0).toLocaleString();
+                    
+                    // Fecha de actualización
+                    const ahora = new Date();
+                    document.getElementById('ultimaActualizacion').textContent = 
+                        ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
                     
                     // Renderizar gimnasios
                     renderizarGimnasios(d.gimnasios || []);
                     
-                    // Renderizar suscripciones
-                    renderizarSuscripciones(d.suscripciones_recientes || []);
-                    
-                    mostrarToast('✅ Datos actualizados', 'success');
+                    mostrarToast('✅ Datos actualizados correctamente', 'success');
                 } else {
-                    mostrarToast('❌ Error al cargar datos', 'error');
+                    mostrarToast('❌ ' + (data.error || 'Error al cargar datos'), 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
                 mostrarToast('❌ Error de conexión con el servidor', 'error');
+                
+                // Mostrar error en las estadísticas
+                document.getElementById('totalGimnasios').textContent = 'Error';
+                document.getElementById('totalUsuarios').textContent = 'Error';
+                document.getElementById('licenciasActivas').textContent = 'Error';
+                document.getElementById('ultimaActualizacion').textContent = 'Error';
             }
         }
 
@@ -799,7 +890,9 @@
             document.getElementById('gymCount').textContent = gimnasios.length;
             
             if (!gimnasios || gimnasios.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-gray);">No hay gimnasios registrados.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-gray);">
+                    <i class="fas fa-inbox"></i> No hay gimnasios registrados aún.
+                </td></tr>`;
                 return;
             }
             
@@ -808,48 +901,19 @@
                 const estadoClass = estado === 'activa' ? 'activa' : estado === 'vencida' ? 'vencida' : 'suspendida';
                 const estadoText = estado === 'activa' ? 'Activa' : estado === 'vencida' ? 'Vencida' : 'Suspendida';
                 const fechaCorte = g.licencia_fecha_corte ? new Date(g.licencia_fecha_corte).toLocaleDateString('es-ES') : 'N/A';
+                const idCorto = g.id ? g.id.substring(0, 8) : 'N/A';
                 
                 return `
                     <tr>
-                        <td><strong>${g.nombre || 'N/A'}</strong></td>
+                        <td><strong>${g.nombre || 'N/A'}</strong><br><small style="color: var(--text-gray);">ID: ${idCorto}...</small></td>
                         <td>${g.email || 'N/A'}</td>
-                        <td>${g.plan || 'basico'}</td>
+                        <td><span style="text-transform: capitalize;">${g.plan || 'basico'}</span></td>
                         <td><span class="badge-estado ${estadoClass}">${estadoText}</span></td>
                         <td>${fechaCorte}</td>
                         <td style="text-align: center;">
-                            <button class="btn-accion ver" onclick="verGimnasio('${g.id}')" title="Ver"><i class="fas fa-eye"></i></button>
+                            <button class="btn-accion ver" onclick="verGimnasio('${g.id}')" title="Ver detalles"><i class="fas fa-eye"></i></button>
                             <button class="btn-accion suspender" onclick="suspenderGimnasio('${g.id}')" title="Suspender"><i class="fas fa-pause"></i></button>
                         </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // ============================================
-        // RENDERIZAR SUSCRIPCIONES
-        // ============================================
-        function renderizarSuscripciones(suscripciones) {
-            const tbody = document.getElementById('tablaSuscripciones');
-            document.getElementById('suscripcionesCount').textContent = suscripciones.length;
-            
-            if (!suscripciones || suscripciones.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-gray);">No hay suscripciones recientes.</td></tr>`;
-                return;
-            }
-            
-            tbody.innerHTML = suscripciones.map(s => {
-                const estadoClass = s.activa ? 'activa' : 'vencida';
-                const estadoText = s.activa ? 'Activa' : 'Vencida';
-                const fecha = s.created_at ? new Date(s.created_at).toLocaleDateString('es-ES') : 'N/A';
-                
-                return `
-                    <tr>
-                        <td>${s.usuario_id || 'N/A'}</td>
-                        <td>${s.gimnasio_id || 'N/A'}</td>
-                        <td>${s.plan || 'N/A'}</td>
-                        <td>$${s.monto || 0}</td>
-                        <td>${fecha}</td>
-                        <td><span class="badge-estado ${estadoClass}">${estadoText}</span></td>
                     </tr>
                 `;
             }).join('');
@@ -859,12 +923,12 @@
         // ACCIONES
         // ============================================
         function verGimnasio(id) {
-            mostrarToast(`📋 Ver gimnasio ID: ${id}`, 'success');
+            mostrarToast(`📋 Ver gimnasio ID: ${id.substring(0, 8)}...`, 'success');
         }
 
         function suspenderGimnasio(id) {
-            if (confirm('¿Suspender este gimnasio?')) {
-                mostrarToast(`⏸️ Gimnasio suspendido`, 'error');
+            if (confirm('⚠️ ¿Estás seguro de suspender este gimnasio?\n\nEl gimnasio no será visible para los clientes hasta que se reactive.')) {
+                mostrarToast('⏸️ Gimnasio suspendido temporalmente', 'error');
             }
         }
 
@@ -873,18 +937,42 @@
         }
 
         function verificarTodo() {
-            mostrarToast('✅ Todo funciona correctamente!', 'success');
+            fetch(API_URL + '/api/health')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        mostrarToast('✅ Sistema funcionando correctamente<br><small>API: ' + data.version + '</small>', 'success');
+                    } else {
+                        mostrarToast('⚠️ Sistema inestable', 'error');
+                    }
+                })
+                .catch(() => {
+                    mostrarToast('❌ No se pudo conectar con el servidor', 'error');
+                });
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Cerrar sidebar en móvil
+            document.getElementById('sidebar').classList.remove('open');
         }
 
         function cerrarSesion() {
-            localStorage.removeItem('super_admin_mode');
-            window.location.href = '../index.html';
+            if (confirm('¿Estás seguro de cerrar sesión?')) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminUser');
+                window.location.href = '../index.html';
+            }
         }
 
         // ============================================
         // TOGGLE SIDEBAR (móvil)
         // ============================================
-        document.getElementById('hamburgerBtn')?.addEventListener('click', function() {
+        document.getElementById('hamburgerBtn').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('open');
         });
 
@@ -897,6 +985,25 @@
                 }
             }
         });
+
+        // ============================================
+        // CERRAR SESIÓN POR INACTIVIDAD (30 min)
+        // ============================================
+        let tiempoInactividad;
+        
+        function reiniciarTemporizador() {
+            clearTimeout(tiempoInactividad);
+            tiempoInactividad = setTimeout(() => {
+                mostrarToast('⏰ Sesión cerrada por inactividad', 'error');
+                setTimeout(redirigirAlLogin, 2000);
+            }, 30 * 60 * 1000); // 30 minutos
+        }
+        
+        ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evento => {
+            document.addEventListener(evento, reiniciarTemporizador);
+        });
+        
+        reiniciarTemporizador();
     </script>
 </body>
 </html>
