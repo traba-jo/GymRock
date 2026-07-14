@@ -4,407 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GymRock · Configuración</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg-primary: #0A0E1A;
-            --bg-card: #111827;
-            --bg-sidebar: #0F1524;
-            --text-white: #E8EDF5;
-            --text-gray: #94A3B8;
-            --azul: #2563EB;
-            --azul-oscuro: #1E3A8A;
-            --azul-claro: #60A5FA;
-            --rojo: #DC2626;
-            --verde: #22C55E;
-            --dorado: #F59E0B;
-            --border-color: rgba(255, 255, 255, 0.05);
-            --radius: 16px;
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-white);
-            min-height: 100vh;
-            display: flex;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 260px;
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 24px 16px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar .logo-wrapper {
-            display: flex; align-items: center; gap: 12px;
-            margin-bottom: 32px; padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .sidebar .logo-wrapper img { width: 40px; height: 40px; object-fit: contain; border-radius: 8px; }
-        .sidebar .logo-wrapper span { font-size: 20px; font-weight: 800; color: var(--text-white); }
-        .sidebar .logo-wrapper span span { color: var(--azul-claro); }
-
-        .sidebar .nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-
-        .sidebar .nav a {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-            border-radius: 10px; color: var(--text-gray); text-decoration: none;
-            font-size: 14px; font-weight: 500; transition: var(--transition);
-        }
-
-        .sidebar .nav a i { width: 20px; font-size: 16px; }
-        .sidebar .nav a:hover { background: rgba(37, 99, 235, 0.08); color: var(--text-white); }
-        .sidebar .nav a.active { background: rgba(37, 99, 235, 0.12); color: var(--azul-claro); border-left: 3px solid var(--azul); }
-        .sidebar .nav a.logout { margin-top: auto; color: var(--rojo); border-top: 1px solid var(--border-color); padding-top: 16px; }
-
-        .main { margin-left: 260px; flex: 1; padding: 24px 32px; overflow-y: auto; height: 100vh; }
-
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
-        }
-
-        .header .greeting h1 { font-size: 24px; font-weight: 700; }
-        .header .greeting p { color: var(--text-gray); font-size: 14px; }
-
-        .header .user {
-            display: flex; align-items: center; gap: 12px; background: var(--bg-card);
-            padding: 8px 16px 8px 12px; border-radius: 50px; border: 1px solid var(--border-color);
-        }
-
-        .header .user .avatar {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--azul), var(--azul-oscuro));
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 14px; color: white;
-        }
-
-        .header .user .info { font-size: 13px; font-weight: 500; }
-        .header .user .info small { display: block; font-weight: 400; color: var(--text-gray); font-size: 11px; }
-
-        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-
-        .config-card {
-            background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: var(--radius); padding: 24px; transition: var(--transition);
-        }
-
-        .config-card .card-title {
-            font-size: 16px; font-weight: 600; margin-bottom: 6px;
-            display: flex; align-items: center; gap: 10px;
-        }
-
-        .config-card .card-title i { color: var(--azul-claro); font-size: 18px; }
-        .config-card .card-desc { font-size: 13px; color: var(--text-gray); margin-bottom: 16px; }
-
-        .config-card .form-group { margin-bottom: 14px; }
-
-        .config-card .form-group label {
-            display: block; font-size: 13px; font-weight: 500;
-            color: var(--text-gray); margin-bottom: 4px;
-        }
-
-        .config-card .form-group input,
-        .config-card .form-group select {
-            width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-color); border-radius: 10px;
-            color: var(--text-white); font-size: 14px; font-family: 'Inter', sans-serif;
-            transition: var(--transition); outline: none;
-        }
-
-        .config-card .form-group input:focus,
-        .config-card .form-group select:focus {
-            border-color: var(--azul);
-        }
-
-        .btn-save {
-            padding: 10px 24px; background: linear-gradient(135deg, var(--azul), var(--azul-oscuro));
-            border: none; border-radius: 10px; color: white; font-size: 14px;
-            font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .btn-save:hover { transform: translateY(-2px); }
-
-        .licencia-info {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 16px; background: rgba(34, 197, 94, 0.06);
-            border: 1px solid rgba(34, 197, 94, 0.12); border-radius: 10px;
-            margin-top: 8px; flex-wrap: wrap; gap: 12px;
-        }
-
-        .licencia-info .plan { font-size: 18px; font-weight: 700; color: var(--verde); }
-        .licencia-info .fecha { font-size: 13px; color: var(--text-gray); }
-
-        .trial-badge {
-            display: inline-block; padding: 4px 12px; border-radius: 50px;
-            background: rgba(34, 197, 94, 0.12); color: var(--verde);
-            font-size: 12px; font-weight: 600;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main { margin-left: 0; padding: 16px; }
-            .config-grid { grid-template-columns: 1fr; }
-        }
-
-        .hamburger { display: none; background: none; border: none; color: var(--text-white); font-size: 24px; cursor: pointer; padding: 8px; }
-
-        @media (max-width: 768px) { .hamburger { display: block; } }
-
-        .mensaje-toast {
-            position: fixed; bottom: 30px; right: 30px; padding: 14px 24px;
-            border-radius: 12px; background: var(--bg-card); border: 1px solid var(--verde);
-            color: var(--text-white); font-size: 14px; z-index: 999;
-            opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
-        }
-
-        .mensaje-toast.show { opacity: 1; transform: translateY(0); }
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0A0E1A;--card:#111827;--side:#0F1524;--border:rgba(255,255,255,0.05);--white:#E8EDF5;--gray:#94A3B8;--blue:#2563EB;--gold:#F59E0B;--green:#22C55E;--red:#DC2626}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
+        .sidebar{width:260px;background:var(--side);border-right:1px solid var(--border);padding:24px 16px;position:fixed;top:0;left:0;height:100vh;z-index:100}
+        .sidebar .logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+        .sidebar .logo img{width:40px;height:40px}.sidebar .logo span{font-size:20px;font-weight:800}.sidebar .logo span span{color:#60A5FA}
+        .sidebar nav{display:flex;flex-direction:column;gap:4px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
+        .sidebar nav a:hover{background:rgba(37,99,235,0.08);color:var(--white)}
+        .sidebar nav a.active{background:rgba(37,99,235,0.12);color:#60A5FA;border-left:3px solid var(--blue)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:16px}
+        .main{margin-left:260px;flex:1;padding:24px 32px;overflow-y:auto;height:100vh}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+        .header h1{font-size:24px}.header p{color:var(--gray);font-size:14px}
+        .user{display:flex;align-items:center;gap:12px;background:var(--card);padding:8px 16px;border-radius:50px;border:1px solid var(--border)}
+        .user .avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#1E3A8A);display:flex;align-items:center;justify-content:center;font-weight:700;color:white}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+        .card h3{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .card h3 i{color:#60A5FA}
+        .form-group{margin-bottom:14px}
+        .form-group label{display:block;font-size:13px;color:var(--gray);margin-bottom:4px}
+        .form-group input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;outline:none}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+        .btn-primary{background:linear-gradient(135deg,var(--blue),#1E3A8A);color:white}
+        .btn-gold{background:linear-gradient(135deg,var(--gold),#B8941E);color:#0A0E1A}
+        .licencia{display:flex;justify-content:space-between;align-items:center;padding:16px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.12);border-radius:10px;margin-top:8px;flex-wrap:wrap;gap:12px}
+        .licencia .plan{font-size:18px;font-weight:700;color:var(--green)}
+        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:16px}.grid{grid-template-columns:1fr}}
     </style>
 </head>
 <body>
-
-    <aside class="sidebar" id="sidebar">
-        <div class="logo-wrapper">
-            <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock">
-            <span>GYM<span>ROCK</span></span>
-        </div>
-
-        <nav class="nav">
+    <aside class="sidebar">
+        <div class="logo"><img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock"><span>GYM<span>ROCK</span></span></div>
+        <nav>
             <a href="dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</a>
             <a href="entrenadores.html"><i class="fas fa-users"></i> Entrenadores</a>
             <a href="suscriptores.html"><i class="fas fa-user-check"></i> Suscriptores</a>
-            <a href="#" class="active"><i class="fas fa-cog"></i> Configuración</a>
-            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="#" class="active"><i class="fas fa-cog"></i> Configuracion</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
         </nav>
     </aside>
-
     <main class="main">
         <div class="header">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-                <div class="greeting">
-                    <h1><i class="fas fa-cog" style="color: var(--azul-claro);"></i> Configuración</h1>
-                    <p>Administra los ajustes de tu gimnasio</p>
-                </div>
-            </div>
-            <div class="user">
-                <div class="avatar" id="userAvatar">GR</div>
-                <div class="info" id="userInfo">
-                    Gimnasio
-                    <small>Administrador</small>
-                </div>
-            </div>
+            <div><h1><i class="fas fa-cog" style="color:#60A5FA"></i> Configuracion</h1><p>Administra tu gimnasio</p></div>
+            <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Gimnasio<small style="font-size:11px;color:var(--gray)">Admin</small></div></div>
         </div>
-
-        <div class="config-grid">
-
-            <!-- PERFIL -->
-            <div class="config-card">
-                <div class="card-title"><i class="fas fa-store"></i> Perfil del Gimnasio</div>
-                <div class="card-desc">Actualiza la información de tu negocio.</div>
-
-                <div class="form-group">
-                    <label>Nombre del Gimnasio</label>
-                    <input type="text" id="gymNombre" placeholder="Nombre del gimnasio">
-                </div>
-                <div class="form-group">
-                    <label>Teléfono</label>
-                    <input type="text" id="gymTelefono" placeholder="Teléfono de contacto">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="gymEmail" placeholder="Email" disabled style="opacity: 0.6;">
-                </div>
-                <button class="btn-save" onclick="guardarPerfil()"><i class="fas fa-save"></i> Guardar Cambios</button>
+        <div class="grid">
+            <div class="card">
+                <h3><i class="fas fa-store"></i> Perfil</h3>
+                <div class="form-group"><label>Nombre</label><input type="text" id="gymNombre" placeholder="Nombre del gimnasio"></div>
+                <div class="form-group"><label>Telefono</label><input type="text" id="gymTelefono" placeholder="Telefono"></div>
+                <button class="btn btn-primary" onclick="alert('✅ Guardado')"><i class="fas fa-save"></i> Guardar</button>
             </div>
-
-            <!-- LICENCIA -->
-            <div class="config-card">
-                <div class="card-title"><i class="fas fa-file-contract"></i> Licencia Operativa</div>
-                <div class="card-desc">Estado de tu suscripción a GymRock.</div>
-
-                <div class="licencia-info" id="licenciaInfo">
-                    <div>
-                        <div class="plan" id="estadoLicencia">Cargando...</div>
-                        <div class="fecha" id="fechaLicencia">--</div>
-                    </div>
-                    <span class="trial-badge" id="trialBadge" style="display:none;">🎁 Prueba Gratis</span>
-                </div>
-
-                <div style="margin-top: 14px;">
-                    <div class="form-group">
-                        <label>Cambiar Plan</label>
-                        <select id="cambiarPlan">
-                            <option value="basico">Básico ($500/mes)</option>
-                            <option value="pro">Pro ($800/mes)</option>
-                            <option value="premium">Premium ($1200/mes)</option>
-                        </select>
-                    </div>
-                    <button class="btn-save" onclick="cambiarPlan()"><i class="fas fa-exchange-alt"></i> Cambiar Plan</button>
+            <div class="card">
+                <h3><i class="fas fa-file-contract"></i> Licencia</h3>
+                <div class="licencia">
+                    <div><div class="plan" id="estadoLic">Activa</div><div style="font-size:13px;color:var(--gray)" id="fechaLic">--</div></div>
+                    <button class="btn btn-gold" onclick="window.location.href='pago_licencia.html'"><i class="fas fa-sync"></i> Renovar</button>
                 </div>
             </div>
-
-            <!-- PLANES -->
-            <div class="config-card">
-                <div class="card-title"><i class="fas fa-crown"></i> Planes de Suscripción</div>
-                <div class="card-desc">Precios que verán tus clientes.</div>
-
-                <div class="form-group">
-                    <label>Plan Mensual (MXN)</label>
-                    <input type="number" id="planMensual" value="450" placeholder="Precio mensual">
-                </div>
-                <div class="form-group">
-                    <label>Plan Quincenal (MXN)</label>
-                    <input type="number" id="planQuincenal" value="250" placeholder="Precio quincenal">
-                </div>
-                <button class="btn-save" onclick="guardarPlanes()"><i class="fas fa-save"></i> Guardar Planes</button>
-            </div>
-
-            <!-- SEGURIDAD -->
-            <div class="config-card">
-                <div class="card-title"><i class="fas fa-shield-alt"></i> Seguridad</div>
-                <div class="card-desc">Cambia tu contraseña.</div>
-
-                <div class="form-group">
-                    <label>Contraseña Actual</label>
-                    <input type="password" id="passActual" placeholder="••••••••">
-                </div>
-                <div class="form-group">
-                    <label>Nueva Contraseña</label>
-                    <input type="password" id="passNueva" placeholder="Mínimo 6 caracteres">
-                </div>
-                <button class="btn-save" onclick="cambiarPassword()"><i class="fas fa-key"></i> Cambiar Contraseña</button>
-            </div>
-
         </div>
     </main>
-
-    <div class="mensaje-toast" id="toast"></div>
-
     <script>
-        const API_URL = window.location.origin;
-
-        function mostrarToast(mensaje) {
-            const toast = document.getElementById('toast');
-            toast.textContent = mensaje;
-            toast.className = 'mensaje-toast show';
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
-        }
-
-        function cerrarSesion() {
-            localStorage.removeItem('gymrock_token');
-            localStorage.removeItem('gymrock_user');
-            localStorage.removeItem('gymrock_rol');
-            window.location.href = '../index.html';
-        }
-
-        function guardarPerfil() {
-            mostrarToast('✅ Perfil actualizado correctamente');
-        }
-
-        function guardarPlanes() {
-            mostrarToast('✅ Planes actualizados correctamente');
-        }
-
-        function cambiarPlan() {
-            const plan = document.getElementById('cambiarPlan').value;
-            mostrarToast('✅ Plan cambiado a ' + plan.charAt(0).toUpperCase() + plan.slice(1));
-        }
-
-        function cambiarPassword() {
-            const actual = document.getElementById('passActual').value;
-            const nueva = document.getElementById('passNueva').value;
-            
-            if (!actual || !nueva) {
-                mostrarToast('⚠️ Completa todos los campos');
-                return;
-            }
-            
-            if (nueva.length < 6) {
-                mostrarToast('⚠️ La contraseña debe tener al menos 6 caracteres');
-                return;
-            }
-            
-            mostrarToast('✅ Contraseña actualizada correctamente');
-            document.getElementById('passActual').value = '';
-            document.getElementById('passNueva').value = '';
-        }
-
-        document.getElementById('hamburgerBtn')?.addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('open');
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('gymrock_token');
-            const rol = localStorage.getItem('gymrock_rol');
-            
-            if (!token || rol !== 'gimnasio') {
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            const userData = JSON.parse(localStorage.getItem('gymrock_user') || '{}');
-            
-            // Datos del usuario
-            if (userData.nombre) {
-                document.getElementById('userInfo').innerHTML = `
-                    ${userData.nombre}
-                    <small>Administrador</small>
-                `;
-                document.getElementById('userAvatar').textContent = userData.nombre.substring(0, 2).toUpperCase();
-                document.getElementById('gymNombre').value = userData.nombre;
-            }
-            
-            if (userData.email) {
-                document.getElementById('gymEmail').value = userData.email;
-            }
-            
-            // Estado de licencia
-            if (userData.fecha_corte) {
-                const fechaCorte = new Date(userData.fecha_corte.split('/').reverse().join('-'));
-                const hoy = new Date();
-                const dias = Math.ceil((fechaCorte - hoy) / (1000 * 60 * 60 * 24));
-                
-                if (dias > 0) {
-                    document.getElementById('estadoLicencia').textContent = '✅ Activa';
-                    document.getElementById('fechaLicencia').innerHTML = 
-                        `<i class="far fa-calendar-alt"></i> Vigente hasta: <strong>${userData.fecha_corte}</strong> (${dias} días)`;
-                    
-                    if (userData.dias_prueba || userData.periodo_prueba) {
-                        document.getElementById('trialBadge').style.display = 'inline-block';
-                    }
-                } else {
-                    document.getElementById('estadoLicencia').textContent = '⚠️ Vencida';
-                    document.getElementById('fechaLicencia').textContent = 'Renueva tu licencia';
-                    document.querySelector('.licencia-info').style.borderColor = 'rgba(220, 38, 38, 0.3)';
-                    document.querySelector('.licencia-info').style.background = 'rgba(220, 38, 38, 0.06)';
-                }
-            }
-            
-            // Plan actual
-            if (userData.plan) {
-                document.getElementById('cambiarPlan').value = userData.plan;
-            }
+        function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
+        document.addEventListener('DOMContentLoaded',()=>{
+            const t=localStorage.getItem('gymrock_token');
+            if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}
+            const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
+            if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="font-size:11px;color:var(--gray)">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();document.getElementById('gymNombre').value=u.nombre}
+            if(u.fecha_corte){document.getElementById('fechaLic').textContent='Vence: '+u.fecha_corte}
         });
     </script>
 </body>
