@@ -8,52 +8,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--purple:#8b5cf6;--blue:#3b82f6;--cyan:#06b6d4;--green:#22c55e;--red:#ef4444;--amber:#f59e0b}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--purple:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--red:#ef4444}
         body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
-        
-        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column}
+        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex!important;flex-direction:column;z-index:100}
         .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
         .sidebar .logo span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
-        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.2s}
+        .sidebar nav{display:flex!important;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex!important;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
         .sidebar nav a i{width:20px;text-align:center}
         .sidebar nav a:hover{background:rgba(59,130,246,0.06);color:var(--white)}
         .sidebar nav a.active{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(59,130,246,0.15)}
         .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
-        
         .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
         .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px}
-        .header h1{font-size:28px;font-weight:800}.header h1 i{color:var(--blue)}
+        .header h1{font-size:28px;font-weight:800}
         .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
         .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-        
-        .trial-banner{background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(16,185,129,0.04));border:1px solid rgba(34,197,94,0.15);border-radius:16px;padding:18px 24px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-        .trial-banner .trial-text strong{color:var(--green);font-size:15px}
-        .trial-banner .trial-text span{color:var(--gray);font-size:13px;display:block}
-        .trial-banner button{padding:10px 24px;background:var(--green);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer}
-        
+        .trial-banner{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:16px;padding:18px 24px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:center}
         .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
-        .metric{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 24px;transition:all 0.3s}
-        .metric:hover{border-color:rgba(59,130,246,0.2);transform:translateY(-2px)}
+        .metric{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 24px}
         .metric .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:8px}
         .metric .value{font-size:32px;font-weight:800}
-        .metric .icon{float:right;font-size:28px;opacity:0.1}
-        
-        .section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
-        .section h3{font-size:16px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-        .section h3 i{color:var(--blue)}
-        .section table{width:100%;border-collapse:collapse;font-size:13px}
-        .section table th{text-align:left;padding:10px 8px;color:var(--gray);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border)}
-        .section table td{padding:10px 8px;border-bottom:1px solid var(--border)}
-        
-        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.metrics{grid-template-columns:1fr 1fr}}
+        .section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+        .section h3{font-size:16px;margin-bottom:16px}
+        table{width:100%;border-collapse:collapse;font-size:13px}
+        th{text-align:left;padding:10px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+        td{padding:10px 8px;border-bottom:1px solid var(--border)}
+        @media(max-width:768px){.sidebar{width:270px!important;left:0!important;transform:none!important}.main{margin-left:270px!important;padding:20px}.metrics{grid-template-columns:1fr 1fr}}
     </style>
 </head>
 <body>
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar">
         <div class="logo"><span>GYMROCK</span></div>
         <nav>
-            <a href="#" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a href="dashboard.html" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a>
             <a href="entrenadores.html"><i class="fas fa-users"></i> Entrenadores</a>
             <a href="suscriptores.html"><i class="fas fa-user-check"></i> Suscriptores</a>
             <a href="configuracion.html"><i class="fas fa-cog"></i> Configuracion</a>
@@ -62,22 +50,22 @@
     </aside>
     <main class="main">
         <div class="header">
-            <div><h1><i class="fas fa-chart-pie"></i> Dashboard</h1><p style="color:var(--gray);font-size:14px">Panel de control de tu gimnasio</p></div>
+            <div><h1>Dashboard</h1><p style="color:var(--gray);font-size:14px">Panel de control</p></div>
             <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Cargando...</div></div>
         </div>
         <div class="trial-banner" id="trialBanner" style="display:none">
-            <div class="trial-text"><strong>🎁 Periodo de prueba activo</strong><span id="trialInfo">Tu prueba gratuita esta activa</span></div>
-            <button onclick="window.location.href='pago_licencia.html'">Activar Plan</button>
+            <div><strong style="color:var(--green)">Periodo de prueba activo</strong><br><span style="color:var(--gray);font-size:13px" id="trialInfo"></span></div>
+            <button onclick="window.location.href='pago_licencia.html'" style="padding:10px 24px;background:var(--green);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer">Activar Plan</button>
         </div>
         <div class="metrics">
-            <div class="metric"><div class="icon"><i class="fas fa-users"></i></div><div class="label">Suscriptores</div><div class="value" id="totalSuscriptores">0</div></div>
-            <div class="metric"><div class="icon"><i class="fas fa-dollar-sign"></i></div><div class="label">Ingresos del Mes</div><div class="value" id="ingresosMes">$0</div></div>
-            <div class="metric"><div class="icon"><i class="fas fa-clock"></i></div><div class="label">Por Vencer</div><div class="value" id="cortesProximos">0</div></div>
-            <div class="metric"><div class="icon"><i class="fas fa-calendar-check"></i></div><div class="label">Estado Licencia</div><div class="value" id="estadoLicencia" style="font-size:16px">✅ Activa</div></div>
+            <div class="metric"><div class="label">Suscriptores</div><div class="value" id="totalSuscriptores">0</div></div>
+            <div class="metric"><div class="label">Ingresos del Mes</div><div class="value" id="ingresosMes">$0</div></div>
+            <div class="metric"><div class="label">Por Vencer</div><div class="value" id="cortesProximos">0</div></div>
+            <div class="metric"><div class="label">Licencia</div><div class="value" id="estadoLicencia" style="font-size:16px">Activa</div></div>
         </div>
         <div class="section">
-            <h3><i class="fas fa-users"></i> Suscriptores Recientes</h3>
-            <div style="overflow-x:auto"><table><thead><tr><th>Cliente</th><th>Email</th><th>Plan</th><th>Estado</th><th>Corte</th></tr></thead><tbody id="tablaSuscriptores"><tr><td colspan="5" style="text-align:center;color:var(--gray);padding:30px">Aun no tienes suscriptores</td></tr></tbody></table></div>
+            <h3>Suscriptores</h3>
+            <table><thead><tr><th>Cliente</th><th>Email</th><th>Plan</th><th>Estado</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center;color:var(--gray);padding:30px">Aun no tienes suscriptores</td></tr></tbody></table>
         </div>
     </main>
     <script>
