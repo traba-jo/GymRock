@@ -2,227 +2,71 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>GymRock · Entrenadores</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg-primary: #0A0E1A;
-            --bg-card: #111827;
-            --bg-sidebar: #0F1524;
-            --text-white: #E8EDF5;
-            --text-gray: #94A3B8;
-            --azul: #2563EB;
-            --azul-oscuro: #1E3A8A;
-            --azul-claro: #60A5FA;
-            --rojo: #DC2626;
-            --verde: #22C55E;
-            --dorado: #F59E0B;
-            --border-color: rgba(255, 255, 255, 0.05);
-            --radius: 16px;
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-white);
-            min-height: 100vh;
-            display: flex;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 260px;
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 24px 16px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar .logo-wrapper {
-            display: flex; align-items: center; gap: 12px;
-            margin-bottom: 32px; padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .sidebar .logo-wrapper img { width: 40px; height: 40px; object-fit: contain; border-radius: 8px; }
-        .sidebar .logo-wrapper span { font-size: 20px; font-weight: 800; color: var(--text-white); }
-        .sidebar .logo-wrapper span span { color: var(--azul-claro); }
-
-        .sidebar .nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-
-        .sidebar .nav a {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-            border-radius: 10px; color: var(--text-gray); text-decoration: none;
-            font-size: 14px; font-weight: 500; transition: var(--transition);
-        }
-
-        .sidebar .nav a i { width: 20px; font-size: 16px; }
-        .sidebar .nav a:hover { background: rgba(37, 99, 235, 0.08); color: var(--text-white); }
-        .sidebar .nav a.active { background: rgba(37, 99, 235, 0.12); color: var(--azul-claro); border-left: 3px solid var(--azul); }
-        .sidebar .nav a.logout { margin-top: auto; color: var(--rojo); border-top: 1px solid var(--border-color); padding-top: 16px; }
-
-        .main { margin-left: 260px; flex: 1; padding: 24px 32px; overflow-y: auto; height: 100vh; }
-
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
-        }
-
-        .header .greeting h1 { font-size: 24px; font-weight: 700; }
-        .header .greeting p { color: var(--text-gray); font-size: 14px; }
-
-        .header .user {
-            display: flex; align-items: center; gap: 12px; background: var(--bg-card);
-            padding: 8px 16px 8px 12px; border-radius: 50px; border: 1px solid var(--border-color);
-        }
-
-        .header .user .avatar {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--azul), var(--azul-oscuro));
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 14px; color: white;
-        }
-
-        .header .user .info { font-size: 13px; font-weight: 500; }
-        .header .user .info small { display: block; font-weight: 400; color: var(--text-gray); font-size: 11px; }
-
-        .vacio {
-            text-align: center; padding: 60px 20px; color: var(--text-gray);
-        }
-
-        .vacio .icono { font-size: 60px; opacity: 0.2; display: block; margin-bottom: 16px; }
-        .vacio h3 { font-size: 20px; color: var(--text-white); margin-bottom: 8px; }
-        .vacio p { font-size: 14px; }
-
-        .btn-primary {
-            display: inline-flex; align-items: center; gap: 10px; padding: 10px 24px;
-            background: linear-gradient(135deg, var(--azul), var(--azul-oscuro));
-            border: none; border-radius: 12px; color: white; font-size: 14px;
-            font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer;
-            transition: var(--transition); text-decoration: none; margin-top: 16px;
-        }
-
-        .btn-primary:hover { transform: translateY(-2px); }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main { margin-left: 0; padding: 16px; }
-        }
-
-        .hamburger { display: none; background: none; border: none; color: var(--text-white); font-size: 24px; cursor: pointer; padding: 8px; }
-        @media (max-width: 768px) { .hamburger { display: block; } }
-
-        .mensaje-toast {
-            position: fixed; bottom: 30px; right: 30px; padding: 14px 24px;
-            border-radius: 12px; background: var(--bg-card); border: 1px solid var(--azul);
-            color: var(--text-white); font-size: 14px; z-index: 999;
-            opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
-        }
-
-        .mensaje-toast.show { opacity: 1; transform: translateY(0); }
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--purple:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--amber:#f59e0b}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
+        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100}
+        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+        .sidebar .logo span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.2s}
+        .sidebar nav a i{width:20px;text-align:center}
+        .sidebar nav a:hover{background:rgba(59,130,246,0.06);color:var(--white)}
+        .sidebar nav a.active{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(59,130,246,0.15)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
+        .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px}
+        .header h1{font-size:28px;font-weight:800}.header h1 i{color:var(--blue)}
+        .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
+        .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+        .btn-add{display:inline-flex;align-items:center;gap:10px;padding:12px 28px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .btn-add:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(59,130,246,0.3)}
+        .empty-state{text-align:center;padding:80px 20px;background:var(--card);border:1px solid var(--border);border-radius:20px}
+        .empty-state .icon{font-size:72px;display:block;margin-bottom:20px;opacity:0.2}
+        .empty-state h2{font-size:24px;font-weight:700;margin-bottom:8px}
+        .empty-state p{color:var(--gray);margin-bottom:24px;font-size:15px}
+        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.header h1{font-size:22px}}
+        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
+        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--blue);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
     </style>
 </head>
 <body>
-
     <aside class="sidebar" id="sidebar">
-        <div class="logo-wrapper">
-            <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock">
-            <span>GYM<span>ROCK</span></span>
-        </div>
-
-        <nav class="nav">
+        <div class="logo"><span>GYMROCK</span></div>
+        <nav>
             <a href="dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</a>
             <a href="#" class="active"><i class="fas fa-users"></i> Entrenadores</a>
             <a href="suscriptores.html"><i class="fas fa-user-check"></i> Suscriptores</a>
-            <a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a>
-            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+            <a href="configuracion.html"><i class="fas fa-cog"></i> Configuracion</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
         </nav>
     </aside>
-
     <main class="main">
         <div class="header">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-                <div class="greeting">
-                    <h1><i class="fas fa-users" style="color: var(--azul-claro);"></i> Entrenadores</h1>
-                    <p>Gestión del equipo de entrenadores</p>
-                </div>
+            <div style="display:flex;align-items:center;gap:14px">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+                <div><h1><i class="fas fa-users"></i> Entrenadores</h1><p style="color:var(--gray);font-size:14px">Gestiona tu equipo de entrenadores</p></div>
             </div>
-            <div class="user">
-                <div class="avatar" id="userAvatar">GR</div>
-                <div class="info" id="userInfo">
-                    Gimnasio
-                    <small>Administrador</small>
-                </div>
-            </div>
+            <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Cargando...</div></div>
         </div>
-
-        <div class="vacio">
-            <span class="icono">👥</span>
-            <h3>Aún no tienes entrenadores</h3>
-            <p>Agrega a tu equipo de entrenadores para que aparezcan en tu perfil</p>
-            <button class="btn-primary" onclick="mostrarToast('🚧 Funcionalidad próximamente')">
-                <i class="fas fa-plus"></i> Agregar Entrenador
-            </button>
+        <div style="margin-bottom:28px"><button class="btn-add" onclick="mostrarToast('Proximamente: Agregar entrenador')"><i class="fas fa-plus"></i> Nuevo Entrenador</button></div>
+        <div class="empty-state">
+            <span class="icon">👥</span>
+            <h2>Aun no tienes entrenadores</h2>
+            <p>Agrega entrenadores a tu equipo para que aparezcan en tu perfil publico</p>
+            <button class="btn-add" onclick="mostrarToast('Proximamente')"><i class="fas fa-plus"></i> Agregar Primer Entrenador</button>
         </div>
     </main>
-
-    <div class="mensaje-toast" id="toast"></div>
-
+    <div class="toast" id="toast"></div>
     <script>
-        const API_URL = window.location.origin;
-
-        function mostrarToast(mensaje) {
-            const toast = document.getElementById('toast');
-            toast.textContent = mensaje;
-            toast.className = 'mensaje-toast show';
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
-        }
-
-        function cerrarSesion() {
-            localStorage.removeItem('gymrock_token');
-            localStorage.removeItem('gymrock_user');
-            localStorage.removeItem('gymrock_rol');
-            window.location.href = '../index.html';
-        }
-
-        document.getElementById('hamburgerBtn')?.addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('open');
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('gymrock_token');
-            const rol = localStorage.getItem('gymrock_rol');
-            
-            if (!token || rol !== 'gimnasio') {
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            const userData = JSON.parse(localStorage.getItem('gymrock_user') || '{}');
-            if (userData.nombre) {
-                document.getElementById('userInfo').innerHTML = `
-                    ${userData.nombre}
-                    <small>Administrador</small>
-                `;
-                document.getElementById('userAvatar').textContent = userData.nombre.substring(0, 2).toUpperCase();
-            }
-        });
+        function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
+        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+        document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}});
     </script>
 </body>
 </html>

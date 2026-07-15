@@ -2,1008 +2,124 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>GymRock · Super Admin</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0A0E1A;
-            --bg-card: #111827;
-            --bg-sidebar: #0F1524;
-            --text-white: #E8EDF5;
-            --text-gray: #94A3B8;
-            --azul: #2563EB;
-            --azul-oscuro: #1E3A8A;
-            --azul-claro: #60A5FA;
-            --rojo: #DC2626;
-            --rojo-oscuro: #991B1B;
-            --verde: #22C55E;
-            --dorado: #F59E0B;
-            --border-color: rgba(255, 255, 255, 0.05);
-            --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-            --radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-white);
-            min-height: 100vh;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* ============================================
-           SIDEBAR
-           ============================================ */
-        .sidebar {
-            width: 280px;
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 24px 16px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar .logo-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .sidebar .logo-wrapper img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-
-        .sidebar .logo-wrapper span {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--text-white);
-        }
-
-        .sidebar .logo-wrapper span span {
-            color: var(--azul-claro);
-        }
-
-        .sidebar .user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            background: rgba(37, 99, 235, 0.06);
-            border-radius: 12px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(37, 99, 235, 0.08);
-        }
-
-        .sidebar .user .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--azul), var(--rojo));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 16px;
-            color: white;
-        }
-
-        .sidebar .user .info {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .sidebar .user .info small {
-            display: block;
-            font-weight: 400;
-            color: var(--text-gray);
-            font-size: 12px;
-        }
-
-        .sidebar .nav {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            flex: 1;
-        }
-
-        .sidebar .nav a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 10px;
-            color: var(--text-gray);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .sidebar .nav a i {
-            width: 20px;
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        .sidebar .nav a:hover {
-            background: rgba(37, 99, 235, 0.08);
-            color: var(--text-white);
-        }
-
-        .sidebar .nav a:hover i {
-            color: var(--azul-claro);
-        }
-
-        .sidebar .nav a.active {
-            background: rgba(37, 99, 235, 0.12);
-            color: var(--azul-claro);
-            border-left: 3px solid var(--azul);
-        }
-
-        .sidebar .nav a.active i {
-            color: var(--azul-claro);
-        }
-
-        .sidebar .nav a.logout {
-            margin-top: auto;
-            color: var(--rojo);
-            border-top: 1px solid var(--border-color);
-            padding-top: 16px;
-        }
-
-        .sidebar .nav a.logout:hover {
-            background: rgba(220, 38, 38, 0.08);
-        }
-
-        /* ============================================
-           MAIN CONTENT
-           ============================================ */
-        .main {
-            margin-left: 280px;
-            flex: 1;
-            padding: 24px 32px;
-            overflow-y: auto;
-            height: 100vh;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .header .greeting h1 {
-            font-size: 24px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header .greeting h1 i {
-            color: var(--dorado);
-        }
-
-        .header .greeting p {
-            color: var(--text-gray);
-            font-size: 14px;
-        }
-
-        .header .badge-version {
-            font-size: 12px;
-            padding: 4px 16px;
-            border-radius: 50px;
-            background: rgba(37, 99, 235, 0.08);
-            color: var(--azul-claro);
-            border: 1px solid rgba(37, 99, 235, 0.1);
-        }
-
-        /* ============================================
-           ESTADÍSTICAS
-           ============================================ */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card:hover {
-            border-color: var(--azul);
-            transform: translateY(-2px);
-        }
-
-        .stat-card .icon-stat {
-            font-size: 28px;
-            opacity: 0.15;
-            position: absolute;
-            right: 16px;
-            top: 16px;
-        }
-
-        .stat-card .number {
-            font-size: 32px;
-            font-weight: 700;
-        }
-
-        .stat-card .label {
-            font-size: 13px;
-            color: var(--text-gray);
-            margin-top: 2px;
-        }
-
-        .stat-card .sub-label {
-            font-size: 12px;
-            color: var(--text-gray);
-            margin-top: 4px;
-            opacity: 0.6;
-        }
-
-        /* ============================================
-           TABLAS
-           ============================================ */
-        .section {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            margin-bottom: 24px;
-        }
-
-        .section .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .section .section-header h3 {
-            font-size: 16px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section .section-header h3 i {
-            color: var(--azul-claro);
-        }
-
-        .section .section-header .badge-count {
-            font-size: 12px;
-            padding: 2px 12px;
-            border-radius: 50px;
-            background: rgba(37, 99, 235, 0.08);
-            color: var(--text-gray);
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        table thead {
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        table th {
-            text-align: left;
-            padding: 10px 8px;
-            color: var(--text-gray);
-            font-weight: 600;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        table td {
-            padding: 10px 8px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        table tr:last-child td {
-            border-bottom: none;
-        }
-
-        table .badge-estado {
-            font-size: 11px;
-            padding: 2px 12px;
-            border-radius: 50px;
-            font-weight: 500;
-        }
-
-        table .badge-estado.activa {
-            background: rgba(34, 197, 94, 0.12);
-            color: var(--verde);
-        }
-
-        table .badge-estado.vencida {
-            background: rgba(220, 38, 38, 0.12);
-            color: var(--rojo);
-        }
-
-        table .badge-estado.suspendida {
-            background: rgba(245, 158, 11, 0.12);
-            color: var(--dorado);
-        }
-
-        .btn-accion {
-            background: none;
-            border: none;
-            color: var(--text-gray);
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 6px;
-            transition: var(--transition);
-            font-size: 13px;
-        }
-
-        .btn-accion:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-white);
-        }
-
-        .btn-accion.ver:hover {
-            color: var(--azul-claro);
-        }
-
-        .btn-accion.editar:hover {
-            color: var(--dorado);
-        }
-
-        .btn-accion.eliminar:hover {
-            color: var(--rojo);
-        }
-
-        .btn-accion.suspender:hover {
-            color: var(--dorado);
-        }
-
-        /* ============================================
-           ACCIONES RÁPIDAS
-           ============================================ */
-        .actions-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .actions-bar .btn-action {
-            padding: 8px 20px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.02);
-            color: var(--text-gray);
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .actions-bar .btn-action:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-white);
-        }
-
-        .actions-bar .btn-action.primary {
-            background: rgba(37, 99, 235, 0.08);
-            border-color: rgba(37, 99, 235, 0.1);
-            color: var(--azul-claro);
-        }
-
-        .actions-bar .btn-action.primary:hover {
-            background: rgba(37, 99, 235, 0.12);
-        }
-
-        .actions-bar .btn-action.success {
-            background: rgba(34, 197, 94, 0.06);
-            border-color: rgba(34, 197, 94, 0.08);
-            color: var(--verde);
-        }
-
-        .actions-bar .btn-action.success:hover {
-            background: rgba(34, 197, 94, 0.1);
-        }
-
-        .actions-bar .btn-action.danger {
-            color: var(--rojo);
-        }
-
-        .actions-bar .btn-action.danger:hover {
-            background: rgba(220, 38, 38, 0.08);
-            border-color: rgba(220, 38, 38, 0.1);
-        }
-
-        /* ============================================
-           LOADING
-           ============================================ */
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 14, 26, 0.9);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .loading-overlay.show {
-            display: flex;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(37, 99, 235, 0.2);
-            border-top-color: var(--azul);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main {
-                margin-left: 0;
-                padding: 16px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header .greeting h1 {
-                font-size: 20px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section {
-                padding: 16px;
-            }
-
-            table {
-                font-size: 12px;
-            }
-
-            table th, table td {
-                padding: 6px 4px;
-            }
-
-            .actions-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .actions-bar .btn-action {
-                justify-content: center;
-            }
-        }
-
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-white);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-            }
-        }
-
-        .mensaje-toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 14px 24px;
-            border-radius: 12px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-white);
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: var(--shadow);
-            z-index: 999;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s ease;
-            pointer-events: none;
-        }
-
-        .mensaje-toast.show {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        .mensaje-toast.success {
-            border-color: var(--verde);
-        }
-
-        .mensaje-toast.error {
-            border-color: var(--rojo);
-        }
-
-        .mensaje-toast i {
-            margin-right: 8px;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--purple:#8b5cf6;--blue:#3b82f6;--red:#ef4444;--green:#22c55e;--amber:#f59e0b;--pink:#ec4899}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
+        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100}
+        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+        .sidebar .logo span{background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sidebar .user-info{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(236,72,153,0.06);border:1px solid rgba(236,72,153,0.1);border-radius:12px;margin-bottom:24px}
+        .sidebar .user-info .avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px}
+        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.2s}
+        .sidebar nav a i{width:20px;text-align:center}
+        .sidebar nav a:hover{background:rgba(236,72,153,0.06);color:var(--white)}
+        .sidebar nav a.active{background:linear-gradient(135deg,rgba(236,72,153,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(236,72,153,0.15)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
+        .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
+        .header{margin-bottom:36px}
+        .header h1{font-size:28px;font-weight:800}.header h1 i{color:var(--pink)}
+        .header p{color:var(--gray);font-size:14px;margin-top:4px}
+        .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+        .metric{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all 0.3s}
+        .metric:hover{border-color:rgba(236,72,153,0.2);transform:translateY(-2px)}
+        .metric .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:8px}
+        .metric .value{font-size:36px;font-weight:800}
+        .metric .icon{float:right;font-size:30px;opacity:0.08}
+        .section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
+        .section h2{font-size:18px;font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+        .section h2 i{color:var(--pink)}
+        table{width:100%;border-collapse:collapse;font-size:13px}
+        th{text-align:left;padding:12px 10px;color:var(--gray);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border)}
+        td{padding:12px 10px;border-bottom:1px solid var(--border)}
+        .badge{display:inline-block;font-size:10px;font-weight:600;padding:4px 12px;border-radius:50px;text-transform:uppercase;letter-spacing:0.5px}
+        .badge-active{background:rgba(34,197,94,0.1);color:var(--green)}
+        .badge-trial{background:rgba(245,158,11,0.1);color:var(--amber)}
+        .badge-expired{background:rgba(239,68,68,0.1);color:var(--red)}
+        .btn-action{padding:8px 20px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+        .loading{text-align:center;padding:40px;color:var(--gray)}
+        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.metrics{grid-template-columns:1fr 1fr}}
+        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
+        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--pink);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
     </style>
 </head>
 <body>
-
-    <!-- ============================================
-    LOADING OVERLAY
-    ============================================ -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <p style="color: var(--text-gray);">Verificando acceso...</p>
-    </div>
-
-    <!-- ============================================
-    SIDEBAR
-    ============================================ -->
     <aside class="sidebar" id="sidebar">
-        <div class="logo-wrapper">
-            <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock">
-            <span>GYM<span>ROCK</span></span>
+        <div class="logo"><span>GYMROCK</span></div>
+        <div class="user-info">
+            <div class="avatar" id="adminAvatar">SA</div>
+            <div><strong id="adminName">Super Admin</strong><br><small style="color:var(--gray);font-size:11px">Acceso total</small></div>
         </div>
-
-        <div class="user">
-            <div class="avatar">SA</div>
-            <div class="info">
-                <span id="adminNombre">Super Admin</span>
-                <small>Acceso completo</small>
-            </div>
-        </div>
-
-        <nav class="nav">
-            <a href="#" class="active" onclick="scrollToSection('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a href="#gimnasios" onclick="scrollToSection('gimnasios')"><i class="fas fa-dumbbell"></i> Gimnasios</a>
-            <a href="#suscripciones" onclick="scrollToSection('suscripciones')"><i class="fas fa-user-check"></i> Suscripciones</a>
-            <a href="#" onclick="mostrarToast('🔧 Configuración próximamente', 'success')"><i class="fas fa-cog"></i> Configuración</a>
-            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+        <nav>
+            <a href="#" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a href="#gimnasios"><i class="fas fa-dumbbell"></i> Gimnasios</a>
+            <a href="#usuarios"><i class="fas fa-users"></i> Usuarios</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
         </nav>
     </aside>
-
-    <!-- ============================================
-    MAIN
-    ============================================ -->
     <main class="main">
-        <!-- Header -->
         <div class="header">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-                <div class="greeting">
-                    <h1 id="dashboard"><i class="fas fa-crown"></i> Super Admin</h1>
-                    <p>Panel de control global de GymRock</p>
-                </div>
-            </div>
-            <span class="badge-version"><i class="fas fa-shield-alt"></i> v2.1 · Acceso restringido</span>
-        </div>
-
-        <!-- Estadísticas -->
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card">
-                <div class="icon-stat"><i class="fas fa-dumbbell"></i></div>
-                <div class="number" id="totalGimnasios">--</div>
-                <div class="label">Gimnasios Registrados</div>
-                <div class="sub-label">Total en la plataforma</div>
-            </div>
-            <div class="stat-card">
-                <div class="icon-stat"><i class="fas fa-users"></i></div>
-                <div class="number" id="totalUsuarios">--</div>
-                <div class="label">Usuarios Registrados</div>
-                <div class="sub-label">Clientes en la plataforma</div>
-            </div>
-            <div class="stat-card">
-                <div class="icon-stat"><i class="fas fa-check-circle"></i></div>
-                <div class="number" id="licenciasActivas">--</div>
-                <div class="label">Licencias Activas</div>
-                <div class="sub-label">Gimnasios con pago al día</div>
-            </div>
-            <div class="stat-card">
-                <div class="icon-stat"><i class="fas fa-clock"></i></div>
-                <div class="number" id="ultimaActualizacion">--</div>
-                <div class="label">Última Actualización</div>
-                <div class="sub-label">Datos del servidor</div>
+            <div style="display:flex;align-items:center;gap:14px">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+                <div><h1><i class="fas fa-crown"></i> Panel de Administracion</h1><p>Control total de la plataforma GymRock</p></div>
             </div>
         </div>
-
-        <!-- Lista de Gimnasios -->
+        <div class="metrics">
+            <div class="metric"><div class="icon"><i class="fas fa-dumbbell"></i></div><div class="label">Gimnasios</div><div class="value" id="totalGimnasios" style="color:var(--blue)">--</div></div>
+            <div class="metric"><div class="icon"><i class="fas fa-users"></i></div><div class="label">Usuarios</div><div class="value" id="totalUsuarios" style="color:var(--green)">--</div></div>
+            <div class="metric"><div class="icon"><i class="fas fa-check-circle"></i></div><div class="label">Activos</div><div class="value" style="color:var(--green)">--</div></div>
+            <div class="metric"><div class="icon"><i class="fas fa-clock"></i></div><div class="label">Actualizado</div><div class="value" style="font-size:14px" id="ultimaAct">--</div></div>
+        </div>
         <div class="section" id="gimnasios">
-            <div class="section-header">
-                <h3><i class="fas fa-dumbbell"></i> Gimnasios Registrados</h3>
-                <span class="badge-count" id="gymCount">0</span>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Gimnasio</th>
-                            <th>Email</th>
-                            <th>Plan</th>
-                            <th>Licencia</th>
-                            <th>Corte</th>
-                            <th style="text-align: center;">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaGimnasios">
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-gray);">
-                                <i class="fas fa-spinner fa-pulse"></i> Cargando gimnasios...
-                            </td>
-                        </tr>
-                    </tbody>
+            <h2><i class="fas fa-dumbbell"></i> Gimnasios Registrados</h2>
+            <div style="overflow-x:auto">
+                <table><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Estado</th><th>Registro</th><th>Accion</th></tr></thead>
+                    <tbody id="tablaGimnasios"><tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr></tbody>
                 </table>
-            </div>
-        </div>
-
-        <!-- Suscripciones Recientes -->
-        <div class="section" id="suscripciones">
-            <div class="section-header">
-                <h3><i class="fas fa-user-check"></i> Suscripciones Recientes</h3>
-                <span class="badge-count" id="suscripcionesCount">0</span>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Gimnasio</th>
-                            <th>Plan</th>
-                            <th>Monto</th>
-                            <th>Fecha</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaSuscripciones">
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-gray);">
-                                Próximamente...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Acciones rápidas -->
-        <div class="section" style="background: rgba(37, 99, 235, 0.02); border: 1px dashed rgba(37, 99, 235, 0.15);">
-            <div class="actions-bar">
-                <div>
-                    <h4 style="font-size: 14px; font-weight: 600;"><i class="fas fa-bolt" style="color: var(--azul-claro);"></i> Acciones Rápidas</h4>
-                    <p style="font-size: 13px; color: var(--text-gray);">Gestiona todo el sistema desde aquí</p>
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn-action primary" onclick="recargarDatos()">
-                        <i class="fas fa-sync"></i> Recargar datos
-                    </button>
-                    <button class="btn-action success" onclick="verificarTodo()">
-                        <i class="fas fa-check-circle"></i> Verificar sistema
-                    </button>
-                    <button class="btn-action danger" onclick="cerrarSesion()">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-                    </button>
-                </div>
             </div>
         </div>
     </main>
-
-    <!-- Toast -->
-    <div class="mensaje-toast" id="toast"></div>
-
+    <div class="toast" id="toast"></div>
     <script>
-        // ============================================
-        // GYMROCK · SUPER ADMIN v2.1
-        // ============================================
-
-        const API_URL = window.location.origin;
-
-        // ============================================
-        // VERIFICAR ACCESO CON JWT
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('adminToken');
-            const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
-            
-            // Mostrar loading
-            document.getElementById('loadingOverlay').classList.add('show');
-            
-            // Mostrar nombre del admin
-            if (adminUser.usuario) {
-                document.getElementById('adminNombre').textContent = adminUser.usuario;
-            }
-            
-            if (!token) {
-                redirigirAlLogin();
-                return;
-            }
-            
-            // Verificar que el token sea válido
-            fetch(API_URL + '/api/admin/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: token })
-            })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('loadingOverlay').classList.remove('show');
-                
-                if (data.valid) {
-                    // ✅ Token válido → cargar datos
-                    cargarDatos();
-                } else {
-                    // ❌ Token inválido
-                    mostrarToast('🔒 Sesión expirada. Inicia sesión de nuevo.', 'error');
-                    setTimeout(redirigirAlLogin, 2000);
-                }
-            })
-            .catch(err => {
-                document.getElementById('loadingOverlay').classList.remove('show');
-                console.error('Error de verificación:', err);
-                mostrarToast('⚠️ No se pudo verificar la sesión. Intenta recargar.', 'error');
-            });
-        });
-
-        function redirigirAlLogin() {
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminUser');
-            window.location.href = '../index.html';
-        }
-
-        // ============================================
-        // TOAST
-        // ============================================
-        function mostrarToast(mensaje, tipo = 'success') {
-            const toast = document.getElementById('toast');
-            toast.innerHTML = mensaje;
-            toast.className = 'mensaje-toast ' + tipo + ' show';
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // ============================================
-        // CARGAR DATOS DESDE EL BACKEND
-        // ============================================
-        async function cargarDatos() {
-            try {
-                mostrarToast('🔄 Actualizando datos...', 'success');
-                
-                const token = localStorage.getItem('adminToken');
-                
-                const res = await fetch(`${API_URL}/api/admin/dashboard?token=${encodeURIComponent(token)}`);
-                const data = await res.json();
-                
-                if (data.status === 'success') {
-                    const d = data.data;
-                    
-                    // Actualizar estadísticas
-                    document.getElementById('totalGimnasios').textContent = d.total_gimnasios || 0;
-                    document.getElementById('totalUsuarios').textContent = d.total_usuarios || 0;
-                    document.getElementById('licenciasActivas').textContent = d.total_gimnasios || 0;
-                    
-                    // Fecha de actualización
-                    const ahora = new Date();
-                    document.getElementById('ultimaActualizacion').textContent = 
-                        ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                    
-                    // Renderizar gimnasios
-                    renderizarGimnasios(d.gimnasios || []);
-                    
-                    mostrarToast('✅ Datos actualizados correctamente', 'success');
-                } else {
-                    mostrarToast('❌ ' + (data.error || 'Error al cargar datos'), 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarToast('❌ Error de conexión con el servidor', 'error');
-                
-                // Mostrar error en las estadísticas
-                document.getElementById('totalGimnasios').textContent = 'Error';
-                document.getElementById('totalUsuarios').textContent = 'Error';
-                document.getElementById('licenciasActivas').textContent = 'Error';
-                document.getElementById('ultimaActualizacion').textContent = 'Error';
-            }
-        }
-
-        // ============================================
-        // RENDERIZAR GIMNASIOS
-        // ============================================
-        function renderizarGimnasios(gimnasios) {
-            const tbody = document.getElementById('tablaGimnasios');
-            document.getElementById('gymCount').textContent = gimnasios.length;
-            
-            if (!gimnasios || gimnasios.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-gray);">
-                    <i class="fas fa-inbox"></i> No hay gimnasios registrados aún.
-                </td></tr>`;
-                return;
-            }
-            
-            tbody.innerHTML = gimnasios.map(g => {
-                const estado = g.estado_licencia || 'activa';
-                const estadoClass = estado === 'activa' ? 'activa' : estado === 'vencida' ? 'vencida' : 'suspendida';
-                const estadoText = estado === 'activa' ? 'Activa' : estado === 'vencida' ? 'Vencida' : 'Suspendida';
-                const fechaCorte = g.licencia_fecha_corte ? new Date(g.licencia_fecha_corte).toLocaleDateString('es-ES') : 'N/A';
-                const idCorto = g.id ? g.id.substring(0, 8) : 'N/A';
-                
-                return `
-                    <tr>
-                        <td><strong>${g.nombre || 'N/A'}</strong><br><small style="color: var(--text-gray);">ID: ${idCorto}...</small></td>
-                        <td>${g.email || 'N/A'}</td>
-                        <td><span style="text-transform: capitalize;">${g.plan || 'basico'}</span></td>
-                        <td><span class="badge-estado ${estadoClass}">${estadoText}</span></td>
-                        <td>${fechaCorte}</td>
-                        <td style="text-align: center;">
-                            <button class="btn-accion ver" onclick="verGimnasio('${g.id}')" title="Ver detalles"><i class="fas fa-eye"></i></button>
-                            <button class="btn-accion suspender" onclick="suspenderGimnasio('${g.id}')" title="Suspender"><i class="fas fa-pause"></i></button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // ============================================
-        // ACCIONES
-        // ============================================
-        function verGimnasio(id) {
-            mostrarToast(`📋 Ver gimnasio ID: ${id.substring(0, 8)}...`, 'success');
-        }
-
-        function suspenderGimnasio(id) {
-            if (confirm('⚠️ ¿Estás seguro de suspender este gimnasio?\n\nEl gimnasio no será visible para los clientes hasta que se reactive.')) {
-                mostrarToast('⏸️ Gimnasio suspendido temporalmente', 'error');
-            }
-        }
-
-        function recargarDatos() {
-            cargarDatos();
-        }
-
-        function verificarTodo() {
-            fetch(API_URL + '/api/health')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'ok') {
-                        mostrarToast('✅ Sistema funcionando correctamente<br><small>API: ' + data.version + '</small>', 'success');
-                    } else {
-                        mostrarToast('⚠️ Sistema inestable', 'error');
+        function cerrarSesion(){localStorage.removeItem('adminToken');localStorage.removeItem('adminUser');window.location.href='../index.html'}
+        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+        async function cargarDashboard(){
+            const token=localStorage.getItem('adminToken');
+            if(!token){window.location.href='../index.html';return}
+            try{
+                const r=await fetch('/api/admin/dashboard?token='+encodeURIComponent(token));
+                const d=await r.json();
+                if(d.status==='success'){
+                    document.getElementById('totalGimnasios').textContent=d.data.total_gimnasios||0;
+                    document.getElementById('totalUsuarios').textContent=d.data.total_usuarios||0;
+                    document.getElementById('ultimaAct').textContent=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+                    const gimnasios=d.data.gimnasios||[];
+                    if(gimnasios.length){
+                        document.getElementById('tablaGimnasios').innerHTML=gimnasios.map(g=>{
+                            const estado=g.estado_licencia||'activa';
+                            const badge=estado==='activa'?'badge-active':estado==='vencida'?'badge-expired':'badge-trial';
+                            const fecha=g.fecha_registro?g.fecha_registro.slice(0,10):'--';
+                            return`<tr><td><strong>${g.nombre||'N/A'}</strong></td><td>${g.email||'N/A'}</td><td style="text-transform:capitalize">${g.plan||'basico'}</td><td><span class="badge ${badge}">${estado}</span></td><td>${fecha}</td><td><button class="btn-action" onclick="mostrarToast('Gimnasio: ${g.nombre}')"><i class="fas fa-eye"></i> Ver</button></td></tr>`
+                        }).join('');
+                    }else{
+                        document.getElementById('tablaGimnasios').innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:30px">No hay gimnasios registrados</td></tr>';
                     }
-                })
-                .catch(() => {
-                    mostrarToast('❌ No se pudo conectar con el servidor', 'error');
-                });
-        }
-
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth' });
-            }
-            
-            // Cerrar sidebar en móvil
-            document.getElementById('sidebar').classList.remove('open');
-        }
-
-        function cerrarSesion() {
-            if (confirm('¿Estás seguro de cerrar sesión?')) {
-                localStorage.removeItem('adminToken');
-                localStorage.removeItem('adminUser');
-                window.location.href = '../index.html';
-            }
-        }
-
-        // ============================================
-        // TOGGLE SIDEBAR (móvil)
-        // ============================================
-        document.getElementById('hamburgerBtn').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('open');
-        });
-
-        document.addEventListener('click', function(e) {
-            const sidebar = document.getElementById('sidebar');
-            const hamburger = document.getElementById('hamburgerBtn');
-            if (window.innerWidth <= 768) {
-                if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
-                    sidebar.classList.remove('open');
                 }
+            }catch(e){
+                document.getElementById('tablaGimnasios').innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--red);padding:30px">Error al cargar datos</td></tr>';
             }
-        });
-
-        // ============================================
-        // CERRAR SESIÓN POR INACTIVIDAD (30 min)
-        // ============================================
-        let tiempoInactividad;
-        
-        function reiniciarTemporizador() {
-            clearTimeout(tiempoInactividad);
-            tiempoInactividad = setTimeout(() => {
-                mostrarToast('⏰ Sesión cerrada por inactividad', 'error');
-                setTimeout(redirigirAlLogin, 2000);
-            }, 30 * 60 * 1000); // 30 minutos
         }
-        
-        ['click', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(evento => {
-            document.addEventListener(evento, reiniciarTemporizador);
+        document.addEventListener('DOMContentLoaded',()=>{
+            const token=localStorage.getItem('adminToken');
+            if(!token){window.location.href='../index.html';return}
+            fetch('/api/admin/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})})
+            .then(r=>r.json()).then(d=>{if(d.valid){const u=JSON.parse(localStorage.getItem('adminUser')||'{}');if(u.usuario){document.getElementById('adminName').textContent=u.usuario;document.getElementById('adminAvatar').textContent=u.usuario.substring(0,2).toUpperCase()}cargarDashboard()}else{cerrarSesion()}}).catch(()=>cerrarSesion());
         });
-        
-        reiniciarTemporizador();
     </script>
 </body>
 </html>

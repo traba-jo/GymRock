@@ -1,1 +1,76 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>GymRock · Extras</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"><style>*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#0D0D1A;--card:rgba(255,255,255,0.03);--side:#111128;--border:rgba(255,255,255,0.06);--white:#F0F0F5;--gray:#8A8AA8;--gold:#D4AF37;--red:#DC2626}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex}.sidebar{width:260px;background:var(--side);border-right:1px solid var(--border);padding:24px 16px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column}.sidebar .logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}.sidebar .logo span{font-size:20px;font-weight:800}.sidebar .logo span span{color:var(--gold)}.sidebar nav{display:flex;flex-direction:column;gap:4px;flex:1}.sidebar nav a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}.sidebar nav a:hover{background:rgba(212,175,55,0.06);color:var(--white)}.sidebar nav a.active{background:rgba(212,175,55,0.08);color:var(--gold);border-left:3px solid var(--gold)}.sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:16px}.main{margin-left:260px;flex:1;padding:24px 32px}.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.header h1{font-size:24px}.header p{color:var(--gray)}.user{display:flex;align-items:center;gap:12px;background:var(--card);padding:8px 16px;border-radius:50px;border:1px solid var(--border)}.user .avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#B8941E);display:flex;align-items:center;justify-content:center;font-weight:700;color:#0D0D1A}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center}.card .icon{font-size:40px;margin-bottom:12px}.card h3{font-size:18px;margin-bottom:8px}.card p{color:var(--gray);font-size:13px;margin-bottom:16px}.card .precio{font-size:22px;font-weight:700;color:var(--gold)}@media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:16px}.grid{grid-template-columns:1fr}}</style></head><body><aside class="sidebar"><div class="logo"><span>GYM<span>ROCK</span></span></div><nav><a href="gimnasios.html"><i class="fas fa-dumbbell"></i> Gimnasios</a><a href="suscripciones.html"><i class="fas fa-receipt"></i> Suscripciones</a><a href="#" class="active"><i class="fas fa-gem"></i> Extras</a><a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Salir</a></nav></aside><main class="main"><div class="header"><div><h1><i class="fas fa-gem" style="color:var(--gold)"></i> Extras</h1><p>Servicios adicionales</p></div><div class="user"><div class="avatar" id="ua">CL</div><div class="info" id="ui">Cliente</div></div></div><div class="grid"><div class="card"><div class="icon">💪</div><h3>Entrenador Personal</h3><p>Sesiones 1-on-1</p><div class="precio">$350 / sesion</div></div><div class="card"><div class="icon">🥗</div><h3>Plan Alimenticio</h3><p>Personalizado</p><div class="precio">$250 / plan</div></div><div class="card"><div class="icon">🏆</div><h3>Paquete Completo</h3><p>Entrenador + Nutricion</p><div class="precio">$550 / mes</div></div><div class="card"><div class="icon">🧘</div><h3>Clases Grupales</h3><p>Yoga, HIIT, Zumba</p><div class="precio">$150 / clase</div></div></div></main><script>function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='cliente'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').textContent=u.nombre;document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}});</script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Extras</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--cyan:#06b6d4;--purple:#8b5cf6;--red:#ef4444}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
+        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100}
+        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+        .sidebar .logo span{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.2s}
+        .sidebar nav a i{width:20px;text-align:center}
+        .sidebar nav a:hover{background:rgba(6,182,212,0.06);color:var(--white)}
+        .sidebar nav a.active{background:linear-gradient(135deg,rgba(6,182,212,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(6,182,212,0.15)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
+        .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px}
+        .header h1{font-size:28px;font-weight:800}.header h1 i{color:var(--cyan)}
+        .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
+        .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden}
+        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--purple));opacity:0;transition:opacity 0.3s}
+        .card:hover{border-color:rgba(6,182,212,0.2);transform:translateY(-3px)}.card:hover::before{opacity:1}
+        .card .icon{font-size:48px;margin-bottom:16px}
+        .card h3{font-size:20px;font-weight:700;margin-bottom:8px}
+        .card p{color:var(--gray);font-size:13px;margin-bottom:16px;line-height:1.5}
+        .card .precio{font-size:28px;font-weight:800;color:var(--cyan);margin-bottom:16px}
+        .card .precio small{font-size:13px;color:var(--gray);font-weight:400}
+        .card button{width:100%;padding:12px;background:linear-gradient(135deg,var(--cyan),#0ea5e9);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .card button:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(6,182,212,0.3)}
+        .badge-pop{position:absolute;top:16px;right:16px;font-size:10px;font-weight:700;padding:5px 14px;border-radius:50px;background:rgba(245,158,11,0.15);color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px}
+        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.grid{grid-template-columns:1fr}}
+        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
+        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--cyan);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="logo"><span>GYMROCK</span></div>
+        <nav>
+            <a href="gimnasios.html"><i class="fas fa-dumbbell"></i> Gimnasios</a>
+            <a href="suscripciones.html"><i class="fas fa-receipt"></i> Suscripciones</a>
+            <a href="#" class="active"><i class="fas fa-gem"></i> Extras</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
+        </nav>
+    </aside>
+    <main class="main">
+        <div class="header">
+            <div style="display:flex;align-items:center;gap:14px">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+                <div><h1><i class="fas fa-gem"></i> Extras</h1><p style="color:var(--gray);font-size:14px">Servicios adicionales premium</p></div>
+            </div>
+            <div class="user"><div class="avatar" id="ua">CL</div><div class="info" id="ui">Cargando...</div></div>
+        </div>
+        <div class="grid">
+            <div class="card"><span class="badge-pop">Popular</span><div class="icon">💪</div><h3>Entrenador Personal</h3><p>Sesiones 1-on-1 con entrenadores certificados</p><div class="precio">$350<small>/sesion</small></div><button onclick="mostrarToast('Proximamente disponible')">Contratar</button></div>
+            <div class="card"><div class="icon">🥗</div><h3>Plan Alimenticio</h3><p>Planes personalizados por nutriologos</p><div class="precio">$250<small>/plan</small></div><button onclick="mostrarToast('Proximamente disponible')">Contratar</button></div>
+            <div class="card"><span class="badge-pop">Premium</span><div class="icon">🏆</div><h3>Paquete Completo</h3><p>Entrenador + Plan alimenticio + Seguimiento</p><div class="precio">$550<small>/mes</small></div><button onclick="mostrarToast('Proximamente disponible')">Contratar</button></div>
+            <div class="card"><div class="icon">🧘</div><h3>Clases Grupales</h3><p>Yoga, Pilates, HIIT, Zumba y mas</p><div class="precio">$150<small>/clase</small></div><button onclick="mostrarToast('Proximamente disponible')">Contratar</button></div>
+        </div>
+    </main>
+    <div class="toast" id="toast"></div>
+    <script>
+        function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
+        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+        document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='cliente'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Cliente</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}});
+    </script>
+</body>
+</html>
