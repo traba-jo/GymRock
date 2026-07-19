@@ -218,6 +218,23 @@
         const aspirante=params.get('nombre')||'Aspirante';
         const email=params.get('email')||'';
         let claseSeleccionada='';
+
+        // Cargar preguntas personalizadas si es Clase A
+        const clase=params.get('clase')||'';
+        if(clase==='A'){
+            const preguntas=[
+                params.get('p1')||'¿Por qué quieres ser entrenador en este gimnasio?',
+                params.get('p2')||'Describe tu experiencia previa en el ámbito fitness.',
+                params.get('p3')||'¿Cómo diseñas un plan de entrenamiento para un cliente nuevo?',
+                params.get('p4')||'¿Qué harías si un cliente no ve resultados después de 3 meses?',
+                params.get('p5')||'¿Por qué deberíamos elegirte a ti sobre otros candidatos?'
+            ];
+            for(let i=0;i<5;i++){
+                const el=document.getElementById('pa'+(i+1));
+                if(el)el.previousElementSibling.textContent=(i+1)+'. '+preguntas[i];
+            }
+        }
+
         
         document.getElementById('gymName').textContent='ID: '+gymId.substring(0,8)+'...';
         document.getElementById('aspiranteName').textContent=aspirante+' ('+email+')';

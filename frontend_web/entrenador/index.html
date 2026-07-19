@@ -75,6 +75,7 @@
             <a href="#" onclick="mostrarSeccion('rutinas')"><i class="fas fa-clipboard-list"></i> Mis Rutinas</a>
             <a href="#" onclick="mostrarSeccion('clientes')"><i class="fas fa-users"></i> Mis Clientes</a>
             <a href="#" onclick="mostrarSeccion('material')"><i class="fas fa-folder-open"></i> Material</a>
+            <a href="#" onclick="mostrarSeccion('banco')"><i class="fas fa-credit-card"></i> Datos Bancarios</a>
             <a href="#" onclick="mostrarSeccion('precios')"><i class="fas fa-tag"></i> Precios</a>
             <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
         </nav>
@@ -140,6 +141,19 @@
             <div id="listaMaterial" style="margin-top:16px"></div>
         </div>
         
+        
+        <!-- Datos Bancarios -->
+        <div class="section" id="seccionBanco" style="display:none">
+            <h3><i class="fas fa-credit-card"></i> Datos Bancarios para Cobro</h3>
+            <p style="color:var(--gray);font-size:13px;margin-bottom:16px">El cliente verá solo los últimos 4 dígitos al pagar por transferencia</p>
+            <div class="form-group"><label>Banco</label><input type="text" id="bancoNombre" placeholder="BBVA, Santander, etc"></div>
+            <div class="form-group"><label>Titular</label><input type="text" id="bancoTitular" placeholder="Nombre del titular"></div>
+            <div class="form-group"><label>Número de Cuenta/Tarjeta</label><input type="text" id="bancoCuenta" placeholder="4815 1632 9824 3091" maxlength="20"></div>
+            <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.1);border-radius:10px;padding:10px;margin-bottom:12px;font-size:12px;color:var(--gray)">
+                🔒 Vista previa para clientes: <strong id="previewBanco" style="color:var(--white)">--</strong>
+            </div>
+            <button class="btn btn-green" onclick="guardarBanco()">💾 Guardar Datos Bancarios</button>
+        </div>
         <!-- Precios -->
         <div class="section" id="seccionPrecios" style="display:none">
             <h3><i class="fas fa-tag"></i> Configurar Precios</h3>
@@ -195,6 +209,19 @@
         function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
         function abrirModalRutina(){document.getElementById('modalRutina').classList.add('show')}
         function cerrarModalRutina(){document.getElementById('modalRutina').classList.remove('show')}
+        
+        function guardarBanco(){
+            const b=document.getElementById('bancoNombre').value;
+            const t=document.getElementById('bancoTitular').value;
+            const c=document.getElementById('bancoCuenta').value.replace(/\s/g,'');
+            if(!b||!t||!c){mostrarToast('⚠️ Completa todos los campos');return}
+            document.getElementById('previewBanco').textContent=b+' · ***'+c.slice(-4);
+            mostrarToast('✅ Datos bancarios guardados');
+        }
+        document.getElementById('bancoCuenta').addEventListener('input',function(){
+            const c=this.value.replace(/\s/g,'');
+            if(c.length>=4)document.getElementById('previewBanco').textContent=(document.getElementById('bancoNombre').value||'Banco')+' · ***'+c.slice(-4);
+        });
         function guardarPrecios(){
             const p=document.getElementById('precioSesion').value;
             document.getElementById('precioSesionMetric').textContent='$'+p;

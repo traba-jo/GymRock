@@ -124,8 +124,17 @@
                     <div class="desc">25 preguntas · Normativa</div>
                 </div>
             </div>
+            
+            <div id="preguntasPersonalizadas" style="display:none;margin-top:12px">
+                <label style="font-size:13px;color:var(--gray);margin-bottom:8px;display:block">Personaliza las 5 preguntas para el aspirante:</label>
+                <div class="form-group"><label>Pregunta 1</label><input type="text" id="pers1" placeholder="¿Por qué quieres ser entrenador?"></div>
+                <div class="form-group"><label>Pregunta 2</label><input type="text" id="pers2" placeholder="Describe tu experiencia"></div>
+                <div class="form-group"><label>Pregunta 3</label><input type="text" id="pers3" placeholder="¿Cómo manejas un cliente nuevo?"></div>
+                <div class="form-group"><label>Pregunta 4</label><input type="text" id="pers4" placeholder="¿Qué harías si un cliente no avanza?"></div>
+                <div class="form-group"><label>Pregunta 5</label><input type="text" id="pers5" placeholder="¿Por qué deberíamos elegirte?"></div>
+            </div>
             <div id="claseInfo" style="font-size:12px;color:var(--blue);margin-bottom:12px;padding:8px;background:rgba(59,130,246,0.06);border-radius:8px">
-                📝 Clase A: El gimnasio evalúa al aspirante con 10 preguntas personalizadas.
+                📝 Clase A: Personaliza las preguntas abajo antes de enviar.
             </div>
             
             <div style="display:flex;gap:10px;margin-top:16px">
@@ -150,7 +159,7 @@
             document.querySelectorAll('.test-card').forEach(c=>c.classList.remove('selected'));
             el.classList.add('selected');
             claseSeleccionada=clase;
-            const info={'A':'📝 Clase A: El gimnasio evalúa al aspirante con 10 preguntas personalizadas.','B':'🥈 Clase B: 15 preguntas sobre conocimiento deportivo mexicano.','C':'🥇 Clase C: 25 preguntas exhaustivas de normativa mexicana.'};
+            const info={'A':'📝 Clase A: Personaliza las preguntas abajo antes de enviar.','B':'🥈 Clase B: 15 preguntas sobre conocimiento deportivo mexicano.','C':'🥇 Clase C: 25 preguntas exhaustivas de normativa mexicana.'};
             document.getElementById('claseInfo').textContent=info[clase];
         }
         
@@ -159,7 +168,11 @@
             const email=document.getElementById('testEmail').value.trim();
             if(!nombre||!email){mostrarToast('⚠️ Completa nombre y email');return}
             
-            const testURL=API_URL+'/test_certificacion.html?gym='+gymId+'&nombre='+encodeURIComponent(nombre)+'&email='+encodeURIComponent(email)+'&clase='+claseSeleccionada;
+            let testURL=API_URL+'/test_certificacion.html?gym='+gymId+'&nombre='+encodeURIComponent(nombre)+'&email='+encodeURIComponent(email)+'&clase='+claseSeleccionada;
+            if(claseSeleccionada==='A'){
+                const p1=document.getElementById('pers1').value.trim();const p2=document.getElementById('pers2').value.trim();const p3=document.getElementById('pers3').value.trim();const p4=document.getElementById('pers4').value.trim();const p5=document.getElementById('pers5').value.trim();
+                testURL+='&p1='+encodeURIComponent(p1||'¿Por qué quieres ser entrenador?')+'&p2='+encodeURIComponent(p2||'Describe tu experiencia')+'&p3='+encodeURIComponent(p3||'¿Cómo manejas un cliente nuevo?')+'&p4='+encodeURIComponent(p4||'¿Qué harías si un cliente no avanza?')+'&p5='+encodeURIComponent(p5||'¿Por qué deberíamos elegirte?');
+            }
             
             document.getElementById('testNombre').value='';
             document.getElementById('testEmail').value='';
