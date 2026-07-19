@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Entrenadores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--cyan:#06b6d4;--purple:#8b5cf6;--green:#22c55e;--red:#ef4444;--gold:#f59e0b}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
+        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;height:100vh;position:sticky;top:0;display:flex;flex-direction:column;overflow-y:auto}
+        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+        .sidebar .logo span{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
+        .sidebar nav a i{width:20px;text-align:center}
+        .sidebar nav a:hover{background:rgba(6,182,212,0.06);color:var(--white)}
+        .sidebar nav a.active{background:linear-gradient(135deg,rgba(6,182,212,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(6,182,212,0.15)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
+        .main{flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px}
+        .header h1{font-size:28px;font-weight:800}
+        .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
+        .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+        
+        .tabs{display:flex;gap:4px;margin-bottom:28px;background:var(--card);border-radius:14px;padding:4px}
+        .tab{padding:10px 24px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:500;color:var(--gray);border:none;background:none;font-family:'Inter',sans-serif;transition:all 0.2s}
+        .tab.active{background:rgba(6,182,212,0.12);color:var(--cyan);font-weight:600}
+        .tab:hover{color:var(--white)}
+        
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all 0.3s;position:relative;overflow:hidden}
+        .card:hover{border-color:rgba(6,182,212,0.2);transform:translateY(-3px)}
+        .card .trainer-header{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+        .card .trainer-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px}
+        .card h3{font-size:18px;font-weight:700}
+        .card .cert-badge{display:inline-block;font-size:10px;padding:4px 10px;border-radius:50px;font-weight:600;margin-top:4px}
+        .cert-a{background:rgba(59,130,246,0.15);color:#3b82f6}
+        .cert-b{background:rgba(245,158,11,0.15);color:#f59e0b}
+        .cert-c{background:rgba(34,197,94,0.15);color:#22c55e}
+        .card .precio{font-size:22px;font-weight:700;color:var(--cyan);margin:12px 0}
+        .card button{width:100%;padding:12px;background:linear-gradient(135deg,var(--cyan),#0ea5e9);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+        
+        .rutina-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+        .rutina-card h4{font-size:16px;margin-bottom:8px;color:var(--cyan)}
+        .rutina-card .ejercicios{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+        .ejercicio-img{width:100%;max-width:200px;border-radius:10px;border:1px solid var(--border)}
+        .ejercicio-gif{width:100%;max-width:250px;border-radius:10px}
+        
+        .empty{text-align:center;padding:60px 20px;color:var(--gray)}
+        .empty .icon{font-size:64px;display:block;margin-bottom:16px;opacity:0.2}
+        @media(max-width:768px){.sidebar{display:none}.main{padding:20px}.grid{grid-template-columns:1fr}}
+        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
+        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--cyan);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo"><span>GYMROCK</span></div>
+        <nav>
+            <a href="gimnasios.html"><i class="fas fa-dumbbell"></i> Gimnasios</a>
+            <a href="suscripciones.html"><i class="fas fa-receipt"></i> Suscripciones</a>
+            <a href="#" class="active"><i class="fas fa-user-graduate"></i> Entrenadores</a>
+            <a href="extras.html"><i class="fas fa-gem"></i> Extras</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
+        </nav>
+    </aside>
+    <main class="main">
+        <div class="header">
+            <div><h1>Entrenadores</h1><p style="color:var(--gray);font-size:14px">Entrenadores certificados disponibles para ti</p></div>
+            <div class="user"><div class="avatar" id="ua">CL</div><div class="info" id="ui">Cargando...</div></div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="cambiarTab('disponibles',this)">👥 Disponibles</button>
+            <button class="tab" onclick="cambiarTab('contratados',this)">✅ Mis Entrenadores</button>
+            <button class="tab" onclick="cambiarTab('rutinas',this)">📋 Mis Rutinas</button>
+        </div>
+        
+        <!-- Entrenadores Disponibles -->
+        <div id="tabDisponibles">
+            <div class="grid">
+                <div class="card">
+                    <div class="trainer-header">
+                        <div class="trainer-avatar">CR</div>
+                        <div><h3>Carlos Rodríguez</h3><span class="cert-badge cert-b">🏅 Clase B</span></div>
+                    </div>
+                    <p style="color:var(--gray);font-size:13px;margin-bottom:8px">Especialista en fuerza y acondicionamiento. 5 años de experiencia.</p>
+                    <div class="precio">$350 <small style="font-size:13px;color:var(--gray)">/ sesión</small></div>
+                    <button onclick="mostrarToast('✅ Entrenador contratado. Podrás ver tus rutinas en Mis Rutinas.')">Contratar</button>
+                </div>
+                <div class="empty" style="grid-column:1/-1">
+                    <span class="icon">🔍</span>
+                    <h3>Próximamente más entrenadores</h3>
+                    <p>Los gimnasios están certificando a sus entrenadores</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mis Entrenadores -->
+        <div id="tabContratados" style="display:none">
+            <div class="empty">
+                <span class="icon">👤</span>
+                <h3>Aún no has contratado entrenadores</h3>
+                <p>Explora los entrenadores disponibles y contrata al que mejor se adapte a ti</p>
+            </div>
+        </div>
+        
+        <!-- Mis Rutinas -->
+        <div id="tabRutinas" style="display:none">
+            <div class="empty">
+                <span class="icon">📋</span>
+                <h3>No tienes rutinas asignadas</h3>
+                <p>Cuando contrates un entrenador, aquí aparecerán tus rutinas personalizadas con imágenes y GIFs</p>
+            </div>
+        </div>
+    </main>
+    <div class="toast" id="toast"></div>
+    <script>
+        function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
+        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+        function cambiarTab(tab,el){
+            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('tabDisponibles').style.display=tab==='disponibles'?'block':'none';
+            document.getElementById('tabContratados').style.display=tab==='contratados'?'block':'none';
+            document.getElementById('tabRutinas').style.display=tab==='rutinas'?'block':'none';
+        }
+        document.addEventListener('DOMContentLoaded',()=>{
+            const t=localStorage.getItem('gymrock_token');
+            if(!t||localStorage.getItem('gymrock_rol')!=='cliente'){window.location.href='index.html';return}
+            const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
+            if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Cliente</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}
+        });
+    </script>
+</body>
+</html>
