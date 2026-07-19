@@ -56,7 +56,7 @@
     </style>
 </head>
 <body>
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar" id="sidebar">
         <div class="logo"><span>GYMROCK</span></div>
         <nav>
             <a href="dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</a>
@@ -69,7 +69,7 @@
     <main class="main">
         <div class="header">
             <div style="display:flex;align-items:center;gap:14px">
-                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+                <button class="hamburger" id="hamburgerBtn" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
                 <div><h1>Entrenadores</h1><p style="color:var(--gray);font-size:14px">Gestiona tu equipo y certificaciones</p></div>
             </div>
             <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Cargando...</div></div>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Acceso Entrenador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#06060E;color:#EDEDF5;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+        .card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:24px;padding:40px;max-width:420px;width:100%;text-align:center}
+        h1{font-size:28px;margin-bottom:4px}h1 span{color:#22c55e}
+        p{color:#8888A0;font-size:14px;margin-bottom:24px}
+        input{width:100%;padding:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#fff;font-size:15px;margin-bottom:12px;outline:none;text-align:center;letter-spacing:2px}
+        input:focus{border-color:#22c55e}
+        input::placeholder{color:rgba(255,255,255,0.15);letter-spacing:0}
+        button{width:100%;padding:14px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:12px;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+        button:hover{transform:translateY(-2px)}
+        .error{color:#ef4444;font-size:13px;margin-top:8px;display:none}
+        .back{color:#8888A0;font-size:13px;margin-top:16px;display:block;text-decoration:none}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>GYM<span>ROCK</span></h1>
+        <p>Acceso de Entrenador Certificado</p>
+        <input type="text" id="codigo" placeholder="Ingresa tu Código de Acceso" maxlength="20" autocomplete="off">
+        <button onclick="acceder()">Acceder al Panel</button>
+        <p class="error" id="error">Código inválido o no autorizado</p>
+        <a href="../index.html" class="back">← Volver al inicio</a>
+    </div>
+    <script>
+        async function acceder(){
+            const codigo=document.getElementById('codigo').value.trim().toUpperCase();
+            if(!codigo){document.getElementById('error').style.display='block';return}
+            // Buscar entrenador por código
+            try{
+                const r=await fetch('/api/entrenador/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({codigo_acceso:codigo})});
+                const d=await r.json();
+                if(d.status==='success'){
+                    localStorage.setItem('entrenador_token',d.data.token);
+                    localStorage.setItem('entrenador_user',JSON.stringify(d.data));
+                    localStorage.setItem('entrenador_rol','entrenador');
+                    window.location.href='index.html';
+                }else{
+                    document.getElementById('error').style.display='block';
+                }
+            }catch(e){document.getElementById('error').style.display='block'}
+        }
+    </script>
+</body>
+</html>

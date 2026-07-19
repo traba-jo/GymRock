@@ -155,6 +155,21 @@ def get_banco_gimnasio(gym_id):
         return jsonify({'error':str(e)}), 500
 
 
+
+@app.route('/api/entrenador/login', methods=['POST'])
+def entrenador_login():
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    try:
+        d=request.get_json()
+        codigo=d.get('codigo_acceso','').strip().upper()
+        if not codigo: return jsonify({'error':'Codigo requerido'}), 400
+        r=supabase.table('entrenadores').select('*').eq('codigo_acceso',codigo).eq('activo',True).execute()
+        if not r.data: return jsonify({'error':'Codigo invalido'}), 401
+        e=r.data[0]
+        token=generate_token(e['id'],e['email'],'entrenador')
+        return jsonify({'status':'success','data':{'id':e['id'],'nombre':e['nombre'],'email':e['email'],'codigo_acceso':e['codigo_acceso'],'token':token,'rol':'entrenador'}}),200
+    except Exception as e: return jsonify({'error':str(e)}),500
+
 # FRONTEND - ESTO ES LO CORREGIDO
 @app.route('/')
 def index():

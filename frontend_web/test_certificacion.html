@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Test de Certificación</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--gold:#f59e0b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;padding:20px}
+        .container{max-width:750px;margin:0 auto}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:20px}
+        h1{font-size:28px;text-align:center;margin-bottom:4px}
+        h1 span{background:linear-gradient(135deg,var(--gold),#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .subtitle{text-align:center;color:var(--gray);margin-bottom:20px;font-size:14px}
+        .info-bar{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.1);border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--gray)}
+        .info-bar strong{color:var(--white)}
+        .class-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+        .class-card{background:rgba(255,255,255,0.02);border:2px solid var(--border);border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:all 0.3s}
+        .class-card:hover{border-color:var(--gold)}
+        .class-card.selected{border-color:var(--gold);background:rgba(245,158,11,0.06)}
+        .class-card .badge{font-size:24px;margin-bottom:8px}
+        .class-card .clase{font-size:13px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+        .class-card .desc{font-size:11px;color:var(--gray);margin-top:4px}
+        .question-box{display:none}
+        .question-box.active{display:block}
+        .question{margin-bottom:24px;padding:20px;background:rgba(255,255,255,0.02);border-radius:14px;border:1px solid var(--border)}
+        .question h4{font-size:15px;margin-bottom:12px;color:var(--white)}
+        .options label{display:block;padding:12px 16px;margin-bottom:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.2s;font-size:14px}
+        .options label:hover{border-color:var(--gold);background:rgba(245,158,11,0.04)}
+        .options input[type="radio"]{margin-right:10px;accent-color:var(--gold)}
+        textarea{width:100%;padding:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;resize:vertical;min-height:90px;font-family:'Inter',sans-serif}
+        textarea:focus{border-color:var(--gold);outline:none}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s}
+        .btn-gold{background:linear-gradient(135deg,var(--gold),#d97706);color:#000;width:100%;justify-content:center}
+        .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}
+        .result{display:none;text-align:center;padding:32px}
+        .result.show{display:block}
+        .result .score{font-size:60px;font-weight:900;margin:16px 0}
+        .cert-badge{display:inline-block;padding:12px 32px;border-radius:50px;font-size:18px;font-weight:800;margin:12px 0}
+        .cert-a{background:rgba(59,130,246,0.15);color:var(--blue);border:2px solid var(--blue)}
+        .cert-b{background:rgba(245,158,11,0.15);color:var(--gold);border:2px solid var(--gold)}
+        .cert-c{background:rgba(34,197,94,0.15);color:var(--green);border:2px solid var(--green)}
+        .progress{background:var(--border);border-radius:10px;height:6px;margin:12px 0;overflow:hidden}
+        .progress-fill{background:var(--gold);height:100%;transition:width 0.3s}
+        .timer{text-align:center;color:var(--gray);font-size:13px;margin:8px 0}
+        @media(max-width:600px){.class-selector{grid-template-columns:1fr}.card{padding:20px 16px}}
+        .section-title{font-size:16px;font-weight:700;color:var(--gold);margin:24px 0 16px 0;padding-bottom:8px;border-bottom:1px solid var(--border)}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>GYM<span>ROCK</span></h1>
+            <p class="subtitle">Certificación Oficial para Entrenadores</p>
+            <div class="info-bar">
+                <strong>📋 Gimnasio:</strong> <span id="gymName">--</span> &nbsp;|&nbsp;
+                <strong>👤 Aspirante:</strong> <span id="aspiranteName">--</span>
+            </div>
+            
+            <!-- Selección de clase -->
+            <div id="selectorClase">
+                <h3 style="text-align:center;margin-bottom:16px">Selecciona el nivel de certificación</h3>
+                <div class="class-selector">
+                    <div class="class-card" onclick="seleccionarClase('A',this)">
+                        <div class="badge">📝</div>
+                        <div class="clase">Clase A</div>
+                        <div class="desc">10 preguntas personalizadas por tu gimnasio</div>
+                    </div>
+                    <div class="class-card" onclick="seleccionarClase('B',this)">
+                        <div class="badge">🥈</div>
+                        <div class="clase">Clase B</div>
+                        <div class="desc">15 preguntas · Conocimiento deportivo mexicano</div>
+                    </div>
+                    <div class="class-card" onclick="seleccionarClase('C',this)">
+                        <div class="badge">🥇</div>
+                        <div class="clase">Clase C</div>
+                        <div class="desc">25 preguntas · Normativa exhaustiva México</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ============================================ -->
+            <!-- TEST CLASE A - 10 PREGUNTAS PERSONALIZADAS -->
+            <!-- ============================================ -->
+            <div class="question-box" id="testA">
+                <div class="section-title">📝 Clase A · Evaluación Personalizada del Gimnasio</div>
+                <p style="color:var(--gray);font-size:13px;margin-bottom:20px">Responde las 10 preguntas formuladas por tu gimnasio. Sé honesto y detallado.</p>
+                
+                <div class="question"><h4>1. ¿Por qué quieres ser entrenador certificado en este gimnasio?</h4><textarea id="pa1" placeholder="Explica tus motivaciones..."></textarea></div>
+                <div class="question"><h4>2. Describe tu experiencia previa en el ámbito fitness y deportivo.</h4><textarea id="pa2" placeholder="Años de experiencia, disciplinas, logros..."></textarea></div>
+                <div class="question"><h4>3. ¿Qué tipo de clientes has manejado anteriormente?</h4><textarea id="pa3" placeholder="Principiantes, intermedios, avanzados, atletas..."></textarea></div>
+                <div class="question"><h4>4. ¿Cómo diseñas un plan de entrenamiento para un cliente nuevo?</h4><textarea id="pa4" placeholder="Describe tu metodología paso a paso..."></textarea></div>
+                <div class="question"><h4>5. ¿Qué haces si un cliente no ve resultados después de 3 meses?</h4><textarea id="pa5" placeholder="Tu enfoque para ajustar el plan..."></textarea></div>
+                <div class="question"><h4>6. ¿Cómo manejas a un cliente con una lesión previa?</h4><textarea id="pa6" placeholder="Precauciones, adaptaciones, comunicación..."></textarea></div>
+                <div class="question"><h4>7. ¿Qué importancia tiene la nutrición en tus planes de entrenamiento?</h4><textarea id="pa7" placeholder="Tu visión sobre entrenamiento + nutrición..."></textarea></div>
+                <div class="question"><h4>8. ¿Cómo te mantienes actualizado en tendencias fitness?</h4><textarea id="pa8" placeholder="Cursos, certificaciones, lecturas..."></textarea></div>
+                <div class="question"><h4>9. ¿Cómo motivas a un cliente que está por abandonar?</h4><textarea id="pa9" placeholder="Estrategias de motivación y retención..."></textarea></div>
+                <div class="question"><h4>10. ¿Por qué deberíamos elegirte a ti sobre otros candidatos?</h4><textarea id="pa10" placeholder="Tu propuesta de valor como entrenador..."></textarea></div>
+                
+                <button class="btn btn-gold" onclick="evaluarClaseA()">Enviar Evaluación Personalizada</button>
+            </div>
+            
+            <!-- ============================================ -->
+            <!-- TEST CLASE B - 15 PREGUNTAS -->
+            <!-- ============================================ -->
+            <div class="question-box" id="testB">
+                <div class="section-title">🥈 Clase B · Conocimiento Deportivo Mexicano (15 preguntas)</div>
+                
+                <div class="question"><h4>1. ¿Cuál es considerado el deporte nacional por excelencia en México?</h4><div class="options"><label><input type="radio" name="b1" value="a"> A) Fútbol</label><label><input type="radio" name="b1" value="b"> B) Charrería</label><label><input type="radio" name="b1" value="c"> C) Boxeo</label><label><input type="radio" name="b1" value="d"> D) Lucha Libre</label></div></div>
+                
+                <div class="question"><h4>2. ¿Qué significan las siglas CONADE?</h4><div class="options"><label><input type="radio" name="b2" value="a"> A) Consejo Nacional del Deporte</label><label><input type="radio" name="b2" value="b"> B) Comisión Nacional de Cultura Física y Deporte</label><label><input type="radio" name="b2" value="c"> C) Confederación Nacional de Deportistas</label><label><input type="radio" name="b2" value="d"> D) Centro Nacional de Desarrollo Deportivo</label></div></div>
+                
+                <div class="question"><h4>3. ¿Cuál es la frecuencia cardiaca recomendada para ejercicio aeróbico moderado?</h4><div class="options"><label><input type="radio" name="b3" value="a"> A) 50-60% de la FCmax</label><label><input type="radio" name="b3" value="b"> B) 60-70% de la FCmax</label><label><input type="radio" name="b3" value="c"> C) 70-80% de la FCmax</label><label><input type="radio" name="b3" value="d"> D) 80-90% de la FCmax</label></div></div>
+                
+                <div class="question"><h4>4. ¿Qué mide el Índice de Masa Corporal (IMC)?</h4><div class="options"><label><input type="radio" name="b4" value="a"> A) Relación entre peso y altura</label><label><input type="radio" name="b4" value="b"> B) Porcentaje de grasa corporal</label><label><input type="radio" name="b4" value="c"> C) Masa muscular total</label><label><input type="radio" name="b4" value="d"> D) Densidad ósea</label></div></div>
+                
+                <div class="question"><h4>5. Según la OMS, ¿cuántos minutos de actividad física moderada se recomiendan por semana para adultos?</h4><div class="options"><label><input type="radio" name="b5" value="a"> A) 75 minutos</label><label><input type="radio" name="b5" value="b"> B) 150 minutos</label><label><input type="radio" name="b5" value="c"> C) 300 minutos</label><label><input type="radio" name="b5" value="d"> D) 500 minutos</label></div></div>
+                
+                <div class="question"><h4>6. ¿Qué tipo de estiramiento se recomienda ANTES del ejercicio?</h4><div class="options"><label><input type="radio" name="b6" value="a"> A) Estiramiento estático prolongado</label><label><input type="radio" name="b6" value="b"> B) Estiramiento dinámico</label><label><input type="radio" name="b6" value="c"> C) Estiramiento balístico</label><label><input type="radio" name="b6" value="d"> D) No se recomienda estirar</label></div></div>
+                
+                <div class="question"><h4>7. ¿Cuál es la lesión más común en corredores principiantes?</h4><div class="options"><label><input type="radio" name="b7" value="a"> A) Fractura de tibia</label><label><input type="radio" name="b7" value="b"> B) Fascitis plantar</label><label><input type="radio" name="b7" value="c"> C) Tendinitis rotuliana</label><label><input type="radio" name="b7" value="d"> D) Esguince de tobillo</label></div></div>
+                
+                <div class="question"><h4>8. ¿Qué deporte mexicano tiene origen prehispánico?</h4><div class="options"><label><input type="radio" name="b8" value="a"> A) Charrería</label><label><input type="radio" name="b8" value="b"> B) Juego de Pelota</label><label><input type="radio" name="b8" value="c"> C) Boxeo</label><label><input type="radio" name="b8" value="d"> D) Béisbol</label></div></div>
+                
+                <div class="question"><h4>9. ¿Cuántos litros de agua se recomiendan al día para un deportista activo?</h4><div class="options"><label><input type="radio" name="b9" value="a"> A) 1-1.5 litros</label><label><input type="radio" name="b9" value="b"> B) 2-3 litros</label><label><input type="radio" name="b9" value="c"> C) 3-4 litros</label><label><input type="radio" name="b9" value="d"> D) Más de 5 litros</label></div></div>
+                
+                <div class="question"><h4>10. ¿Qué es el VO2max?</h4><div class="options"><label><input type="radio" name="b10" value="a"> A) Volumen máximo de oxígeno que el cuerpo puede utilizar</label><label><input type="radio" name="b10" value="b"> B) Velocidad máxima de entrenamiento</label><label><input type="radio" name="b10" value="c"> C) Volumen de repeticiones óptimo</label><label><input type="radio" name="b10" value="d"> D) Valoración de obesidad tipo 2</label></div></div>
+                
+                <div class="question"><h4>11. ¿Cuál es el principal músculo trabajado en una sentadilla?</h4><div class="options"><label><input type="radio" name="b11" value="a"> A) Isquiotibiales</label><label><input type="radio" name="b11" value="b"> B) Cuádriceps</label><label><input type="radio" name="b11" value="c"> C) Glúteos</label><label><input type="radio" name="b11" value="d"> D) Todos los anteriores</label></div></div>
+                
+                <div class="question"><h4>12. ¿Qué significa "principio de sobrecarga progresiva"?</h4><div class="options"><label><input type="radio" name="b12" value="a"> A) Aumentar peso cada semana sin control</label><label><input type="radio" name="b12" value="b"> B) Incrementar gradualmente la carga para mejorar</label><label><input type="radio" name="b12" value="c"> C) Entrenar hasta el fallo en cada sesión</label><label><input type="radio" name="b12" value="d"> D) Descansar más entre series</label></div></div>
+                
+                <div class="question"><h4>13. ¿En qué año se fundó la CONADE?</h4><div class="options"><label><input type="radio" name="b13" value="a"> A) 1988</label><label><input type="radio" name="b13" value="b"> B) 1995</label><label><input type="radio" name="b13" value="c"> C) 2000</label><label><input type="radio" name="b13" value="d"> D) 2003</label></div></div>
+                
+                <div class="question"><h4>14. ¿Qué tipo de fibra muscular predomina en un velocista?</h4><div class="options"><label><input type="radio" name="b14" value="a"> A) Tipo I (lentas)</label><label><input type="radio" name="b14" value="b"> B) Tipo II (rápidas)</label><label><input type="radio" name="b14" value="c"> C) Mixtas 50/50</label><label><input type="radio" name="b14" value="d"> D) Fibras cardíacas</label></div></div>
+                
+                <div class="question"><h4>15. ¿Cuál es el perímetro recomendado de calentamiento antes del entrenamiento?</h4><div class="options"><label><input type="radio" name="b15" value="a"> A) 2-3 minutos</label><label><input type="radio" name="b15" value="b"> B) 5-10 minutos</label><label><input type="radio" name="b15" value="c"> C) 15-20 minutos</label><label><input type="radio" name="b15" value="d"> D) No es necesario calentar</label></div></div>
+                
+                <button class="btn btn-gold" onclick="evaluarClaseB()">Enviar Test Clase B</button>
+            </div>
+            
+            <!-- ============================================ -->
+            <!-- TEST CLASE C - 25 PREGUNTAS EXHAUSTIVAS -->
+            <!-- ============================================ -->
+            <div class="question-box" id="testC">
+                <div class="section-title">🥇 Clase C · Normativa Exhaustiva para Entrenadores en México (25 preguntas)</div>
+                
+                <div class="question"><h4>1. Según la Ley General de Cultura Física y Deporte, ¿quién regula a los entrenadores deportivos en México?</h4><div class="options"><label><input type="radio" name="c1" value="a"> A) La SEP</label><label><input type="radio" name="c1" value="b"> B) CONADE y SINADE</label><label><input type="radio" name="c1" value="c"> C) Secretaría de Salud</label><label><input type="radio" name="c1" value="d"> D) COI</label></div></div>
+                
+                <div class="question"><h4>2. ¿Qué NOM regula los servicios de acondicionamiento físico en México?</h4><div class="options"><label><input type="radio" name="c2" value="a"> A) NOM-008-SSA3</label><label><input type="radio" name="c2" value="b"> B) NOM-030-SSA3</label><label><input type="radio" name="c2" value="c"> C) NOM-174-SSA1</label><label><input type="radio" name="c2" value="d"> D) NOM-197-SSA1</label></div></div>
+                
+                <div class="question"><h4>3. ¿Qué es el SINADE?</h4><div class="options"><label><input type="radio" name="c3" value="a"> A) Sistema Nacional de Cultura Física y Deporte</label><label><input type="radio" name="c3" value="b"> B) Sindicato Nacional de Deportistas</label><label><input type="radio" name="c3" value="c"> C) Sistema Integral de Nutrición Atlética y Deporte</label><label><input type="radio" name="c3" value="d"> D) Servicio Internacional de Natación y Deporte</label></div></div>
+                
+                <div class="question"><h4>4. ¿Qué artículo constitucional garantiza el derecho a la cultura física y el deporte?</h4><div class="options"><label><input type="radio" name="c4" value="a"> A) Artículo 3°</label><label><input type="radio" name="c4" value="b"> B) Artículo 4°</label><label><input type="radio" name="c4" value="c"> C) Artículo 27°</label><label><input type="radio" name="c4" value="d"> D) Artículo 123°</label></div></div>
+                
+                <div class="question"><h4>5. ¿Cuál es el protocolo RICE para lesiones deportivas?</h4><div class="options"><label><input type="radio" name="c5" value="a"> A) Reposo, Hielo, Compresión, Elevación</label><label><input type="radio" name="c5" value="b"> B) Resistencia, Intensidad, Cardio, Ejercicio</label><label><input type="radio" name="c5" value="c"> C) Rehabilitación, Inmovilización, Calor, Estiramiento</label><label><input type="radio" name="c5" value="d"> D) Recuperación, Ingesta, Control, Evaluación</label></div></div>
+                
+                <div class="question"><h4>6. ¿Qué porcentaje de 1RM se recomienda para entrenamiento de hipertrofia?</h4><div class="options"><label><input type="radio" name="c6" value="a"> A) 50-60%</label><label><input type="radio" name="c6" value="b"> B) 65-85%</label><label><input type="radio" name="c6" value="c"> C) 85-95%</label><label><input type="radio" name="c6" value="d"> D) 95-100%</label></div></div>
+                
+                <div class="question"><h4>7. ¿Qué significa el término "periodización" en el entrenamiento deportivo?</h4><div class="options"><label><input type="radio" name="c7" value="a"> A) Entrenar por periodos cortos</label><label><input type="radio" name="c7" value="b"> B) Organización planificada del entrenamiento en ciclos</label><label><input type="radio" name="c7" value="c"> C) Descansar entre cada ejercicio</label><label><input type="radio" name="c7" value="d"> D) Medir el tiempo de cada repetición</label></div></div>
+                
+                <div class="question"><h4>8. ¿Cuál es la frecuencia semanal recomendada de entrenamiento de fuerza para principiantes?</h4><div class="options"><label><input type="radio" name="c8" value="a"> A) 1-2 días</label><label><input type="radio" name="c8" value="b"> B) 2-3 días</label><label><input type="radio" name="c8" value="c"> C) 4-5 días</label><label><input type="radio" name="c8" value="d"> D) 6-7 días</label></div></div>
+                
+                <div class="question"><h4>9. ¿Qué es la EPOC (Excess Post-exercise Oxygen Consumption)?</h4><div class="options"><label><input type="radio" name="c9" value="a"> A) Consumo excesivo de oxígeno post-ejercicio</label><label><input type="radio" name="c9" value="b"> B) Evaluación postural obligatoria</label><label><input type="radio" name="c9" value="c"> C) Ejercicio para oxigenar células</label><label><input type="radio" name="c9" value="d"> D) Examen de capacidad oxidativa</label></div></div>
+                
+                <div class="question"><h4>10. ¿Qué tipo de contracción muscular ocurre al bajar una pesa en un curl de bíceps?</h4><div class="options"><label><input type="radio" name="c10" value="a"> A) Concéntrica</label><label><input type="radio" name="c10" value="b"> B) Excéntrica</label><label><input type="radio" name="c10" value="c"> C) Isométrica</label><label><input type="radio" name="c10" value="d"> D) Isotónica</label></div></div>
+                
+                <div class="question"><h4>11. Según la OMS, ¿qué porcentaje de la población mexicana adulta tiene sobrepeso u obesidad?</h4><div class="options"><label><input type="radio" name="c11" value="a"> A) 40-50%</label><label><input type="radio" name="c11" value="b"> B) 50-60%</label><label><input type="radio" name="c11" value="c"> C) 70-75%</label><label><input type="radio" name="c11" value="d"> D) 80-85%</label></div></div>
+                
+                <div class="question"><h4>12. ¿Qué es el síndrome de sobreentrenamiento?</h4><div class="options"><label><input type="radio" name="c12" value="a"> A) Estado de fatiga crónica por exceso de entrenamiento</label><label><input type="radio" name="c12" value="b"> B) Entrenar más de 2 horas al día</label><label><input type="radio" name="c12" value="c"> C) Hacer siempre el mismo ejercicio</label><label><input type="radio" name="c12" value="d"> D) No descansar entre series</label></div></div>
+                
+                <div class="question"><h4>13. ¿Cuál es la función principal del SINADE en la certificación de entrenadores?</h4><div class="options"><label><input type="radio" name="c13" value="a"> A) Vender licencias</label><label><input type="radio" name="c13" value="b"> B) Establecer estándares de calidad y certificación</label><label><input type="radio" name="c13" value="c"> C) Organizar competencias</label><label><input type="radio" name="c13" value="d"> D) Patrocinar atletas</label></div></div>
+                
+                <div class="question"><h4>14. ¿Qué tipo de suplemento está PROHIBIDO por la WADA (Agencia Mundial Antidopaje)?</h4><div class="options"><label><input type="radio" name="c14" value="a"> A) Creatina</label><label><input type="radio" name="c14" value="b"> B) Esteroides anabólicos</label><label><input type="radio" name="c14" value="c"> C) Proteína de suero</label><label><input type="radio" name="c14" value="d"> D) BCAA</label></div></div>
+                
+                <div class="question"><h4>15. ¿Cada cuánto tiempo debe renovar su certificación un entrenador según la CONADE?</h4><div class="options"><label><input type="radio" name="c15" value="a"> A) Cada año</label><label><input type="radio" name="c15" value="b"> B) Cada 2 años</label><label><input type="radio" name="c15" value="c"> C) Cada 3 años</label><label><input type="radio" name="c15" value="d"> D) Cada 5 años</label></div></div>
+                
+                <div class="question"><h4>16. ¿Qué significa "umbral de lactato"?</h4><div class="options"><label><input type="radio" name="c16" value="a"> A) Punto donde el cuerpo produce más lactato del que puede eliminar</label><label><input type="radio" name="c16" value="b"> B) Nivel máximo de leche en sangre</label><label><input type="radio" name="c16" value="c"> C) Límite de entrenamiento diario</label><label><input type="radio" name="c16" value="d"> D) Capacidad de digestión de lácteos</label></div></div>
+                
+                <div class="question"><h4>17. ¿Qué articulación es más propensa a lesiones en el press de banca?</h4><div class="options"><label><input type="radio" name="c17" value="a"> A) Rodilla</label><label><input type="radio" name="c17" value="b"> B) Hombro</label><label><input type="radio" name="c17" value="c"> C) Cadera</label><label><input type="radio" name="c17" value="d"> D) Tobillo</label></div></div>
+                
+                <div class="question"><h4>18. ¿Qué documento oficial regula las instalaciones deportivas en México?</h4><div class="options"><label><input type="radio" name="c18" value="a"> A) ISO 9001</label><label><input type="radio" name="c18" value="b"> B) NOM-008-SCFI</label><label><input type="radio" name="c18" value="c"> C) NMX-R-050-SCFI</label><label><input type="radio" name="c18" value="d"> D) PROY-NOM-197-SSA1</label></div></div>
+                
+                <div class="question"><h4>19. ¿Qué es la sarcopenia?</h4><div class="options"><label><input type="radio" name="c19" value="a"> A) Pérdida de masa muscular relacionada con la edad</label><label><input type="radio" name="c19" value="b"> B) Exceso de masa muscular</label><label><input type="radio" name="c19" value="c"> C) Inflamación del sarcómero</label><label><input type="radio" name="c19" value="d"> D) Enfermedad ósea</label></div></div>
+                
+                <div class="question"><h4>20. ¿Cuál es el rango normal de presión arterial en reposo?</h4><div class="options"><label><input type="radio" name="c20" value="a"> A) 90/60 mmHg</label><label><input type="radio" name="c20" value="b"> B) 120/80 mmHg</label><label><input type="radio" name="c20" value="c"> C) 140/90 mmHg</label><label><input type="radio" name="c20" value="d"> D) 160/100 mmHg</label></div></div>
+                
+                <div class="question"><h4>21. ¿Qué ley protege los datos personales de los clientes en un gimnasio?</h4><div class="options"><label><input type="radio" name="c21" value="a"> A) Ley Federal del Trabajo</label><label><input type="radio" name="c21" value="b"> B) Ley Federal de Protección de Datos Personales</label><label><input type="radio" name="c21" value="c"> C) Ley General de Salud</label><label><input type="radio" name="c21" value="d"> D) Código Civil Federal</label></div></div>
+                
+                <div class="question"><h4>22. ¿Qué significa "fallo muscular"?</h4><div class="options"><label><input type="radio" name="c22" value="a"> A) Incapacidad momentánea de completar una repetición más</label><label><input type="radio" name="c22" value="b"> B) Rotura total del músculo</label><label><input type="radio" name="c22" value="c"> C) Calambre muscular</label><label><input type="radio" name="c22" value="d"> D) Fatiga general</label></div></div>
+                
+                <div class="question"><h4>23. ¿Cuál es la cadencia recomendada (repeticiones por minuto) en ciclismo indoor?</h4><div class="options"><label><input type="radio" name="c23" value="a"> A) 30-50 RPM</label><label><input type="radio" name="c23" value="b"> B) 60-100 RPM</label><label><input type="radio" name="c23" value="c"> C) 100-130 RPM</label><label><input type="radio" name="c23" value="d"> D) 130-160 RPM</label></div></div>
+                
+                <div class="question"><h4>24. ¿Qué tipo de responsabilidad legal tiene un entrenador al prescribir ejercicios?</h4><div class="options"><label><input type="radio" name="c24" value="a"> A) Ninguna</label><label><input type="radio" name="c24" value="b"> B) Responsabilidad profesional y civil</label><label><input type="radio" name="c24" value="c"> C) Solo moral</label><label><input type="radio" name="c24" value="d"> D) Solo si hay contrato firmado</label></div></div>
+                
+                <div class="question"><h4>25. ¿Qué es el "efecto de interferencia" en el entrenamiento concurrente?</h4><div class="options"><label><input type="radio" name="c25" value="a"> A) Mejora simultánea de fuerza y resistencia</label><label><input type="radio" name="c25" value="b"> B) Disminución de adaptaciones al combinar fuerza y resistencia</label><label><input type="radio" name="c25" value="c"> C) Interferencia de ondas cerebrales</label><label><input type="radio" name="c25" value="d"> D) Conflicto entre entrenador y cliente</label></div></div>
+                
+                <button class="btn btn-gold" onclick="evaluarClaseC()">Enviar Test Clase C</button>
+            </div>
+            
+            <!-- Resultado -->
+            <div class="result" id="resultado">
+                <div class="score" id="puntuacion">0/0</div>
+                <div id="badgeCert"></div>
+                <p id="mensajeResultado" style="margin:16px 0;font-size:15px"></p>
+                <p style="color:var(--gray);font-size:13px">✅ Resultado enviado al gimnasio para revisión final</p>
+                <p style="color:var(--gray);font-size:12px;margin-top:8px">El gimnasio recibirá tu puntuación y decidirá si libera tu ID de entrenador</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const params=new URLSearchParams(window.location.search);
+        const gymId=params.get('gym')||'';
+        const aspirante=params.get('nombre')||'Aspirante';
+        const email=params.get('email')||'';
+        let claseSeleccionada='';
+        
+        document.getElementById('gymName').textContent='ID: '+gymId.substring(0,8)+'...';
+        document.getElementById('aspiranteName').textContent=aspirante+' ('+email+')';
+        
+        function seleccionarClase(clase,el){
+            document.querySelectorAll('.class-card').forEach(c=>c.classList.remove('selected'));
+            el.classList.add('selected');
+            claseSeleccionada=clase;
+            document.querySelectorAll('.question-box').forEach(q=>q.classList.remove('active'));
+            document.getElementById('test'+clase).classList.add('active');
+            document.getElementById('selectorClase').style.display='none';
+        }
+        
+        function mostrarResultado(puntaje,total,clase){
+            document.getElementById('resultado').classList.add('show');
+            document.getElementById('puntuacion').textContent=puntaje+'/'+total;
+            document.querySelectorAll('.question-box').forEach(q=>q.classList.remove('active'));
+            const pct=Math.round((puntaje/total)*100);
+            const badge=document.getElementById('badgeCert');
+            
+            if(clase==='A'){
+                badge.innerHTML='<span class="cert-badge cert-a">🏅 Certificado Clase A</span>';
+                document.getElementById('mensajeResultado').textContent='Certificación personalizada completada. El gimnasio evaluará tus respuestas.';
+            }else if(pct>=85){
+                badge.innerHTML='<span class="cert-badge cert-'+(clase.toLowerCase())+'">🏅 Certificado Clase '+clase+'</span>';
+                document.getElementById('mensajeResultado').textContent='¡Excelente! Has aprobado con '+pct+'%. Nivel avanzado.';
+            }else if(pct>=70){
+                badge.innerHTML='<span class="cert-badge cert-'+(clase.toLowerCase())+'">🏅 Certificado Clase '+clase+'</span>';
+                document.getElementById('mensajeResultado').textContent='Aprobado con '+pct+'%. El gimnasio revisará tu caso.';
+            }else if(pct>=60){
+                badge.innerHTML='<span style="color:var(--gold);font-size:18px;font-weight:700">⚠️ Revisión</span>';
+                document.getElementById('mensajeResultado').textContent='Puntuación: '+pct+'%. El gimnasio decidirá si otorga la certificación.';
+            }else{
+                badge.innerHTML='<span style="color:var(--red);font-size:18px;font-weight:700">❌ No Aprobado</span>';
+                document.getElementById('mensajeResultado').textContent='Puntuación: '+pct+'%. No alcanzaste el mínimo requerido (60%).';
+            }
+        }
+        
+        function evaluarClaseA(){
+            let completas=0;
+            for(let i=1;i<=10;i++){
+                if(document.getElementById('pa'+i).value.trim().length>20)completas++;
+            }
+            if(completas<10){alert('Responde todas las preguntas con al menos 20 caracteres');return}
+            mostrarResultado(completas,10,'A');
+        }
+        
+        function evaluarClaseB(){
+            const correctas={b1:'b',b2:'b',b3:'b',b4:'a',b5:'b',b6:'b',b7:'b',b8:'b',b9:'c',b10:'a',b11:'d',b12:'b',b13:'a',b14:'b',b15:'b'};
+            let puntaje=0;
+            for(let i=1;i<=15;i++){
+                const sel=document.querySelector('input[name="b'+i+'"]:checked');
+                if(sel&&sel.value===correctas['b'+i])puntaje++;
+            }
+            mostrarResultado(puntaje,15,'B');
+        }
+        
+        function evaluarClaseC(){
+            const correctas={c1:'b',c2:'a',c3:'a',c4:'b',c5:'a',c6:'b',c7:'b',c8:'b',c9:'a',c10:'b',c11:'c',c12:'a',c13:'b',c14:'b',c15:'b',c16:'a',c17:'b',c18:'d',c19:'a',c20:'b',c21:'b',c22:'a',c23:'b',c24:'b',c25:'b'};
+            let puntaje=0;
+            for(let i=1;i<=25;i++){
+                const sel=document.querySelector('input[name="c'+i+'"]:checked');
+                if(sel&&sel.value===correctas['c'+i])puntaje++;
+            }
+            mostrarResultado(puntaje,25,'C');
+        }
+        
+        console.log('✅ GymRock Test de Certificación v2.0');
+        console.log('📋 Clase A: 10 preguntas | Clase B: 15 preguntas | Clase C: 25 preguntas');
+    </script>
+</body>
+</html>
