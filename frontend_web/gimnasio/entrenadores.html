@@ -8,29 +8,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--purple:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--red:#ef4444}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--blue:#3b82f6;--purple:#8b5cf6;--green:#22c55e;--red:#ef4444;--amber:#f59e0b}
         body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
-        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100}
+        .sidebar{width:270px;min-width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;height:100vh;position:sticky;top:0;display:flex;flex-direction:column;overflow-y:auto}
         .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
         .sidebar .logo span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
-        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.2s}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
         .sidebar nav a i{width:20px;text-align:center}
         .sidebar nav a:hover{background:rgba(59,130,246,0.06);color:var(--white)}
         .sidebar nav a.active{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(59,130,246,0.15)}
         .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
-        .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
+        .main{flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
         .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px}
-        .header h1{font-size:28px;font-weight:800}.header h1 i{color:var(--blue)}
+        .header h1{font-size:28px;font-weight:800}
         .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
         .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-        .btn-add{display:inline-flex;align-items:center;gap:10px;padding:12px 28px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
-        .empty-state{text-align:center;padding:80px 20px;background:var(--card);border:1px solid var(--border);border-radius:20px}
-        .empty-state .icon{font-size:72px;display:block;margin-bottom:20px;opacity:0.2}
-        .empty-state h2{font-size:24px;font-weight:700;margin-bottom:8px}
-        .empty-state p{color:var(--gray);margin-bottom:24px;font-size:15px}
-        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s;text-decoration:none}
+        .btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+        .btn-green{background:var(--green);color:#fff}
+        .btn-amber{background:var(--amber);color:#000}
+        .btn:hover{transform:translateY(-2px);opacity:0.9}
+        .cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center}
+        .card h3{font-size:18px;margin-bottom:12px}
+        .card p{color:var(--gray);font-size:13px;margin-bottom:16px}
+        .section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
+        .section h3{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        table{width:100%;border-collapse:collapse;font-size:13px}
+        th{text-align:left;padding:10px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+        td{padding:10px 8px;border-bottom:1px solid var(--border)}
+        .badge{display:inline-block;font-size:10px;padding:4px 12px;border-radius:50px;font-weight:600;text-transform:uppercase}
+        .badge-active{background:rgba(34,197,94,0.1);color:var(--green)}
+        .badge-pending{background:rgba(245,158,11,0.1);color:var(--amber)}
+        .badge-rejected{background:rgba(239,68,68,0.1);color:var(--red)}
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center}
+        .modal.show{display:flex}
+        .modal-box{background:#111;border:1px solid var(--border);border-radius:20px;padding:32px;width:90%;max-width:500px}
+        .modal-box h2{font-size:20px;margin-bottom:20px}
+        .form-group{margin-bottom:14px}
+        .form-group label{display:block;font-size:13px;color:var(--gray);margin-bottom:4px}
+        .form-group input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;outline:none}
+        .form-group input:focus{border-color:var(--blue)}
+        @media(max-width:768px){.sidebar{display:none}.main{padding:20px}.cards{grid-template-columns:1fr}}
         .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
+        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--green);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
     </style>
 </head>
 <body>
@@ -48,21 +70,83 @@
         <div class="header">
             <div style="display:flex;align-items:center;gap:14px">
                 <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
-                <div><h1><i class="fas fa-users"></i> Entrenadores</h1><p style="color:var(--gray);font-size:14px">Gestiona tu equipo de entrenadores</p></div>
+                <div><h1>Entrenadores</h1><p style="color:var(--gray);font-size:14px">Gestiona tu equipo y certificaciones</p></div>
             </div>
             <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Cargando...</div></div>
         </div>
-        <div style="margin-bottom:28px"><button class="btn-add" onclick="alert('Proximamente')"><i class="fas fa-plus"></i> Nuevo Entrenador</button></div>
-        <div class="empty-state">
-            <span class="icon">👥</span>
-            <h2>Aun no tienes entrenadores</h2>
-            <p>Agrega entrenadores a tu equipo</p>
-            <button class="btn-add" onclick="alert('Proximamente')"><i class="fas fa-plus"></i> Agregar Primer Entrenador</button>
+        
+        <!-- Opciones principales -->
+        <div class="cards">
+            <div class="card">
+                <span style="font-size:40px">📝</span>
+                <h3>Nuevo Test de Certificacion</h3>
+                <p>Envia el test a un aspirante a entrenador. Al aprobar, recibira un codigo de acceso.</p>
+                <button class="btn btn-blue" onclick="abrirModalTest()"><i class="fas fa-paper-plane"></i> Enviar Test</button>
+            </div>
+            <div class="card">
+                <span style="font-size:40px">✅</span>
+                <h3>Entrenadores Aprobados</h3>
+                <p>Gestiona los entrenadores activos, sus codigos de acceso y precios.</p>
+                <a href="#aprobados" class="btn btn-green"><i class="fas fa-list"></i> Ver Entrenadores</a>
+            </div>
+        </div>
+        
+        <!-- Tests pendientes -->
+        <div class="section">
+            <h3><i class="fas fa-hourglass-half" style="color:var(--amber)"></i> Tests Pendientes de Revision</h3>
+            <table><thead><tr><th>Solicitante</th><th>Email</th><th>Puntuacion</th><th>Estado</th><th>Accion</th></tr></thead>
+            <tbody id="tablaPendientes"><tr><td colspan="5" style="text-align:center;color:var(--gray);padding:20px">No hay tests pendientes</td></tr></tbody></table>
+        </div>
+        
+        <!-- Entrenadores aprobados -->
+        <div class="section" id="aprobados">
+            <h3><i class="fas fa-check-circle" style="color:var(--green)"></i> Entrenadores Aprobados</h3>
+            <table><thead><tr><th>Nombre</th><th>Email</th><th>Codigo</th><th>Especialidad</th><th>Precio/Sesion</th><th>Estado</th><th>Accion</th></tr></thead>
+            <tbody id="tablaAprobados"><tr><td colspan="7" style="text-align:center;color:var(--gray);padding:20px">No hay entrenadores aprobados</td></tr></tbody></table>
         </div>
     </main>
+    
+    <!-- Modal: Enviar Test -->
+    <div class="modal" id="modalTest">
+        <div class="modal-box">
+            <h2>📝 Enviar Test de Certificacion</h2>
+            <div class="form-group"><label>Nombre del Aspirante</label><input type="text" id="testNombre" placeholder="Nombre completo"></div>
+            <div class="form-group"><label>Email del Aspirante</label><input type="email" id="testEmail" placeholder="correo@ejemplo.com"></div>
+            <div style="display:flex;gap:10px;margin-top:20px">
+                <button class="btn btn-blue" onclick="enviarTest()" style="flex:1">Enviar Test</button>
+                <button class="btn" onclick="cerrarModalTest()" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--white)">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
     <script>
+        const API_URL=window.location.origin;
         function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
-        document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}});
+        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+        function abrirModalTest(){document.getElementById('modalTest').classList.add('show')}
+        function cerrarModalTest(){document.getElementById('modalTest').classList.remove('show')}
+        
+        function enviarTest(){
+            const nombre=document.getElementById('testNombre').value.trim();
+            const email=document.getElementById('testEmail').value.trim();
+            if(!nombre||!email){mostrarToast('Completa todos los campos');return}
+            // Crear link del test
+            const testURL=API_URL+'/test_certificacion.html?gym='+localStorage.getItem('gymrock_user_id')+'&nombre='+encodeURIComponent(nombre)+'&email='+encodeURIComponent(email);
+            document.getElementById('testNombre').value='';
+            document.getElementById('testEmail').value='';
+            cerrarModalTest();
+            mostrarToast('✅ Link del test generado. Compartelo con el aspirante.');
+            // Mostrar link
+            prompt('📋 Copia este link y envialo al aspirante:',testURL);
+        }
+        
+        document.addEventListener('DOMContentLoaded',()=>{
+            const t=localStorage.getItem('gymrock_token');
+            if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}
+            const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
+            if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();localStorage.setItem('gymrock_user_id',u.id)}
+        });
     </script>
 </body>
 </html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Panel Entrenador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--green:#22c55e;--blue:#3b82f6;--purple:#8b5cf6;--gold:#f59e0b;--red:#ef4444}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
+        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;height:100vh;position:sticky;top:0;display:flex;flex-direction:column;overflow-y:auto}
+        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+        .sidebar .logo span{background:linear-gradient(135deg,var(--green),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
+        .sidebar nav a i{width:20px;text-align:center}
+        .sidebar nav a:hover{background:rgba(34,197,94,0.06);color:var(--white)}
+        .sidebar nav a.active{background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(59,130,246,0.08));color:var(--white);border:1px solid rgba(34,197,94,0.15)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
+        .main{flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px}
+        .header h1{font-size:28px;font-weight:800}
+        .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
+        .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+        .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+        .metric{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 24px}
+        .metric .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:6px}
+        .metric .value{font-size:28px;font-weight:800}
+        .section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
+        .section h3{font-size:16px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .section h3 i{color:var(--green)}
+        .form-group{margin-bottom:14px}
+        .form-group label{display:block;font-size:13px;color:var(--gray);margin-bottom:4px}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;outline:none;font-family:'Inter',sans-serif}
+        .form-group textarea{resize:vertical;min-height:80px}
+        .form-group input:focus,.form-group textarea:focus{border-color:var(--green)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s}
+        .btn-green{background:var(--green);color:#fff}
+        .btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+        .btn:hover{transform:translateY(-2px)}
+        .rutina-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+        .rutina-card h4{font-size:15px;margin-bottom:4px}
+        .rutina-card p{color:var(--gray);font-size:13px}
+        .badge{display:inline-block;font-size:10px;padding:4px 12px;border-radius:50px;font-weight:600;text-transform:uppercase}
+        .badge-green{background:rgba(34,197,94,0.1);color:var(--green)}
+        .badge-blue{background:rgba(59,130,246,0.1);color:var(--blue)}
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center}
+        .modal.show{display:flex}
+        .modal-box{background:#111;border:1px solid var(--border);border-radius:20px;padding:32px;width:90%;max-width:600px;max-height:80vh;overflow-y:auto}
+        .modal-box h2{font-size:20px;margin-bottom:20px}
+        table{width:100%;border-collapse:collapse;font-size:13px}
+        th{text-align:left;padding:10px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+        td{padding:10px 8px;border-bottom:1px solid var(--border)}
+        @media(max-width:768px){.sidebar{display:none}.main{padding:20px}}
+        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--green);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo"><span>GYMROCK</span></div>
+        <nav>
+            <a href="#" class="active"><i class="fas fa-chart-pie"></i> Mi Panel</a>
+            <a href="#" onclick="mostrarSeccion('rutinas')"><i class="fas fa-clipboard-list"></i> Rutinas</a>
+            <a href="#" onclick="mostrarSeccion('clientes')"><i class="fas fa-users"></i> Mis Clientes</a>
+            <a href="#" onclick="mostrarSeccion('precios')"><i class="fas fa-tag"></i> Precios</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
+        </nav>
+    </aside>
+    <main class="main">
+        <div class="header">
+            <div><h1>Panel de Entrenador</h1><p style="color:var(--gray);font-size:14px" id="gymInfo"></p></div>
+            <div class="user"><div class="avatar" id="ua">EN</div><div class="info" id="ui">Entrenador</div></div>
+        </div>
+        
+        <!-- Métricas -->
+        <div class="metrics">
+            <div class="metric"><div class="label">Clientes Activos</div><div class="value" id="clientesActivos" style="color:var(--green)">0</div></div>
+            <div class="metric"><div class="label">Rutinas Creadas</div><div class="value" id="rutinasCreadas" style="color:var(--blue)">0</div></div>
+            <div class="metric"><div class="label">Ingresos del Mes</div><div class="value" id="ingresosMes">$0</div></div>
+            <div class="metric"><div class="label">Precio/Sesión</div><div class="value" id="precioSesion" style="font-size:18px">$350</div></div>
+        </div>
+        
+        <!-- Sección Rutinas -->
+        <div class="section" id="seccionRutinas">
+            <h3><i class="fas fa-clipboard-list"></i> Mis Rutinas</h3>
+            <button class="btn btn-green" onclick="abrirModalRutina()"><i class="fas fa-plus"></i> Nueva Rutina</button>
+            <div id="listaRutinas" style="margin-top:16px"><p style="color:var(--gray);text-align:center;padding:20px">No has creado rutinas aún</p></div>
+        </div>
+        
+        <!-- Sección Clientes -->
+        <div class="section" id="seccionClientes" style="display:none">
+            <h3><i class="fas fa-users"></i> Mis Clientes</h3>
+            <table><thead><tr><th>Cliente</th><th>Email</th><th>Plan</th><th>Estado</th><th>Acción</th></tr></thead>
+            <tbody><tr><td colspan="5" style="text-align:center;color:var(--gray);padding:20px">Aún no tienes clientes asignados</td></tr></tbody></table>
+        </div>
+        
+        <!-- Sección Precios -->
+        <div class="section" id="seccionPrecios" style="display:none">
+            <h3><i class="fas fa-tag"></i> Configurar Precios</h3>
+            <div class="form-group"><label>Precio por Sesión (MXN)</label><input type="number" id="precioSesionInput" value="350"></div>
+            <div class="form-group"><label>Precio Paquete 5 Sesiones (MXN)</label><input type="number" id="precioPaquete5" value="1500"></div>
+            <div class="form-group"><label>Precio Paquete 10 Sesiones (MXN)</label><input type="number" id="precioPaquete10" value="2800"></div>
+            <button class="btn btn-green" onclick="guardarPrecios()">Guardar Precios</button>
+        </div>
+    </main>
+    
+    <!-- Modal Nueva Rutina -->
+    <div class="modal" id="modalRutina">
+        <div class="modal-box">
+            <h2>📋 Nueva Rutina</h2>
+            <div class="form-group"><label>Cliente</label><select id="rutinaCliente"><option value="">Seleccionar cliente...</option></select></div>
+            <div class="form-group"><label>Título de la Rutina</label><input type="text" id="rutinaTitulo" placeholder="Ej: Rutina de Fuerza - Semana 1"></div>
+            <div class="form-group"><label>Descripción</label><textarea id="rutinaDesc" placeholder="Instrucciones generales..."></textarea></div>
+            <div class="form-group"><label>Ejercicios (URLs de imágenes/GIFs)</label><textarea id="rutinaEjercicios" placeholder="https://ejemplo.com/gif1.gif&#10;https://ejemplo.com/imagen.jpg"></textarea></div>
+            <div style="display:flex;gap:10px;margin-top:16px">
+                <button class="btn btn-green" onclick="crearRutina()" style="flex:1">Crear Rutina</button>
+                <button class="btn" onclick="cerrarModalRutina()" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--white)">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    <script>
+        let seccionActual='rutinas';
+        function mostrarSeccion(s){document.querySelectorAll('.section').forEach(e=>e.style.display='none');document.getElementById('seccion'+s.charAt(0).toUpperCase()+s.slice(1)).style.display='block';seccionActual=s}
+        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+        function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
+        function abrirModalRutina(){document.getElementById('modalRutina').classList.add('show')}
+        function cerrarModalRutina(){document.getElementById('modalRutina').classList.remove('show')}
+        function guardarPrecios(){mostrarToast('✅ Precios actualizados')}
+        function crearRutina(){
+            const titulo=document.getElementById('rutinaTitulo').value;
+            if(!titulo){mostrarToast('⚠️ Ingresa un título');return}
+            mostrarToast('✅ Rutina creada y enviada al cliente');
+            cerrarModalRutina();
+        }
+        document.addEventListener('DOMContentLoaded',()=>{
+            const t=localStorage.getItem('entrenador_token');
+            if(!t||localStorage.getItem('entrenador_rol')!=='entrenador'){window.location.href='../index.html';return}
+            const u=JSON.parse(localStorage.getItem('entrenador_user')||'{}');
+            if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Entrenador</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}
+            if(u.gimnasio_nombre)document.getElementById('gymInfo').textContent='Gimnasio: '+u.gimnasio_nombre;
+        });
+    </script>
+</body>
+</html>
