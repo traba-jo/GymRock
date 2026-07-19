@@ -10,7 +10,7 @@
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--blue:#3b82f6;--purple:#8b5cf6;--green:#22c55e;--red:#ef4444;--amber:#f59e0b}
         body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
-        .sidebar{width:270px;min-width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;height:100vh;position:sticky;top:0;display:flex;flex-direction:column;overflow-y:auto}
+        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;height:100vh;position:sticky;top:0;display:flex;flex-direction:column;overflow-y:auto}
         .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
         .sidebar .logo span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
@@ -24,39 +24,44 @@
         .header h1{font-size:28px;font-weight:800}
         .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
         .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s;text-decoration:none}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s}
         .btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
         .btn-green{background:var(--green);color:#fff}
         .btn-amber{background:var(--amber);color:#000}
-        .btn:hover{transform:translateY(-2px);opacity:0.9}
-        .cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
-        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center}
-        .card h3{font-size:18px;margin-bottom:12px}
-        .card p{color:var(--gray);font-size:13px;margin-bottom:16px}
+        .btn-red{background:var(--red);color:#fff}
+        .btn:hover{transform:translateY(-2px)}
         .section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
         .section h3{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
         table{width:100%;border-collapse:collapse;font-size:13px}
         th{text-align:left;padding:10px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
         td{padding:10px 8px;border-bottom:1px solid var(--border)}
-        .badge{display:inline-block;font-size:10px;padding:4px 12px;border-radius:50px;font-weight:600;text-transform:uppercase}
-        .badge-active{background:rgba(34,197,94,0.1);color:var(--green)}
-        .badge-pending{background:rgba(245,158,11,0.1);color:var(--amber)}
-        .badge-rejected{background:rgba(239,68,68,0.1);color:var(--red)}
-        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center}
+        .badge{display:inline-block;font-size:10px;padding:4px 12px;border-radius:50px;font-weight:600}
+        .badge-green{background:rgba(34,197,94,0.1);color:var(--green)}
+        .badge-amber{background:rgba(245,158,11,0.1);color:var(--amber)}
+        .badge-red{background:rgba(239,68,68,0.1);color:var(--red)}
+        .badge-blue{background:rgba(59,130,246,0.1);color:var(--blue)}
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center}
         .modal.show{display:flex}
-        .modal-box{background:#111;border:1px solid var(--border);border-radius:20px;padding:32px;width:90%;max-width:500px}
+        .modal-box{background:#111;border:1px solid var(--border);border-radius:20px;padding:32px;width:90%;max-width:550px;max-height:85vh;overflow-y:auto}
         .modal-box h2{font-size:20px;margin-bottom:20px}
         .form-group{margin-bottom:14px}
         .form-group label{display:block;font-size:13px;color:var(--gray);margin-bottom:4px}
-        .form-group input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;outline:none}
-        .form-group input:focus{border-color:var(--blue)}
-        @media(max-width:768px){.sidebar{display:none}.main{padding:20px}.cards{grid-template-columns:1fr}}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;outline:none;font-family:'Inter',sans-serif}
+        .form-group textarea{resize:vertical;min-height:60px}
+        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--blue)}
+        .test-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+        .test-card{background:rgba(255,255,255,0.02);border:2px solid var(--border);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 0.3s}
+        .test-card:hover{border-color:var(--blue)}
+        .test-card.selected{border-color:var(--blue);background:rgba(59,130,246,0.06)}
+        .test-card .clase{font-size:12px;font-weight:700;color:var(--blue);text-transform:uppercase}
+        .test-card .desc{font-size:10px;color:var(--gray)}
+        @media(max-width:768px){.sidebar{display:none}.main{padding:20px}.test-selector{grid-template-columns:1fr}}
         .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
         .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--green);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
     </style>
 </head>
 <body>
-    <aside class="sidebar" id="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="logo"><span>GYMROCK</span></div>
         <nav>
             <a href="dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</a>
@@ -69,52 +74,63 @@
     <main class="main">
         <div class="header">
             <div style="display:flex;align-items:center;gap:14px">
-                <button class="hamburger" id="hamburgerBtn" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
-                <div><h1>Entrenadores</h1><p style="color:var(--gray);font-size:14px">Gestiona tu equipo y certificaciones</p></div>
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+                <div><h1>Entrenadores</h1><p style="color:var(--gray);font-size:14px">Gestión de certificaciones y entrenadores</p></div>
             </div>
             <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Cargando...</div></div>
         </div>
         
-        <!-- Opciones principales -->
-        <div class="cards">
-            <div class="card">
-                <span style="font-size:40px">📝</span>
-                <h3>Nuevo Test de Certificacion</h3>
-                <p>Envia el test a un aspirante a entrenador. Al aprobar, recibira un codigo de acceso.</p>
-                <button class="btn btn-blue" onclick="abrirModalTest()"><i class="fas fa-paper-plane"></i> Enviar Test</button>
-            </div>
-            <div class="card">
-                <span style="font-size:40px">✅</span>
-                <h3>Entrenadores Aprobados</h3>
-                <p>Gestiona los entrenadores activos, sus codigos de acceso y precios.</p>
-                <a href="#aprobados" class="btn btn-green"><i class="fas fa-list"></i> Ver Entrenadores</a>
-            </div>
+        <!-- Acciones -->
+        <div style="margin-bottom:24px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-blue" onclick="abrirModalEnviarTest()"><i class="fas fa-paper-plane"></i> Enviar Test a Aspirante</button>
+            <button class="btn btn-green" onclick="window.location.href='#aprobados'"><i class="fas fa-check-circle"></i> Ver Aprobados</button>
         </div>
         
-        <!-- Tests pendientes -->
+        <!-- Tests Pendientes -->
         <div class="section">
-            <h3><i class="fas fa-hourglass-half" style="color:var(--amber)"></i> Tests Pendientes de Revision</h3>
-            <table><thead><tr><th>Solicitante</th><th>Email</th><th>Puntuacion</th><th>Estado</th><th>Accion</th></tr></thead>
-            <tbody id="tablaPendientes"><tr><td colspan="5" style="text-align:center;color:var(--gray);padding:20px">No hay tests pendientes</td></tr></tbody></table>
+            <h3><i class="fas fa-hourglass-half" style="color:var(--amber)"></i> Tests Pendientes de Revisión</h3>
+            <table><thead><tr><th>Aspirante</th><th>Email</th><th>Clase</th><th>Puntuación</th><th>Fecha</th><th>Acción</th></tr></thead>
+            <tbody id="tablaPendientes"><tr><td colspan="6" style="text-align:center;color:var(--gray);padding:20px">No hay tests pendientes</td></tr></tbody></table>
         </div>
         
-        <!-- Entrenadores aprobados -->
+        <!-- Entrenadores Aprobados -->
         <div class="section" id="aprobados">
             <h3><i class="fas fa-check-circle" style="color:var(--green)"></i> Entrenadores Aprobados</h3>
-            <table><thead><tr><th>Nombre</th><th>Email</th><th>Codigo</th><th>Especialidad</th><th>Precio/Sesion</th><th>Estado</th><th>Accion</th></tr></thead>
+            <table><thead><tr><th>Nombre</th><th>Email</th><th>Clase</th><th>Código</th><th>Precio</th><th>Estado</th><th>Acción</th></tr></thead>
             <tbody id="tablaAprobados"><tr><td colspan="7" style="text-align:center;color:var(--gray);padding:20px">No hay entrenadores aprobados</td></tr></tbody></table>
         </div>
     </main>
     
     <!-- Modal: Enviar Test -->
-    <div class="modal" id="modalTest">
+    <div class="modal" id="modalEnviarTest">
         <div class="modal-box">
-            <h2>📝 Enviar Test de Certificacion</h2>
+            <h2>📝 Enviar Test de Certificación</h2>
+            
             <div class="form-group"><label>Nombre del Aspirante</label><input type="text" id="testNombre" placeholder="Nombre completo"></div>
             <div class="form-group"><label>Email del Aspirante</label><input type="email" id="testEmail" placeholder="correo@ejemplo.com"></div>
-            <div style="display:flex;gap:10px;margin-top:20px">
-                <button class="btn btn-blue" onclick="enviarTest()" style="flex:1">Enviar Test</button>
-                <button class="btn" onclick="cerrarModalTest()" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--white)">Cancelar</button>
+            
+            <label style="font-size:13px;color:var(--gray);margin-bottom:8px;display:block">Tipo de Certificación:</label>
+            <div class="test-selector" id="testSelector">
+                <div class="test-card selected" onclick="seleccionarTest('A',this)">
+                    <div class="clase">Clase A</div>
+                    <div class="desc">10 preguntas personalizadas</div>
+                </div>
+                <div class="test-card" onclick="seleccionarTest('B',this)">
+                    <div class="clase">Clase B</div>
+                    <div class="desc">15 preguntas · Deporte MX</div>
+                </div>
+                <div class="test-card" onclick="seleccionarTest('C',this)">
+                    <div class="clase">Clase C</div>
+                    <div class="desc">25 preguntas · Normativa</div>
+                </div>
+            </div>
+            <div id="claseInfo" style="font-size:12px;color:var(--blue);margin-bottom:12px;padding:8px;background:rgba(59,130,246,0.06);border-radius:8px">
+                📝 Clase A: El gimnasio evalúa al aspirante con 10 preguntas personalizadas.
+            </div>
+            
+            <div style="display:flex;gap:10px;margin-top:16px">
+                <button class="btn btn-green" onclick="enviarTest()" style="flex:1"><i class="fas fa-paper-plane"></i> Enviar Test</button>
+                <button class="btn" onclick="cerrarModalEnviarTest()" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--white)">Cancelar</button>
             </div>
         </div>
     </div>
@@ -122,30 +138,45 @@
     <div class="toast" id="toast"></div>
     <script>
         const API_URL=window.location.origin;
+        let claseSeleccionada='A';
+        let gymId='';
+        
         function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
         function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
-        function abrirModalTest(){document.getElementById('modalTest').classList.add('show')}
-        function cerrarModalTest(){document.getElementById('modalTest').classList.remove('show')}
+        function abrirModalEnviarTest(){document.getElementById('modalEnviarTest').classList.add('show')}
+        function cerrarModalEnviarTest(){document.getElementById('modalEnviarTest').classList.remove('show')}
+        
+        function seleccionarTest(clase,el){
+            document.querySelectorAll('.test-card').forEach(c=>c.classList.remove('selected'));
+            el.classList.add('selected');
+            claseSeleccionada=clase;
+            const info={'A':'📝 Clase A: El gimnasio evalúa al aspirante con 10 preguntas personalizadas.','B':'🥈 Clase B: 15 preguntas sobre conocimiento deportivo mexicano.','C':'🥇 Clase C: 25 preguntas exhaustivas de normativa mexicana.'};
+            document.getElementById('claseInfo').textContent=info[clase];
+        }
         
         function enviarTest(){
             const nombre=document.getElementById('testNombre').value.trim();
             const email=document.getElementById('testEmail').value.trim();
-            if(!nombre||!email){mostrarToast('Completa todos los campos');return}
-            // Crear link del test
-            const testURL=API_URL+'/test_certificacion.html?gym='+localStorage.getItem('gymrock_user_id')+'&nombre='+encodeURIComponent(nombre)+'&email='+encodeURIComponent(email);
+            if(!nombre||!email){mostrarToast('⚠️ Completa nombre y email');return}
+            
+            const testURL=API_URL+'/test_certificacion.html?gym='+gymId+'&nombre='+encodeURIComponent(nombre)+'&email='+encodeURIComponent(email)+'&clase='+claseSeleccionada;
+            
             document.getElementById('testNombre').value='';
             document.getElementById('testEmail').value='';
-            cerrarModalTest();
-            mostrarToast('✅ Link del test generado. Compartelo con el aspirante.');
-            // Mostrar link
-            prompt('📋 Copia este link y envialo al aspirante:',testURL);
+            cerrarModalEnviarTest();
+            
+            // Mostrar link para copiar
+            const linkDiv=document.createElement('div');
+            linkDiv.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111;border:1px solid var(--green);border-radius:16px;padding:24px;z-index:2000;text-align:center;max-width:500px;width:90%';
+            linkDiv.innerHTML='<h3 style="color:var(--green);margin-bottom:12px">✅ Link Generado</h3><p style="color:var(--gray);font-size:13px;margin-bottom:12px">Comparte este link con el aspirante:</p><input type="text" value="'+testURL+'" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;color:var(--white);font-size:12px;margin-bottom:12px" readonly onclick="this.select()"><button onclick="this.parentElement.remove()" style="padding:8px 24px;background:var(--green);border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600">Cerrar</button>';
+            document.body.appendChild(linkDiv);
         }
         
         document.addEventListener('DOMContentLoaded',()=>{
             const t=localStorage.getItem('gymrock_token');
             if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}
             const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
-            if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();localStorage.setItem('gymrock_user_id',u.id)}
+            if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();gymId=u.id}
         });
     </script>
 </body>
