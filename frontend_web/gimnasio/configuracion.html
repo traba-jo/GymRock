@@ -95,6 +95,19 @@
                 <button class="btn btn-green" onclick="guardarBanco()" style="margin-top:12px">💾 Guardar Datos Bancarios</button>
             </div>
             
+            
+            <!-- TEST CLASE A -->
+            <div class="card" style="border:1px solid rgba(59,130,246,0.2)">
+                <h3><i class="fas fa-clipboard-check"></i> Personalizar Test Clase A <span style="font-size:10px;background:rgba(59,130,246,0.1);color:var(--blue);padding:4px 10px;border-radius:50px">Certificación</span></h3>
+                <p style="font-size:12px;color:var(--gray);margin-bottom:14px">Estas preguntas se usarán cuando envíes un test Clase A a un aspirante</p>
+                <div class="form-group"><label>Pregunta 1</label><input type="text" id="testP1" placeholder="¿Por qué quieres ser entrenador?"></div>
+                <div class="form-group"><label>Pregunta 2</label><input type="text" id="testP2" placeholder="Describe tu experiencia"></div>
+                <div class="form-group"><label>Pregunta 3</label><input type="text" id="testP3" placeholder="¿Cómo manejas un cliente nuevo?"></div>
+                <div class="form-group"><label>Pregunta 4</label><input type="text" id="testP4" placeholder="¿Qué harías si un cliente no avanza?"></div>
+                <div class="form-group"><label>Pregunta 5</label><input type="text" id="testP5" placeholder="¿Por qué deberíamos elegirte?"></div>
+                <button class="btn btn-blue" onclick="guardarTestA()">💾 Guardar Preguntas del Test</button>
+                <div id="testGuardado" style="margin-top:8px;font-size:12px;color:var(--green);display:none">✅ Preguntas guardadas</div>
+            </div>
             <!-- PLANES DE SUSCRIPCION -->
             <div class="card">
                 <h3><i class="fas fa-crown"></i> Planes para Clientes</h3>
@@ -106,6 +119,29 @@
     </main>
     <div class="toast" id="toast"></div>
     <script>
+        
+        function guardarTestA(){
+            const p1=document.getElementById('testP1').value.trim();
+            const p2=document.getElementById('testP2').value.trim();
+            const p3=document.getElementById('testP3').value.trim();
+            const p4=document.getElementById('testP4').value.trim();
+            const p5=document.getElementById('testP5').value.trim();
+            localStorage.setItem('gym_testA',JSON.stringify([p1,p2,p3,p4,p5]));
+            document.getElementById('testGuardado').style.display='block';
+            setTimeout(()=>document.getElementById('testGuardado').style.display='none',3000);
+            mostrarToast('✅ Preguntas del Test Clase A guardadas');
+        }
+        // Cargar preguntas guardadas
+        (function(){
+            const saved=JSON.parse(localStorage.getItem('gym_testA')||'[]');
+            if(saved.length){
+                document.getElementById('testP1').value=saved[0]||'';
+                document.getElementById('testP2').value=saved[1]||'';
+                document.getElementById('testP3').value=saved[2]||'';
+                document.getElementById('testP4').value=saved[3]||'';
+                document.getElementById('testP5').value=saved[4]||'';
+            }
+        })();
         function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
         function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
         function guardarPerfil(){mostrarToast('✅ Perfil guardado')}
