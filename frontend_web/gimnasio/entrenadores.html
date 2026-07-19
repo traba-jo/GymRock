@@ -178,11 +178,64 @@
             document.body.appendChild(linkDiv);
         }
         
+        
+        async function cargarCertificaciones(){
+            if(!gymId)return;
+            try{
+                const r=await fetch(API_URL+'/api/gimnasio/'+gymId+'/certificaciones');
+                const d=await r.json();
+                if(d.status==='success'&&d.data.length>0){
+                    const pendientes=d.data.filter(c=>c.estado==='pendiente');
+                    const aprobados=d.data.filter(c=>c.estado==='aprobado');
+                    
+                    // Tabla pendientes
+                    const tbodyP=document.getElementById('tablaPendientes');
+                    if(pendientes.length){
+                        tbodyP.innerHTML=pendientes.map(c=>`<tr>
+                            <td><strong>${c.nombre_solicitante}</strong></td>
+                            <td>${c.email_solicitante}</td>
+                            <td><span class="badge badge-blue">Clase ${c.clase||'A'}</span></td>
+                            <td>${c.puntuacion||0}/${c.total_preguntas||0} (${Math.round((c.puntuacion/c.total_preguntas)*100)||0}%)</td>
+                            <td>${new Date(c.fecha_envio).toLocaleDateString('es-ES')}</td>
+                            <td>
+                                <button class="btn btn-green" onclick="revisarCert('${c.id}','aprobado')" style="padding:6px 12px;font-size:12px">✅ Aprobar</button>
+                                <button class="btn btn-red" onclick="revisarCert('${c.id}','rechazado')" style="padding:6px 12px;font-size:12px;margin-left:4px">❌ Rechazar</button>
+                            </td>
+                        </tr>`).join('');
+                    }
+                    
+                    // Tabla aprobados
+                    const tbodyA=document.getElementById('tablaAprobados');
+                    if(aprobados.length){
+                        tbodyA.innerHTML=aprobados.map(c=>`<tr>
+                            <td><strong>${c.nombre_solicitante}</strong></td>
+                            <td>${c.email_solicitante}</td>
+                            <td><span class="badge badge-blue">Clase ${c.clase||'A'}</span></td>
+                            <td>${c.codigo_generado||'Pendiente'}</td>
+                            <td>--</td>
+                            <td><span class="badge badge-green">Aprobado</span></td>
+                            <td><button class="btn" style="padding:6px 12px;font-size:12px;background:rgba(255,255,255,0.05)">Revocar</button></td>
+                        </tr>`).join('');
+                    }
+                }
+            }catch(e){console.log('Error cargando certificaciones:',e)}
+        }
+        
+        async function revisarCert(id,estado){
+            try{
+                const r=await fetch(API_URL+'/api/certificacion/'+id+'/revisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({estado})});
+                const d=await r.json();
+                if(d.status==='success'){
+                    mostrarToast(estado==='aprobado'?'✅ Entrenador aprobado. Código: '+d.codigo:'❌ Certificación rechazada');
+                    cargarCertificaciones();
+                }
+            }catch(e){mostrarToast('Error al revisar')}
+        }
         document.addEventListener('DOMContentLoaded',()=>{
             const t=localStorage.getItem('gymrock_token');
             if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}
             const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
-            if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();gymId=u.id}
+            if(u.nombre){cargarCertificaciones();document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();gymId=u.id}
         });
     </script>
 </body>

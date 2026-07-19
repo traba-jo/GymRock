@@ -257,18 +257,23 @@
             
             if(clase==='A'){
                 badge.innerHTML='<span class="cert-badge cert-a">🏅 Certificado Clase A</span>';
-                document.getElementById('mensajeResultado').textContent='Certificación personalizada completada. El gimnasio evaluará tus respuestas.';
+                enviarResultado(puntaje,total,clase);
+            document.getElementById('mensajeResultado').textContent='Certificación personalizada completada. El gimnasio evaluará tus respuestas.';
             }else if(pct>=85){
                 badge.innerHTML='<span class="cert-badge cert-'+(clase.toLowerCase())+'">🏅 Certificado Clase '+clase+'</span>';
+                enviarResultado(puntaje,total,clase);
                 document.getElementById('mensajeResultado').textContent='¡Excelente! Has aprobado con '+pct+'%. Nivel avanzado.';
             }else if(pct>=70){
                 badge.innerHTML='<span class="cert-badge cert-'+(clase.toLowerCase())+'">🏅 Certificado Clase '+clase+'</span>';
+                enviarResultado(puntaje,total,clase);
                 document.getElementById('mensajeResultado').textContent='Aprobado con '+pct+'%. El gimnasio revisará tu caso.';
             }else if(pct>=60){
                 badge.innerHTML='<span style="color:var(--gold);font-size:18px;font-weight:700">⚠️ Revisión</span>';
+                enviarResultado(puntaje,total,clase);
                 document.getElementById('mensajeResultado').textContent='Puntuación: '+pct+'%. El gimnasio decidirá si otorga la certificación.';
             }else{
                 badge.innerHTML='<span style="color:var(--red);font-size:18px;font-weight:700">❌ No Aprobado</span>';
+                enviarResultado(puntaje,total,clase);
                 document.getElementById('mensajeResultado').textContent='Puntuación: '+pct+'%. No alcanzaste el mínimo requerido (60%).';
             }
         }
@@ -302,7 +307,31 @@
             mostrarResultado(puntaje,25,'C');
         }
         
-        console.log('✅ GymRock Test de Certificación v2.0');
+        
+        // Enviar resultado al gimnasio
+        function enviarResultado(puntaje,total,clase){
+            const gymId=params.get('gym')||'';
+            const nombre=params.get('nombre')||'Aspirante';
+            const email=params.get('email')||'';
+            
+            fetch('/api/certificacion/resultado',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({
+                    gimnasio_id:gymId,
+                    nombre:nombre,
+                    email:email,
+                    clase:clase,
+                    puntuacion:puntaje,
+                    total:total
+                })
+            }).then(r=>r.json()).then(d=>{
+                if(d.status==='success'){
+                    console.log('✅ Resultado enviado al gimnasio');
+                }
+            }).catch(e=>console.log('Error enviando resultado:',e));
+        }
+        console.log('✅ GymRock Test v2.0');
         console.log('📋 Clase A: 10 preguntas | Clase B: 15 preguntas | Clase C: 25 preguntas');
     </script>
 </body>
