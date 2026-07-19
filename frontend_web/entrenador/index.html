@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--green:#22c55e;--blue:#3b82f6;--purple:#8b5cf6;--gold:#f59e0b;--red:#ef4444}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--green:#22c55e;--blue:#3b82f6;--purple:#8b5cf6;--red:#ef4444;--cyan:#06b6d4}
         body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
         .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;height:100vh;position:sticky;top:0;display:flex;flex-direction:column;overflow-y:auto}
         .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
@@ -20,7 +20,7 @@
         .sidebar nav a.active{background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(59,130,246,0.08));color:var(--white);border:1px solid rgba(34,197,94,0.15)}
         .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
         .main{flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
-        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:16px}
         .header h1{font-size:28px;font-weight:800}
         .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
         .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
@@ -40,20 +40,30 @@
         .btn-green{background:var(--green);color:#fff}
         .btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
         .btn:hover{transform:translateY(-2px)}
-        .rutina-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
-        .rutina-card h4{font-size:15px;margin-bottom:4px}
-        .rutina-card p{color:var(--gray);font-size:13px}
-        .badge{display:inline-block;font-size:10px;padding:4px 12px;border-radius:50px;font-weight:600;text-transform:uppercase}
+        .rutina-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px}
+        .rutina-card h4{font-size:16px;margin-bottom:4px;color:var(--green)}
+        .rutina-card .cliente{font-size:12px;color:var(--gray);margin-bottom:8px}
+        .rutina-card .desc{font-size:13px;color:var(--gray);margin-bottom:12px}
+        .rutina-card .media{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+        .rutina-card .media img{max-width:150px;max-height:150px;border-radius:10px;border:1px solid var(--border);object-fit:cover}
+        .badge{display:inline-block;font-size:10px;padding:4px 12px;border-radius:50px;font-weight:600}
         .badge-green{background:rgba(34,197,94,0.1);color:var(--green)}
         .badge-blue{background:rgba(59,130,246,0.1);color:var(--blue)}
-        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center}
-        .modal.show{display:flex}
-        .modal-box{background:#111;border:1px solid var(--border);border-radius:20px;padding:32px;width:90%;max-width:600px;max-height:80vh;overflow-y:auto}
-        .modal-box h2{font-size:20px;margin-bottom:20px}
         table{width:100%;border-collapse:collapse;font-size:13px}
         th{text-align:left;padding:10px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
         td{padding:10px 8px;border-bottom:1px solid var(--border)}
-        @media(max-width:768px){.sidebar{display:none}.main{padding:20px}}
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center}
+        .modal.show{display:flex}
+        .modal-box{background:#111;border:1px solid var(--border);border-radius:20px;padding:32px;width:90%;max-width:650px;max-height:85vh;overflow-y:auto}
+        .modal-box h2{font-size:20px;margin-bottom:20px}
+        .preview-img{max-width:100%;max-height:200px;border-radius:10px;margin-top:8px;display:none}
+        .tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--card);border-radius:12px;padding:4px}
+        .tab{padding:8px 20px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--gray);border:none;background:none;font-family:'Inter',sans-serif}
+        .tab.active{background:rgba(34,197,94,0.12);color:var(--green);font-weight:600}
+        .instrucciones-ejercicio{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.1);border-radius:10px;padding:12px;margin-top:8px}
+        .instrucciones-ejercicio h5{color:var(--blue);font-size:13px;margin-bottom:4px}
+        .instrucciones-ejercicio p{color:var(--gray);font-size:12px}
+        @media(max-width:768px){.sidebar{display:none}.main{padding:20px}.metrics{grid-template-columns:1fr 1fr}}
         .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--green);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
     </style>
 </head>
@@ -61,61 +71,112 @@
     <aside class="sidebar">
         <div class="logo"><span>GYMROCK</span></div>
         <nav>
-            <a href="#" class="active"><i class="fas fa-chart-pie"></i> Mi Panel</a>
-            <a href="#" onclick="mostrarSeccion('rutinas')"><i class="fas fa-clipboard-list"></i> Rutinas</a>
+            <a href="#" class="active" onclick="mostrarSeccion('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a href="#" onclick="mostrarSeccion('rutinas')"><i class="fas fa-clipboard-list"></i> Mis Rutinas</a>
             <a href="#" onclick="mostrarSeccion('clientes')"><i class="fas fa-users"></i> Mis Clientes</a>
+            <a href="#" onclick="mostrarSeccion('material')"><i class="fas fa-folder-open"></i> Material</a>
             <a href="#" onclick="mostrarSeccion('precios')"><i class="fas fa-tag"></i> Precios</a>
             <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
         </nav>
     </aside>
     <main class="main">
         <div class="header">
-            <div><h1>Panel de Entrenador</h1><p style="color:var(--gray);font-size:14px" id="gymInfo"></p></div>
+            <div><h1>Panel de Entrenador</h1><p style="color:var(--gray);font-size:14px" id="gymInfo">Gimnasio vinculado</p></div>
             <div class="user"><div class="avatar" id="ua">EN</div><div class="info" id="ui">Entrenador</div></div>
         </div>
         
-        <!-- Métricas -->
-        <div class="metrics">
-            <div class="metric"><div class="label">Clientes Activos</div><div class="value" id="clientesActivos" style="color:var(--green)">0</div></div>
-            <div class="metric"><div class="label">Rutinas Creadas</div><div class="value" id="rutinasCreadas" style="color:var(--blue)">0</div></div>
-            <div class="metric"><div class="label">Ingresos del Mes</div><div class="value" id="ingresosMes">$0</div></div>
-            <div class="metric"><div class="label">Precio/Sesión</div><div class="value" id="precioSesion" style="font-size:18px">$350</div></div>
+        <!-- Dashboard -->
+        <div id="seccionDashboard">
+            <div class="metrics">
+                <div class="metric"><div class="label">Clientes Activos</div><div class="value" style="color:var(--green)" id="clientesActivos">0</div></div>
+                <div class="metric"><div class="label">Rutinas Creadas</div><div class="value" style="color:var(--blue)" id="rutinasCreadas">0</div></div>
+                <div class="metric"><div class="label">Ingresos del Mes</div><div class="value">$0</div></div>
+                <div class="metric"><div class="label">Precio/Sesión</div><div class="value" style="font-size:18px" id="precioSesionMetric">$350</div></div>
+            </div>
+            <div class="section">
+                <h3><i class="fas fa-bolt"></i> Acciones Rápidas</h3>
+                <button class="btn btn-green" onclick="abrirModalRutina()"><i class="fas fa-plus"></i> Nueva Rutina</button>
+                <button class="btn btn-blue" onclick="mostrarSeccion('material')" style="margin-left:8px"><i class="fas fa-upload"></i> Subir Material</button>
+            </div>
         </div>
         
-        <!-- Sección Rutinas -->
-        <div class="section" id="seccionRutinas">
-            <h3><i class="fas fa-clipboard-list"></i> Mis Rutinas</h3>
-            <button class="btn btn-green" onclick="abrirModalRutina()"><i class="fas fa-plus"></i> Nueva Rutina</button>
-            <div id="listaRutinas" style="margin-top:16px"><p style="color:var(--gray);text-align:center;padding:20px">No has creado rutinas aún</p></div>
+        <!-- Rutinas -->
+        <div class="section" id="seccionRutinas" style="display:none">
+            <h3><i class="fas fa-clipboard-list"></i> Rutinas Enviadas</h3>
+            <button class="btn btn-green" onclick="abrirModalRutina()"><i class="fas fa-plus"></i> Crear Nueva Rutina</button>
+            <div id="listaRutinas" style="margin-top:16px">
+                <div class="rutina-card">
+                    <h4>🏋️ Rutina de Fuerza - Semana 1</h4>
+                    <p class="cliente">Cliente: Juan Pérez · <span class="badge badge-green">Enviada</span></p>
+                    <p class="desc">Rutina enfocada en tren superior con énfasis en hipertrofia.</p>
+                    <div class="media">
+                        <img src="https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif" alt="Ejercicio 1" onerror="this.style.display='none'">
+                        <img src="https://media.giphy.com/media/l0HlBO7eyXzTpeddK/giphy.gif" alt="Ejercicio 2" onerror="this.style.display='none'">
+                    </div>
+                    <div class="instrucciones-ejercicio" style="margin-top:12px">
+                        <h5>📋 Instrucciones:</h5>
+                        <p>3 series de 12 repeticiones · Descanso 60 seg entre series · Peso moderado</p>
+                    </div>
+                </div>
+                <p style="color:var(--gray);text-align:center;padding:20px;font-size:13px">Crea rutinas personalizadas para tus clientes con imágenes y GIFs animados</p>
+            </div>
         </div>
         
-        <!-- Sección Clientes -->
+        <!-- Clientes -->
         <div class="section" id="seccionClientes" style="display:none">
             <h3><i class="fas fa-users"></i> Mis Clientes</h3>
-            <table><thead><tr><th>Cliente</th><th>Email</th><th>Plan</th><th>Estado</th><th>Acción</th></tr></thead>
+            <table><thead><tr><th>Cliente</th><th>Email</th><th>Plan</th><th>Rutinas</th><th>Acción</th></tr></thead>
             <tbody><tr><td colspan="5" style="text-align:center;color:var(--gray);padding:20px">Aún no tienes clientes asignados</td></tr></tbody></table>
         </div>
         
-        <!-- Sección Precios -->
+        <!-- Material -->
+        <div class="section" id="seccionMaterial" style="display:none">
+            <h3><i class="fas fa-folder-open"></i> Mi Biblioteca de Material</h3>
+            <p style="color:var(--gray);font-size:13px;margin-bottom:16px">Sube imágenes y GIFs para usar en tus rutinas. Formatos: JPG, PNG, GIF</p>
+            <div class="form-group"><label>Nombre del Material</label><input type="text" id="materialNombre" placeholder="Ej: Sentadilla con barra"></div>
+            <div class="form-group"><label>URL de la Imagen o GIF</label><input type="url" id="materialURL" placeholder="https://ejemplo.com/ejercicio.gif"></div>
+            <img id="previewMaterial" class="preview-img" src="" alt="Preview">
+            <button class="btn btn-green" onclick="agregarMaterial()"><i class="fas fa-save"></i> Guardar Material</button>
+            <div id="listaMaterial" style="margin-top:16px"></div>
+        </div>
+        
+        <!-- Precios -->
         <div class="section" id="seccionPrecios" style="display:none">
             <h3><i class="fas fa-tag"></i> Configurar Precios</h3>
-            <div class="form-group"><label>Precio por Sesión (MXN)</label><input type="number" id="precioSesionInput" value="350"></div>
-            <div class="form-group"><label>Precio Paquete 5 Sesiones (MXN)</label><input type="number" id="precioPaquete5" value="1500"></div>
-            <div class="form-group"><label>Precio Paquete 10 Sesiones (MXN)</label><input type="number" id="precioPaquete10" value="2800"></div>
-            <button class="btn btn-green" onclick="guardarPrecios()">Guardar Precios</button>
+            <div class="form-group"><label>Precio por Sesión (MXN)</label><input type="number" id="precioSesion" value="350"></div>
+            <div class="form-group"><label>Paquete 5 Sesiones</label><input type="number" id="precio5" value="1500"></div>
+            <div class="form-group"><label>Paquete 10 Sesiones</label><input type="number" id="precio10" value="2800"></div>
+            <button class="btn btn-green" onclick="guardarPrecios()">💾 Guardar Precios</button>
         </div>
     </main>
     
-    <!-- Modal Nueva Rutina -->
+    <!-- Modal Crear Rutina -->
     <div class="modal" id="modalRutina">
         <div class="modal-box">
-            <h2>📋 Nueva Rutina</h2>
+            <h2>📋 Crear Nueva Rutina</h2>
             <div class="form-group"><label>Cliente</label><select id="rutinaCliente"><option value="">Seleccionar cliente...</option></select></div>
-            <div class="form-group"><label>Título de la Rutina</label><input type="text" id="rutinaTitulo" placeholder="Ej: Rutina de Fuerza - Semana 1"></div>
-            <div class="form-group"><label>Descripción</label><textarea id="rutinaDesc" placeholder="Instrucciones generales..."></textarea></div>
-            <div class="form-group"><label>Ejercicios (URLs de imágenes/GIFs)</label><textarea id="rutinaEjercicios" placeholder="https://ejemplo.com/gif1.gif&#10;https://ejemplo.com/imagen.jpg"></textarea></div>
-            <div style="display:flex;gap:10px;margin-top:16px">
-                <button class="btn btn-green" onclick="crearRutina()" style="flex:1">Crear Rutina</button>
+            <div class="form-group"><label>Título</label><input type="text" id="rutinaTitulo" placeholder="Rutina de Fuerza - Semana 1"></div>
+            <div class="form-group"><label>Descripción General</label><textarea id="rutinaDesc" placeholder="Objetivo de la rutina, recomendaciones..."></textarea></div>
+            
+            <h4 style="color:var(--green);margin:16px 0 8px 0">🏋️ Ejercicio 1</h4>
+            <div class="form-group"><label>Nombre del Ejercicio</label><input type="text" id="ej1nombre" placeholder="Press de banca"></div>
+            <div class="form-group"><label>Series x Repeticiones</label><input type="text" id="ej1series" placeholder="3x12"></div>
+            <div class="form-group"><label>URL de Imagen/GIF</label><input type="url" id="ej1url" placeholder="https://giphy.com/..."></div>
+            
+            <h4 style="color:var(--green);margin:16px 0 8px 0">🏋️ Ejercicio 2</h4>
+            <div class="form-group"><label>Nombre del Ejercicio</label><input type="text" id="ej2nombre" placeholder="Sentadilla"></div>
+            <div class="form-group"><label>Series x Repeticiones</label><input type="text" id="ej2series" placeholder="4x10"></div>
+            <div class="form-group"><label>URL de Imagen/GIF</label><input type="url" id="ej2url" placeholder="https://giphy.com/..."></div>
+            
+            <h4 style="color:var(--green);margin:16px 0 8px 0">🏋️ Ejercicio 3</h4>
+            <div class="form-group"><label>Nombre del Ejercicio</label><input type="text" id="ej3nombre" placeholder="Remo con barra"></div>
+            <div class="form-group"><label>Series x Repeticiones</label><input type="text" id="ej3series" placeholder="3x10"></div>
+            <div class="form-group"><label>URL de Imagen/GIF</label><input type="url" id="ej3url" placeholder="https://giphy.com/..."></div>
+            
+            <div class="form-group"><label>Instrucciones Finales</label><textarea id="rutinaInstrucciones" placeholder="Descanso entre series, peso recomendado, notas..."></textarea></div>
+            
+            <div style="display:flex;gap:10px;margin-top:20px">
+                <button class="btn btn-green" onclick="crearRutina()" style="flex:1">✅ Enviar Rutina al Cliente</button>
                 <button class="btn" onclick="cerrarModalRutina()" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--white)">Cancelar</button>
             </div>
         </div>
@@ -123,16 +184,49 @@
     
     <div class="toast" id="toast"></div>
     <script>
-        let seccionActual='rutinas';
-        function mostrarSeccion(s){document.querySelectorAll('.section').forEach(e=>e.style.display='none');document.getElementById('seccion'+s.charAt(0).toUpperCase()+s.slice(1)).style.display='block';seccionActual=s}
+        let seccionActual='dashboard';
+        function mostrarSeccion(s){
+            document.querySelectorAll('[id^="seccion"]').forEach(e=>e.style.display='none');
+            const sec=document.getElementById('seccion'+s.charAt(0).toUpperCase()+s.slice(1));
+            if(sec)sec.style.display='block';
+            seccionActual=s;
+        }
         function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
         function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
         function abrirModalRutina(){document.getElementById('modalRutina').classList.add('show')}
         function cerrarModalRutina(){document.getElementById('modalRutina').classList.remove('show')}
-        function guardarPrecios(){mostrarToast('✅ Precios actualizados')}
+        function guardarPrecios(){
+            const p=document.getElementById('precioSesion').value;
+            document.getElementById('precioSesionMetric').textContent='$'+p;
+            mostrarToast('✅ Precios actualizados');
+        }
+        function agregarMaterial(){
+            const nombre=document.getElementById('materialNombre').value;
+            const url=document.getElementById('materialURL').value;
+            if(!nombre||!url){mostrarToast('⚠️ Completa nombre y URL');return}
+            document.getElementById('listaMaterial').innerHTML+='<div class="rutina-card"><h4>'+nombre+'</h4><img src="'+url+'" style="max-width:150px;max-height:150px;border-radius:10px;margin-top:8px" onerror="this.style.display=\'none\'"></div>';
+            document.getElementById('materialNombre').value='';
+            document.getElementById('materialURL').value='';
+            mostrarToast('✅ Material guardado en tu biblioteca');
+        }
+        document.getElementById('materialURL').addEventListener('input',function(){
+            const preview=document.getElementById('previewMaterial');
+            if(this.value){preview.src=this.value;preview.style.display='block'}else{preview.style.display='none'}
+        });
         function crearRutina(){
             const titulo=document.getElementById('rutinaTitulo').value;
             if(!titulo){mostrarToast('⚠️ Ingresa un título');return}
+            const ejercicios=[
+                {nombre:document.getElementById('ej1nombre').value,series:document.getElementById('ej1series').value,url:document.getElementById('ej1url').value},
+                {nombre:document.getElementById('ej2nombre').value,series:document.getElementById('ej2series').value,url:document.getElementById('ej2url').value},
+                {nombre:document.getElementById('ej3nombre').value,series:document.getElementById('ej3series').value,url:document.getElementById('ej3url').value}
+            ].filter(e=>e.nombre);
+            
+            let html='<div class="rutina-card"><h4>'+titulo+'</h4><p class="cliente"><span class="badge badge-blue">Recién enviada</span></p><p class="desc">'+document.getElementById('rutinaDesc').value+'</p><div class="media">';
+            ejercicios.forEach(e=>{html+='<div style="text-align:center"><img src="'+e.url+'" style="max-width:120px;max-height:120px;border-radius:8px" onerror="this.style.display=\'none\'"><br><small style="color:var(--gray)">'+e.nombre+' - '+e.series+'</small></div>'});
+            html+='</div><div class="instrucciones-ejercicio"><h5>📋 Instrucciones:</h5><p>'+document.getElementById('rutinaInstrucciones').value+'</p></div></div>';
+            
+            document.getElementById('listaRutinas').innerHTML=html+document.getElementById('listaRutinas').innerHTML;
             mostrarToast('✅ Rutina creada y enviada al cliente');
             cerrarModalRutina();
         }
@@ -141,7 +235,6 @@
             if(!t||localStorage.getItem('entrenador_rol')!=='entrenador'){window.location.href='../index.html';return}
             const u=JSON.parse(localStorage.getItem('entrenador_user')||'{}');
             if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Entrenador</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}
-            if(u.gimnasio_nombre)document.getElementById('gymInfo').textContent='Gimnasio: '+u.gimnasio_nombre;
         });
     </script>
 </body>
