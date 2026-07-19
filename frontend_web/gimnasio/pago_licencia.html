@@ -2,102 +2,120 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>GymRock · Pagar Licencia</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#0A0E1A;--card:#111827;--side:#0F1524;--border:rgba(255,255,255,0.05);--white:#E8EDF5;--gray:#94A3B8;--blue:#2563EB;--gold:#D4AF37;--green:#22C55E;--red:#DC2626}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
-        .sidebar{width:260px;background:var(--side);border-right:1px solid var(--border);padding:24px 16px;position:fixed;top:0;left:0;height:100vh;z-index:100}
-        .sidebar .logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
-        .sidebar .logo img{width:40px;height:40px;border-radius:8px}
-        .sidebar .logo span{font-size:20px;font-weight:800}.sidebar .logo span span{color:#60A5FA}
-        .sidebar nav{display:flex;flex-direction:column;gap:4px;flex:1}
-        .sidebar nav a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
-        .sidebar nav a:hover{background:rgba(37,99,235,0.08);color:var(--white)}
-        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:16px}
-        .main{margin-left:260px;flex:1;padding:24px 32px;display:flex;justify-content:center;align-items:center}
-        .container{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;max-width:500px;width:100%;text-align:center}
-        h1{font-size:28px;margin-bottom:8px}h1 span{color:#60A5FA}
-        p{color:var(--gray);margin-bottom:20px}
-        .plan-info{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.1);border-radius:12px;padding:20px;margin-bottom:24px}
-        .precio{font-size:40px;font-weight:800;color:var(--white)}
-        .btn{display:block;width:100%;padding:16px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px}
-        .btn-mp{background:linear-gradient(135deg,var(--blue),#1E3A8A);color:white}
-        .btn-trans{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--white)}
-        .trans-info{display:none;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px;text-align:left}
-        .trans-info.show{display:block}
-        .trans-info h3{color:#60A5FA;margin-bottom:12px}
-        .dato{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
-        .dato span:first-child{color:var(--gray)}.dato span:last-child{font-weight:600}
-        .btn-copiar{background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);color:#60A5FA;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px}
-        .btn-volver{display:block;text-align:center;margin-top:16px;color:var(--gray);text-decoration:none;font-size:14px}
-        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0;padding:16px}}
+        :root{--bg:#06060E;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--blue:#3b82f6;--purple:#8b5cf6;--green:#22c55e;--red:#ef4444}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+        .container{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:40px;max-width:520px;width:100%}
+        h1{font-size:28px;text-align:center;margin-bottom:4px}
+        h1 span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        p{text-align:center;color:var(--gray);margin-bottom:24px}
+        .plan-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+        .plan-option{background:rgba(255,255,255,0.02);border:2px solid var(--border);border-radius:14px;padding:16px 12px;text-align:center;cursor:pointer;transition:all 0.3s}
+        .plan-option:hover{border-color:var(--blue)}
+        .plan-option.selected{border-color:var(--blue);background:rgba(59,130,246,0.08)}
+        .plan-option .duracion{font-size:13px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px}
+        .plan-option .precio{font-size:22px;font-weight:800;margin:4px 0}
+        .plan-option .ahorro{font-size:11px;color:var(--green)}
+        .total{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:14px;padding:20px;text-align:center;margin-bottom:24px}
+        .total .monto{font-size:36px;font-weight:900;color:var(--white)}
+        .btn{display:block;width:100%;padding:16px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;transition:all 0.3s}
+        .btn-mp{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+        .btn-trans{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white)}
+        .btn:hover{transform:translateY(-2px)}
+        .transferencia{display:none;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+        .transferencia.show{display:block}
+        .transferencia h3{color:var(--blue);margin-bottom:16px;font-size:18px}
+        .dato{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+        .dato span:first-child{color:var(--gray)}
+        .dato span:last-child{color:var(--white);font-weight:600}
+        .btn-copiar{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:var(--blue);padding:4px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600}
+        .btn-volver{display:block;text-align:center;color:var(--gray);text-decoration:none;font-size:14px;margin-top:16px}
+        @media(max-width:480px){.plan-selector{grid-template-columns:1fr}.container{padding:24px 16px}}
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="logo"><img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock"><span>GYM<span>ROCK</span></span></div>
-        <nav>
-            <a href="dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a href="entrenadores.html"><i class="fas fa-users"></i> Entrenadores</a>
-            <a href="suscriptores.html"><i class="fas fa-user-check"></i> Suscriptores</a>
-            <a href="configuracion.html"><i class="fas fa-cog"></i> Configuracion</a>
-            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
-        </nav>
-    </aside>
-    <main class="main">
-        <div class="container">
-            <h1>GYM<span>ROCK</span></h1>
-            <p>Renovar Licencia Operativa</p>
-            <div class="plan-info">
-                <strong id="planNombre">Plan Basico</strong><br>
-                <span class="precio" id="planPrecio">$500</span> MXN / mes
+    <div class="container">
+        <h1>GYM<span>ROCK</span></h1>
+        <p>Renovar Licencia Operativa</p>
+        
+        <div class="plan-selector">
+            <div class="plan-option selected" onclick="seleccionarPlan('mensual',500,this)">
+                <div class="duracion">1 Mes</div>
+                <div class="precio">$500</div>
+                <div class="ahorro">Precio base</div>
             </div>
-            <button class="btn btn-mp" onclick="pagarMP()">💳 Pagar con Mercado Pago</button>
-            <button class="btn btn-trans" onclick="toggleTrans()">🏦 Pagar por Transferencia</button>
-            <div class="trans-info" id="transInfo">
-                <h3>📋 Datos para Transferencia</h3>
-                <div class="dato"><span>Banco:</span><span>BBVA</span></div>
-                <div class="dato"><span>Titular:</span><span>GymRock Plataforma Fitness</span></div>
-                <div class="dato"><span>CLABE:</span><span>0123 4567 8901 2345 67 <button class="btn-copiar" onclick="copiar('012345678901234567')">Copiar</button></span></div>
-                <div class="dato"><span>Cuenta:</span><span>1234567890</span></div>
-                <div class="dato"><span>Referencia:</span><span id="ref">GR-GYM-000000</span></div>
-                <div class="dato"><span>Monto:</span><span id="montoTrans">$500 MXN</span></div>
-                <p style="margin-top:12px;font-size:13px;color:var(--gray)">⚠️ Tu licencia se activara en max 24h tras validar el pago.</p>
+            <div class="plan-option" onclick="seleccionarPlan('semestral',1000,this)">
+                <div class="duracion">6 Meses</div>
+                <div class="precio">$1,000</div>
+                <div class="ahorro">Ahorras $2,000</div>
             </div>
-            <a href="configuracion.html" class="btn-volver">← Volver</a>
+            <div class="plan-option" onclick="seleccionarPlan('anual',1500,this)">
+                <div class="duracion">1 Año</div>
+                <div class="precio">$1,500</div>
+                <div class="ahorro">Ahorras $4,500</div>
+            </div>
         </div>
-    </main>
+        
+        <div class="total">
+            <div style="color:var(--gray);font-size:13px;margin-bottom:4px">Total a pagar</div>
+            <div class="monto" id="montoTotal">$500</div>
+            <div style="color:var(--gray);font-size:12px;margin-top:4px" id="descripcionPlan">Plan Mensual</div>
+        </div>
+        
+        <button class="btn btn-mp" onclick="pagarMP()">💳 Pagar con Mercado Pago</button>
+        <button class="btn btn-trans" onclick="toggleTransferencia()">🏦 Pagar por Transferencia</button>
+        
+        <div class="transferencia" id="transferenciaInfo">
+            <h3>📋 Datos Bancarios</h3>
+            <div class="dato"><span>Banco</span><span>BBVA</span></div>
+            <div class="dato"><span>Titular</span><span>GymRock Plataforma Fitness</span></div>
+            <div class="dato"><span>No. de Tarjeta</span><span>4815 1632 9824 3091 <button class="btn-copiar" onclick="copiar('4815163298243091')">Copiar</button></span></div>
+            <div class="dato"><span>Concepto</span><span id="refPago">GR-LIC-000000</span></div>
+            <div class="dato"><span>Monto</span><span id="montoTransferencia">$500 MXN</span></div>
+            <p style="margin-top:16px;font-size:13px;color:var(--gray);text-align:center">⚠️ Usa el concepto como referencia. Tu licencia se activara en max 24h tras validar el pago.</p>
+        </div>
+        
+        <a href="configuracion.html" class="btn-volver">← Volver a Configuracion</a>
+    </div>
+
     <script>
         const API_URL = window.location.origin;
-        const params = new URLSearchParams(window.location.search);
-        const plan = params.get('plan') || 'basico';
-        const precio = plan === 'basico' ? 500 : plan === 'pro' ? 800 : 1200;
+        let planSeleccionado = 'mensual';
+        let montoSeleccionado = 500;
         
-        document.getElementById('planNombre').textContent = 'Plan ' + plan.charAt(0).toUpperCase() + plan.slice(1);
-        document.getElementById('planPrecio').textContent = '$' + precio;
-        document.getElementById('montoTrans').textContent = '$' + precio + ' MXN';
-        document.getElementById('ref').textContent = 'GR-GYM-' + Date.now().toString().slice(-6);
+        function seleccionarPlan(plan,monto,elemento){
+            document.querySelectorAll('.plan-option').forEach(el=>el.classList.remove('selected'));
+            elemento.classList.add('selected');
+            planSeleccionado=plan;
+            montoSeleccionado=monto;
+            document.getElementById('montoTotal').textContent='$'+monto.toLocaleString();
+            document.getElementById('montoTransferencia').textContent='$'+monto.toLocaleString()+' MXN';
+            const nombres={mensual:'Plan Mensual',semestral:'Plan Semestral (6 meses)',anual:'Plan Anual (12 meses)'};
+            document.getElementById('descripcionPlan').textContent=nombres[plan];
+        }
         
-        function toggleTrans(){document.getElementById('transInfo').classList.toggle('show')}
-        function copiar(t){navigator.clipboard.writeText(t);alert('✅ Copiado')}
-        function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
+        document.getElementById('refPago').textContent='GR-LIC-'+Date.now().toString().slice(-6);
+        
+        function toggleTransferencia(){document.getElementById('transferenciaInfo').classList.toggle('show')}
+        function copiar(t){navigator.clipboard.writeText(t);alert('✅ Numero de tarjeta copiado')}
         
         async function pagarMP(){
-            const token = localStorage.getItem('gymrock_token');
-            const userData = JSON.parse(localStorage.getItem('gymrock_user') || '{}');
+            const token=localStorage.getItem('gymrock_token');
+            const userData=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
             if(!token){alert('Inicia sesion primero');return}
             try{
-                const res = await fetch(API_URL+'/api/crear-preferencia',{
+                const r=await fetch(API_URL+'/api/crear-preferencia',{
                     method:'POST',headers:{'Content-Type':'application/json'},
-                    body:JSON.stringify({descripcion:'Licencia GymRock - '+plan,monto:precio,gimnasio_id:userData.id||'',nombre:userData.nombre||'',email:userData.email||''})
+                    body:JSON.stringify({descripcion:'Licencia GymRock - '+planSeleccionado,monto:montoSeleccionado,nombre:userData.nombre||'',email:userData.email||''})
                 });
-                const data = await res.json();
-                if(data.status==='success') window.location.href = data.init_point;
-                else alert('Error: '+(data.error||'Intenta de nuevo'));
+                const d=await r.json();
+                if(d.status==='success')window.location.href=d.init_point;
+                else alert('Error: '+(d.error||'Intenta de nuevo'));
             }catch(e){alert('Error de conexion')}
         }
     </script>
