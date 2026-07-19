@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Test de Certificación</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--gold:#f59e0b;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;padding:20px}
+        .container{max-width:700px;margin:0 auto}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:20px}
+        h1{font-size:28px;text-align:center;margin-bottom:4px}
+        h1 span{background:linear-gradient(135deg,var(--gold),#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .subtitle{text-align:center;color:var(--gray);margin-bottom:28px;font-size:14px}
+        .info-bar{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.1);border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--gray)}
+        .info-bar strong{color:var(--white)}
+        .class-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+        .class-card{background:rgba(255,255,255,0.02);border:2px solid var(--border);border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:all 0.3s}
+        .class-card:hover{border-color:var(--gold)}
+        .class-card.selected{border-color:var(--gold);background:rgba(245,158,11,0.06)}
+        .class-card .badge{font-size:24px;margin-bottom:8px}
+        .class-card .clase{font-size:13px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+        .class-card .desc{font-size:11px;color:var(--gray);margin-top:4px}
+        .question-box{display:none}
+        .question-box.active{display:block}
+        .question{margin-bottom:24px;padding:20px;background:rgba(255,255,255,0.02);border-radius:14px;border:1px solid var(--border)}
+        .question h4{font-size:15px;margin-bottom:12px;color:var(--white)}
+        .options label{display:block;padding:12px 16px;margin-bottom:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.2s;font-size:14px}
+        .options label:hover{border-color:var(--gold)}
+        .options input[type="radio"]{margin-right:10px;accent-color:var(--gold)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s}
+        .btn-gold{background:linear-gradient(135deg,var(--gold),#d97706);color:#000}
+        .btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+        .btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}
+        .result{display:none;text-align:center;padding:32px}
+        .result.show{display:block}
+        .result .score{font-size:60px;font-weight:900;margin:16px 0}
+        .result .cert-badge{display:inline-block;padding:12px 32px;border-radius:50px;font-size:18px;font-weight:800;margin:12px 0}
+        .cert-a{background:rgba(59,130,246,0.15);color:var(--blue);border:2px solid var(--blue)}
+        .cert-b{background:rgba(245,158,11,0.15);color:var(--gold);border:2px solid var(--gold)}
+        .cert-c{background:rgba(34,197,94,0.15);color:var(--green);border:2px solid var(--green)}
+        #preguntasPersonalizadas{display:none}
+        #preguntasPersonalizadas.active{display:block}
+        textarea{width:100%;padding:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;resize:vertical;min-height:80px;font-family:'Inter',sans-serif}
+        @media(max-width:600px){.class-selector{grid-template-columns:1fr}.card{padding:20px 16px}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>GYM<span>ROCK</span></h1>
+            <p class="subtitle">Test de Certificación para Entrenadores</p>
+            <div class="info-bar">
+                <strong>📋 Gimnasio:</strong> <span id="gymName">--</span><br>
+                <strong>👤 Aspirante:</strong> <span id="aspiranteName">--</span>
+            </div>
+            
+            <!-- Selección de clase -->
+            <div id="selectorClase">
+                <h3 style="text-align:center;margin-bottom:16px">Selecciona el tipo de certificación</h3>
+                <div class="class-selector">
+                    <div class="class-card" onclick="seleccionarClase('A',this)">
+                        <div class="badge">📝</div>
+                        <div class="clase">Clase A</div>
+                        <div class="desc">Test personalizado por tu gimnasio</div>
+                    </div>
+                    <div class="class-card" onclick="seleccionarClase('B',this)">
+                        <div class="badge">🥈</div>
+                        <div class="clase">Clase B</div>
+                        <div class="desc">Conocimiento deportivo mexicano</div>
+                    </div>
+                    <div class="class-card" onclick="seleccionarClase('C',this)">
+                        <div class="badge">🥇</div>
+                        <div class="clase">Clase C</div>
+                        <div class="desc">Normativa exhaustiva México</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preguntas Personalizadas (Clase A) -->
+            <div id="preguntasPersonalizadas">
+                <h3 style="text-align:center;margin:20px 0">📝 Preguntas del Gimnasio</h3>
+                <p style="text-align:center;color:var(--gray);font-size:13px;margin-bottom:20px">Responde las siguientes preguntas formuladas por tu gimnasio</p>
+                <div class="question">
+                    <h4>1. ¿Por qué quieres ser entrenador en este gimnasio?</h4>
+                    <textarea id="pers1" placeholder="Tu respuesta..."></textarea>
+                </div>
+                <div class="question">
+                    <h4>2. ¿Qué experiencia tienes en el área fitness?</h4>
+                    <textarea id="pers2" placeholder="Describe tu experiencia..."></textarea>
+                </div>
+                <div class="question">
+                    <h4>3. ¿Cómo manejarías a un cliente principiante?</h4>
+                    <textarea id="pers3" placeholder="Tu enfoque..."></textarea>
+                </div>
+                <button class="btn btn-gold" onclick="evaluarClaseA()" style="width:100%">Enviar Respuestas</button>
+            </div>
+            
+            <!-- Test Clase B -->
+            <div class="question-box" id="testB">
+                <h3 style="text-align:center;margin:20px 0">🥈 Test Clase B - Conocimiento Deportivo Mexicano</h3>
+                <div class="question"><h4>1. ¿Cuál es el deporte nacional por excelencia en México?</h4>
+                    <div class="options"><label><input type="radio" name="b1" value="a"> A) Fútbol</label><label><input type="radio" name="b1" value="b"> B) Charrería</label><label><input type="radio" name="b1" value="c"> C) Boxeo</label></div></div>
+                <div class="question"><h4>2. ¿Qué es la CONADE?</h4>
+                    <div class="options"><label><input type="radio" name="b2" value="a"> A) Comisión Nacional de Deporte</label><label><input type="radio" name="b2" value="b"> B) Comisión Nacional de Cultura Física y Deporte</label><label><input type="radio" name="b2" value="c"> C) Consejo Nacional del Deporte</label></div></div>
+                <div class="question"><h4>3. ¿Cuál es la frecuencia cardiaca recomendada para ejercicio aeróbico moderado?</h4>
+                    <div class="options"><label><input type="radio" name="b3" value="a"> A) 50-60% FCmax</label><label><input type="radio" name="b3" value="b"> B) 60-70% FCmax</label><label><input type="radio" name="b3" value="c"> C) 80-90% FCmax</label></div></div>
+                <div class="question"><h4>4. ¿Qué significa IMC?</h4>
+                    <div class="options"><label><input type="radio" name="b4" value="a"> A) Índice de Masa Corporal</label><label><input type="radio" name="b4" value="b"> B) Índice Muscular Cardíaco</label><label><input type="radio" name="b4" value="c"> C) Indicador de Metabolismo Calórico</label></div></div>
+                <div class="question"><h4>5. ¿Cuántos minutos de ejercicio recomienda la OMS por semana?</h4>
+                    <div class="options"><label><input type="radio" name="b5" value="a"> A) 75 minutos</label><label><input type="radio" name="b5" value="b"> B) 150 minutos</label><label><input type="radio" name="b5" value="c"> C) 300 minutos</label></div></div>
+                <button class="btn btn-gold" onclick="evaluarClaseB()" style="width:100%">Enviar Test</button>
+            </div>
+            
+            <!-- Test Clase C -->
+            <div class="question-box" id="testC">
+                <h3 style="text-align:center;margin:20px 0">🥇 Test Clase C - Normativa Exhaustiva México</h3>
+                <div class="question"><h4>1. Según la Ley General de Cultura Física y Deporte, ¿quién regula a los entrenadores deportivos en México?</h4>
+                    <div class="options"><label><input type="radio" name="c1" value="a"> A) La SEP</label><label><input type="radio" name="c1" value="b"> B) La CONADE y el SINADE</label><label><input type="radio" name="c1" value="c"> C) La Secretaría de Salud</label></div></div>
+                <div class="question"><h4>2. ¿Qué norma oficial mexicana regula los servicios de acondicionamiento físico?</h4>
+                    <div class="options"><label><input type="radio" name="c2" value="a"> A) NOM-008-SSA3</label><label><input type="radio" name="c2" value="b"> B) NOM-030-SSA3</label><label><input type="radio" name="c2" value="c"> C) NOM-174-SSA1</label></div></div>
+                <div class="question"><h4>3. ¿Qué tipo de lesiones debe saber prevenir un entrenador certificado?</h4>
+                    <div class="options"><label><input type="radio" name="c3" value="a"> A) Solo musculares</label><label><input type="radio" name="c3" value="b"> B) Musculares, articulares y cardiovasculares</label><label><input type="radio" name="c3" value="c"> C) Solo articulares</label></div></div>
+                <div class="question"><h4>4. ¿Qué es el SINADE?</h4>
+                    <div class="options"><label><input type="radio" name="c4" value="a"> A) Sistema Nacional de Cultura Física y Deporte</label><label><input type="radio" name="c4" value="b"> B) Sindicato Nacional de Deportistas</label><label><input type="radio" name="c4" value="c"> C) Sistema Integral de Nutrición Atlética</label></div></div>
+                <div class="question"><h4>5. ¿Cuál es el protocolo RICE para lesiones deportivas?</h4>
+                    <div class="options"><label><input type="radio" name="c5" value="a"> A) Reposo, Hielo, Compresión, Elevación</label><label><input type="radio" name="c5" value="b"> B) Resistencia, Intensidad, Cardio, Ejercicio</label><label><input type="radio" name="c5" value="c"> C) Rehabilitación, Inmovilización, Calor, Estiramiento</label></div></div>
+                <div class="question"><h4>6. ¿Qué artículo constitucional garantiza el derecho a la cultura física y el deporte?</h4>
+                    <div class="options"><label><input type="radio" name="c6" value="a"> A) Artículo 3°</label><label><input type="radio" name="c6" value="b"> B) Artículo 4°</label><label><input type="radio" name="c6" value="c"> C) Artículo 123°</label></div></div>
+                <div class="question"><h4>7. ¿Qué porcentaje de 1RM se recomienda para hipertrofia?</h4>
+                    <div class="options"><label><input type="radio" name="c7" value="a"> A) 50-60%</label><label><input type="radio" name="c7" value="b"> B) 65-85%</label><label><input type="radio" name="c7" value="c"> C) 90-100%</label></div></div>
+                <button class="btn btn-gold" onclick="evaluarClaseC()" style="width:100%">Enviar Test</button>
+            </div>
+            
+            <!-- Resultado -->
+            <div class="result" id="resultado">
+                <div class="score" id="puntuacion">0/0</div>
+                <div id="badgeCert"></div>
+                <p id="mensajeResultado" style="margin:16px 0;font-size:15px"></p>
+                <p style="color:var(--gray);font-size:13px">✅ Resultado enviado al gimnasio para revisión</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const params=new URLSearchParams(window.location.search);
+        const gymId=params.get('gym')||'';
+        const aspirante=params.get('nombre')||'Aspirante';
+        const email=params.get('email')||'';
+        let claseSeleccionada='';
+        
+        document.getElementById('gymName').textContent='ID: '+gymId.substring(0,8)+'...';
+        document.getElementById('aspiranteName').textContent=aspirante+' ('+email+')';
+        
+        function seleccionarClase(clase,el){
+            document.querySelectorAll('.class-card').forEach(c=>c.classList.remove('selected'));
+            el.classList.add('selected');
+            claseSeleccionada=clase;
+            
+            document.getElementById('preguntasPersonalizadas').classList.remove('active');
+            document.getElementById('testB').classList.remove('active');
+            document.getElementById('testC').classList.remove('active');
+            
+            if(clase==='A')document.getElementById('preguntasPersonalizadas').classList.add('active');
+            if(clase==='B')document.getElementById('testB').classList.add('active');
+            if(clase==='C')document.getElementById('testC').classList.add('active');
+            
+            document.getElementById('selectorClase').style.display='none';
+        }
+        
+        function mostrarResultado(puntaje,total,clase){
+            document.getElementById('resultado').classList.add('show');
+            document.getElementById('puntuacion').textContent=puntaje+'/'+total;
+            const pct=(puntaje/total)*100;
+            const badge=document.getElementById('badgeCert');
+            
+            if(clase==='A'){
+                badge.innerHTML='<span class="cert-badge cert-a">🏅 Certificado Clase A</span>';
+                document.getElementById('mensajeResultado').textContent='Certificación personalizada por tu gimnasio. Puntuación: '+pct+'%';
+            }else if(pct>=80){
+                badge.innerHTML='<span class="cert-badge cert-'+(clase.toLowerCase())+'">🏅 Certificado Clase '+clase+'</span>';
+                document.getElementById('mensajeResultado').textContent='¡Felicidades! Has aprobado con '+pct+'%';
+            }else if(pct>=60){
+                badge.innerHTML='<span class="cert-badge cert-'+(clase.toLowerCase())+'">🏅 Certificado Clase '+clase+'</span>';
+                document.getElementById('mensajeResultado').textContent='Aprobado con '+pct+'%. El gimnasio revisará tu caso.';
+            }else{
+                badge.innerHTML='<span style="color:var(--red);font-size:18px;font-weight:700">❌ No Aprobado</span>';
+                document.getElementById('mensajeResultado').textContent='Puntuación: '+pct+'%. No alcanzaste el mínimo requerido.';
+            }
+        }
+        
+        function evaluarClaseA(){
+            const r1=document.getElementById('pers1').value.trim();
+            const r2=document.getElementById('pers2').value.trim();
+            const r3=document.getElementById('pers3').value.trim();
+            if(!r1||!r2||!r3){alert('Responde todas las preguntas');return}
+            mostrarResultado(3,3,'A');
+        }
+        
+        function evaluarClaseB(){
+            const correctas={b1:'b',b2:'b',b3:'b',b4:'a',b5:'b'};
+            let puntaje=0;
+            for(let i=1;i<=5;i++){
+                const sel=document.querySelector('input[name="b'+i+'"]:checked');
+                if(sel&&sel.value===correctas['b'+i])puntaje++;
+            }
+            mostrarResultado(puntaje,5,'B');
+        }
+        
+        function evaluarClaseC(){
+            const correctas={c1:'b',c2:'a',c3:'b',c4:'a',c5:'a',c6:'b',c7:'b'};
+            let puntaje=0;
+            for(let i=1;i<=7;i++){
+                const sel=document.querySelector('input[name="c'+i+'"]:checked');
+                if(sel&&sel.value===correctas['c'+i])puntaje++;
+            }
+            mostrarResultado(puntaje,7,'C');
+        }
+        
+        console.log('✅ Test de Certificación GymRock cargado');
+        console.log('Gimnasio:',gymId,'Aspirante:',aspirante);
+    </script>
+</body>
+</html>
