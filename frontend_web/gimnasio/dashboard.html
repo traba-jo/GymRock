@@ -8,23 +8,34 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--purple:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--red:#ef4444}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--blue:#3b82f6;--purple:#8b5cf6;--green:#22c55e;--red:#ef4444}
         body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
-        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex!important;flex-direction:column;z-index:100}
-        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+        
+        .sidebar{width:270px;min-width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;height:100vh;position:sticky;top:0;display:flex;flex-direction:column;transition:all 0.3s;overflow-y:auto}
+        .sidebar.collapsed{width:70px;min-width:70px;padding:28px 10px}
+        .sidebar.collapsed .logo span{font-size:0}
+        .sidebar.collapsed .logo::after{content:'G';font-size:24px;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sidebar.collapsed nav a span{display:none}
+        .sidebar.collapsed nav a{justify-content:center;padding:13px 10px}
+        .sidebar.collapsed nav a i{margin:0}
+        
+        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
         .sidebar .logo span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .sidebar nav{display:flex!important;flex-direction:column;gap:6px;flex:1}
-        .sidebar nav a{display:flex!important;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
-        .sidebar nav a i{width:20px;text-align:center}
+        .sidebar .logo .toggle-btn{background:none;border:none;color:var(--gray);cursor:pointer;font-size:18px;padding:4px 8px;border-radius:6px}
+        .sidebar .logo .toggle-btn:hover{color:var(--white);background:rgba(255,255,255,0.05)}
+        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap;transition:all 0.2s}
+        .sidebar nav a i{width:20px;text-align:center;font-size:16px}
         .sidebar nav a:hover{background:rgba(59,130,246,0.06);color:var(--white)}
         .sidebar nav a.active{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(59,130,246,0.15)}
         .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
-        .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
-        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px}
+        
+        .main{flex:1;padding:32px 40px;overflow-y:auto;height:100vh;min-width:0}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;flex-wrap:wrap;gap:16px}
         .header h1{font-size:28px;font-weight:800}
         .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
         .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-        .trial-banner{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:16px;padding:18px 24px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:center}
+        .trial-banner{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:16px;padding:18px 24px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
         .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
         .metric{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 24px}
         .metric .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:8px}
@@ -34,23 +45,31 @@
         table{width:100%;border-collapse:collapse;font-size:13px}
         th{text-align:left;padding:10px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
         td{padding:10px 8px;border-bottom:1px solid var(--border)}
-        @media(max-width:768px){.sidebar{width:270px!important;left:0!important;transform:none!important}.main{margin-left:270px!important;padding:20px}.metrics{grid-template-columns:1fr 1fr}}
+        
+        @media(max-width:768px){.sidebar{width:270px;min-width:270px;position:fixed;z-index:100;transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.sidebar.collapsed{width:270px;min-width:270px}.main{padding:20px}}
+        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="logo"><span>GYMROCK</span></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <span>GYMROCK</span>
+            <button class="toggle-btn" onclick="toggleSidebar()" title="Colapsar menu">☰</button>
+        </div>
         <nav>
-            <a href="dashboard.html" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a href="entrenadores.html"><i class="fas fa-users"></i> Entrenadores</a>
-            <a href="suscriptores.html"><i class="fas fa-user-check"></i> Suscriptores</a>
-            <a href="configuracion.html"><i class="fas fa-cog"></i> Configuracion</a>
-            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
+            <a href="dashboard.html" class="active"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a href="entrenadores.html"><i class="fas fa-users"></i> <span>Entrenadores</span></a>
+            <a href="suscriptores.html"><i class="fas fa-user-check"></i> <span>Suscriptores</span></a>
+            <a href="configuracion.html"><i class="fas fa-cog"></i> <span>Configuracion</span></a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> <span>Cerrar sesion</span></a>
         </nav>
     </aside>
     <main class="main">
         <div class="header">
-            <div><h1>Dashboard</h1><p style="color:var(--gray);font-size:14px">Panel de control</p></div>
+            <div style="display:flex;align-items:center;gap:14px">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+                <div><h1>Dashboard</h1><p style="color:var(--gray);font-size:14px">Panel de control</p></div>
+            </div>
             <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Cargando...</div></div>
         </div>
         <div class="trial-banner" id="trialBanner" style="display:none">
@@ -69,8 +88,19 @@
         </div>
     </main>
     <script>
+        function toggleSidebar(){
+            document.getElementById('sidebar').classList.toggle('collapsed');
+            localStorage.setItem('sidebarCollapsed',document.getElementById('sidebar').classList.contains('collapsed'));
+        }
         function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
-        document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}if(u.periodo_prueba){document.getElementById('trialBanner').style.display='flex';if(u.fecha_corte)document.getElementById('trialInfo').textContent='Vence: '+u.fecha_corte}});
+        document.addEventListener('DOMContentLoaded',()=>{
+            if(localStorage.getItem('sidebarCollapsed')==='true')document.getElementById('sidebar').classList.add('collapsed');
+            const t=localStorage.getItem('gymrock_token');
+            if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}
+            const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
+            if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}
+            if(u.periodo_prueba){document.getElementById('trialBanner').style.display='flex';if(u.fecha_corte)document.getElementById('trialInfo').textContent='Vence: '+u.fecha_corte}
+        });
     </script>
 </body>
 </html>
