@@ -140,6 +140,21 @@ def preferencia():
     r = sdk.preference().create(pref)
     return jsonify({'status':'success','init_point':r['response']['init_point']}), 200
 
+
+@app.route('/api/gimnasio/<gym_id>/banco', methods=['GET'])
+def get_banco_gimnasio(gym_id):
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    try:
+        r = supabase.table('gimnasios').select('banco_nombre,banco_titular,banco_cuenta').eq('id', gym_id).execute()
+        if r.data and len(r.data) > 0:
+            g = r.data[0]
+            cuenta = g.get('banco_cuenta','')
+            return jsonify({'status':'success','data':{'banco':g.get('banco_nombre',''),'titular':g.get('banco_titular',''),'cuenta':cuenta[-4:] if cuenta else '****'}}), 200
+        return jsonify({'status':'error','message':'Gimnasio no encontrado'}), 404
+    except Exception as e:
+        return jsonify({'error':str(e)}), 500
+
+
 # FRONTEND - ESTO ES LO CORREGIDO
 @app.route('/')
 def index():

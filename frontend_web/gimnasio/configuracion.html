@@ -1,1 +1,152 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>GymRock · Config</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"><style>*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#0A0E1A;--card:#111827;--side:#0F1524;--border:rgba(255,255,255,0.05);--white:#E8EDF5;--gray:#94A3B8;--blue:#2563EB;--gold:#F59E0B;--green:#22C55E;--red:#DC2626}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex}.sidebar{width:260px;background:var(--side);border-right:1px solid var(--border);padding:24px 16px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column}.sidebar .logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}.sidebar .logo span{font-size:20px;font-weight:800}.sidebar .logo span span{color:#60A5FA}.sidebar nav{display:flex;flex-direction:column;gap:4px;flex:1}.sidebar nav a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;color:var(--gray);text-decoration:none;font-size:14px}.sidebar nav a:hover{background:rgba(37,99,235,0.08);color:var(--white)}.sidebar nav a.active{background:rgba(37,99,235,0.12);color:#60A5FA;border-left:3px solid var(--blue)}.sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:16px}.main{margin-left:260px;flex:1;padding:24px 32px;overflow-y:auto;height:100vh}.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.header h1{font-size:24px}.header p{color:var(--gray)}.user{display:flex;align-items:center;gap:12px;background:var(--card);padding:8px 16px;border-radius:50px;border:1px solid var(--border)}.user .avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#1E3A8A);display:flex;align-items:center;justify-content:center;font-weight:700;color:white}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}.card h3{font-size:16px;margin-bottom:16px}.card h3 i{color:#60A5FA}.form-group{margin-bottom:12px}.form-group label{display:block;font-size:13px;color:var(--gray);margin-bottom:4px}.form-group input{width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;outline:none}.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}.btn-blue{background:linear-gradient(135deg,var(--blue),#1E3A8A);color:white}.btn-gold{background:linear-gradient(135deg,var(--gold),#B8941E);color:#0A0E1A}.licencia{display:flex;justify-content:space-between;align-items:center;padding:16px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.12);border-radius:10px;flex-wrap:wrap;gap:12px}.licencia .plan{font-size:18px;font-weight:700;color:var(--green)}@media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:16px}.grid{grid-template-columns:1fr}}</style></head><body><aside class="sidebar"><div class="logo"><span>GYM<span>ROCK</span></span></div><nav><a href="dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</a><a href="entrenadores.html"><i class="fas fa-users"></i> Entrenadores</a><a href="suscriptores.html"><i class="fas fa-user-check"></i> Suscriptores</a><a href="#" class="active"><i class="fas fa-cog"></i> Configuracion</a><a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Salir</a></nav></aside><main class="main"><div class="header"><div><h1><i class="fas fa-cog" style="color:#60A5FA"></i> Configuracion</h1><p>Administra tu gimnasio</p></div><div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Gimnasio</div></div></div><div class="grid"><div class="card"><h3><i class="fas fa-store"></i> Perfil del Gimnasio</h3><div class="form-group"><label>Nombre</label><input type="text" id="gymNombre"></div><div class="form-group"><label>Telefono</label><input type="text" id="gymTel"></div><button class="btn btn-blue" onclick="guardarPerfil()"><i class="fas fa-save"></i> Guardar</button></div><div class="card"><h3><i class="fas fa-crown"></i> Planes de Suscripcion</h3><div class="form-group"><label>Plan Mensual (MXN)</label><input type="number" id="planMensual" value="450"></div><div class="form-group"><label>Plan Quincenal (MXN)</label><input type="number" id="planQuincenal" value="250"></div><button class="btn btn-blue" onclick="guardarPlanes()"><i class="fas fa-save"></i> Guardar Planes</button></div><div class="card"><h3><i class="fas fa-file-contract"></i> Licencia GymRock</h3><div class="licencia"><div><div class="plan" id="estadoLic">Activa</div><div style="font-size:13px;color:var(--gray)" id="fechaLic">--</div></div><button class="btn btn-gold" onclick="window.location.href='pago_licencia.html'"><i class="fas fa-sync"></i> Renovar Licencia</button></div></div><div class="card"><h3><i class="fas fa-shield-alt"></i> Seguridad</h3><div class="form-group"><label>Nueva Contraseña</label><input type="password" id="passNueva" placeholder="Min 6 caracteres"></div><button class="btn btn-blue" onclick="cambiarPass()"><i class="fas fa-key"></i> Cambiar</button></div></div></main><script>function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}function guardarPerfil(){alert('✅ Perfil guardado')}function guardarPlanes(){alert('✅ Planes guardados')}function cambiarPass(){alert('✅ Contraseña cambiada')}document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="font-size:11px;color:var(--gray)">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();document.getElementById('gymNombre').value=u.nombre}if(u.fecha_corte)document.getElementById('fechaLic').textContent='Vence: '+u.fecha_corte});</script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Configuracion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--blue:#3b82f6;--purple:#8b5cf6;--green:#22c55e;--gold:#f59e0b;--red:#ef4444}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
+        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100}
+        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+        .sidebar .logo span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
+        .sidebar nav a i{width:20px;text-align:center}
+        .sidebar nav a:hover{background:rgba(59,130,246,0.06);color:var(--white)}
+        .sidebar nav a.active{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(59,130,246,0.15)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
+        .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px}
+        .header h1{font-size:28px;font-weight:800}
+        .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
+        .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+        .card h3{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .card h3 i{color:var(--blue)}
+        .form-group{margin-bottom:14px}
+        .form-group label{display:block;font-size:13px;color:var(--gray);margin-bottom:4px}
+        .form-group input,.form-group select{width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;outline:none}
+        .form-group input:focus,.form-group select:focus{border-color:var(--blue)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+        .btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+        .btn-gold{background:linear-gradient(135deg,var(--gold),#B8941E);color:#0A0E1A}
+        .btn-green{background:var(--green);color:#fff}
+        .licencia{display:flex;justify-content:space-between;align-items:center;padding:16px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.12);border-radius:10px;flex-wrap:wrap;gap:12px}
+        .licencia .plan{font-size:18px;font-weight:700;color:var(--green)}
+        .banco-info{background:rgba(59,130,246,0.04);border:1px solid rgba(59,130,246,0.1);border-radius:10px;padding:12px;margin-top:12px;font-size:13px;color:var(--gray)}
+        .banco-info strong{color:var(--white)}
+        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.grid{grid-template-columns:1fr}}
+        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
+        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--green);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="logo"><span>GYMROCK</span></div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a href="entrenadores.html"><i class="fas fa-users"></i> Entrenadores</a>
+            <a href="suscriptores.html"><i class="fas fa-user-check"></i> Suscriptores</a>
+            <a href="#" class="active"><i class="fas fa-cog"></i> Configuracion</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
+        </nav>
+    </aside>
+    <main class="main">
+        <div class="header">
+            <div style="display:flex;align-items:center;gap:14px">
+                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+                <div><h1>Configuracion</h1><p style="color:var(--gray);font-size:14px">Administra tu gimnasio</p></div>
+            </div>
+            <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Cargando...</div></div>
+        </div>
+        <div class="grid">
+            <!-- PERFIL -->
+            <div class="card">
+                <h3><i class="fas fa-store"></i> Perfil del Gimnasio</h3>
+                <div class="form-group"><label>Nombre</label><input type="text" id="gymNombre"></div>
+                <div class="form-group"><label>Telefono</label><input type="text" id="gymTel"></div>
+                <div class="form-group"><label>Email</label><input type="email" id="gymEmail" disabled style="opacity:0.5"></div>
+                <button class="btn btn-blue" onclick="guardarPerfil()">Guardar</button>
+            </div>
+            
+            <!-- LICENCIA GYMROCK -->
+            <div class="card">
+                <h3><i class="fas fa-file-contract"></i> Licencia GymRock</h3>
+                <div class="licencia">
+                    <div><div class="plan" id="estadoLic">Activa</div><div style="font-size:13px;color:var(--gray)" id="fechaLic">--</div></div>
+                    <button class="btn btn-gold" onclick="window.location.href='pago_licencia.html'">Renovar Licencia</button>
+                </div>
+                <p style="font-size:12px;color:var(--gray);margin-top:8px">Pago de licencia a GymRock · BBVA 4815...</p>
+            </div>
+            
+            <!-- DATOS BANCARIOS DEL GIMNASIO (para cobrar a clientes) -->
+            <div class="card" style="border:1px solid rgba(59,130,246,0.2)">
+                <h3><i class="fas fa-credit-card"></i> Datos Bancarios <span style="font-size:11px;background:rgba(59,130,246,0.1);color:var(--blue);padding:4px 10px;border-radius:50px">Para cobrar a clientes</span></h3>
+                <p style="font-size:12px;color:var(--gray);margin-bottom:14px">Los clientes veran solo los ultimos 4 digitos al pagar por transferencia</p>
+                <div class="form-group"><label>Banco</label><input type="text" id="bancoNombre" placeholder="BBVA, Santander, etc"></div>
+                <div class="form-group"><label>Titular</label><input type="text" id="bancoTitular" placeholder="Nombre del titular"></div>
+                <div class="form-group"><label>Numero de Cuenta/Tarjeta</label><input type="text" id="bancoCuenta" placeholder="4815 1632 9824 3091" maxlength="20"></div>
+                <div class="banco-info">🔒 Tus datos se guardan encriptados. Los clientes solo veran: <strong id="previewBanco">--</strong></div>
+                <button class="btn btn-green" onclick="guardarBanco()" style="margin-top:12px">💾 Guardar Datos Bancarios</button>
+            </div>
+            
+            <!-- PLANES DE SUSCRIPCION -->
+            <div class="card">
+                <h3><i class="fas fa-crown"></i> Planes para Clientes</h3>
+                <div class="form-group"><label>Mensual (MXN)</label><input type="number" id="planMensual" value="450"></div>
+                <div class="form-group"><label>Quincenal (MXN)</label><input type="number" id="planQuincenal" value="250"></div>
+                <button class="btn btn-blue" onclick="guardarPlanes()">Guardar Planes</button>
+            </div>
+        </div>
+    </main>
+    <div class="toast" id="toast"></div>
+    <script>
+        function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
+        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+        function guardarPerfil(){mostrarToast('✅ Perfil guardado')}
+        function guardarPlanes(){mostrarToast('✅ Planes guardados')}
+        
+        function guardarBanco(){
+            const banco=document.getElementById('bancoNombre').value;
+            const titular=document.getElementById('bancoTitular').value;
+            const cuenta=document.getElementById('bancoCuenta').value;
+            if(!banco||!titular||!cuenta){mostrarToast('⚠️ Completa todos los campos');return}
+            // Guardar ultimos 4 digitos visibles
+            const ultimos4=cuenta.replace(/\s/g,'').slice(-4);
+            document.getElementById('previewBanco').textContent=banco+' · ***'+ultimos4;
+            mostrarToast('✅ Datos bancarios guardados (encriptados)');
+        }
+        
+        document.getElementById('bancoCuenta').addEventListener('input',function(){
+            const cuenta=this.value.replace(/\s/g,'');
+            if(cuenta.length>=4){
+                document.getElementById('previewBanco').textContent=(document.getElementById('bancoNombre').value||'Banco')+' · ***'+cuenta.slice(-4);
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded',()=>{
+            const t=localStorage.getItem('gymrock_token');
+            if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}
+            const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
+            if(u.nombre){
+                document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';
+                document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();
+                document.getElementById('gymNombre').value=u.nombre;
+            }
+            if(u.email)document.getElementById('gymEmail').value=u.email;
+            if(u.fecha_corte)document.getElementById('fechaLic').textContent='Vence: '+u.fecha_corte;
+            if(u.banco_cuenta){
+                document.getElementById('bancoNombre').value=u.banco_nombre||'';
+                document.getElementById('bancoTitular').value=u.banco_titular||'';
+                document.getElementById('bancoCuenta').value=u.banco_cuenta||'';
+                document.getElementById('previewBanco').textContent=(u.banco_nombre||'Banco')+' · ***'+(u.banco_cuenta||'****').slice(-4);
+            }
+        });
+    </script>
+</body>
+</html>

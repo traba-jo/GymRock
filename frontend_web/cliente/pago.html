@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>GymRock · Pagar Suscripcion</title>
+    <title>GymRock · Pagar</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#06060E;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--cyan:#06b6d4;--purple:#8b5cf6;--gold:#D4AF37}
+        :root{--bg:#06060E;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--cyan:#06b6d4;--purple:#8b5cf6}
         body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
         .container{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:40px;max-width:500px;width:100%;text-align:center}
         h1{font-size:28px;margin-bottom:4px}h1 span{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         p{color:var(--gray);margin-bottom:24px}
         .plan-info{background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.12);border-radius:16px;padding:24px;margin-bottom:24px}
-        .precio{font-size:40px;font-weight:900;color:var(--white)}
+        .precio{font-size:40px;font-weight:900}
         .btn{display:block;width:100%;padding:16px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;transition:all 0.3s}
         .btn-mp{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff}
         .btn-trans{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white)}
@@ -26,6 +26,7 @@
         .dato span:first-child{color:var(--gray)}.dato span:last-child{color:var(--white);font-weight:600}
         .btn-copiar{background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);color:var(--cyan);padding:4px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600}
         .btn-volver{display:block;text-align:center;color:var(--gray);text-decoration:none;font-size:14px;margin-top:16px}
+        .aviso{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.12);border-radius:10px;padding:10px;margin-top:12px;font-size:12px;color:#f59e0b;text-align:center}
     </style>
 </head>
 <body>
@@ -40,13 +41,13 @@
         <button class="btn btn-mp" onclick="pagarMP()">💳 Pagar con Mercado Pago</button>
         <button class="btn btn-trans" onclick="toggleTrans()">🏦 Pagar por Transferencia</button>
         <div class="transferencia" id="transInfo">
-            <h3>📋 Datos Bancarios</h3>
-            <div class="dato"><span>Banco</span><span>BBVA</span></div>
-            <div class="dato"><span>Titular</span><span>GymRock Plataforma Fitness</span></div>
-            <div class="dato"><span>No. de Tarjeta</span><span>4815 1632 9824 3091 <button class="btn-copiar" onclick="copiar('4815163298243091')">Copiar</button></span></div>
+            <h3>📋 Datos Bancarios del Gimnasio</h3>
+            <div class="dato"><span>Banco</span><span id="datoBanco">--</span></div>
+            <div class="dato"><span>Titular</span><span id="datoTitular">--</span></div>
+            <div class="dato"><span>Cuenta</span><span id="datoCuenta">****</span></div>
             <div class="dato"><span>Concepto</span><span id="ref">GR-SUB-000000</span></div>
             <div class="dato"><span>Monto</span><span id="montoTrans">$450 MXN</span></div>
-            <p style="margin-top:16px;font-size:13px;color:var(--gray);text-align:center">⚠️ Usa el concepto como referencia. Tu suscripcion se activara en max 24h.</p>
+            <div class="aviso">⚠️ Pago directo al gimnasio. GymRock no retiene este pago. Guarda tu comprobante.</div>
         </div>
         <a href="gimnasios.html" class="btn-volver">← Volver a Gimnasios</a>
     </div>
@@ -57,15 +58,29 @@
         document.getElementById('gymNombre').textContent=params.get('nombre')||'Gimnasio';
         document.getElementById('montoTrans').textContent='$'+(params.get('precio')||'450')+' MXN';
         document.getElementById('ref').textContent='GR-SUB-'+Date.now().toString().slice(-6);
+        
+        // Cargar datos bancarios del gimnasio
+        const gymId=params.get('gym');
+        if(gymId){
+            fetch(API_URL+'/api/gimnasio/'+gymId+'/banco')
+            .then(r=>r.json())
+            .then(d=>{
+                if(d.status==='success'&&d.data){
+                    document.getElementById('datoBanco').textContent=d.data.banco||'--';
+                    document.getElementById('datoTitular').textContent=d.data.titular||'--';
+                    document.getElementById('datoCuenta').textContent='***'+(d.data.cuenta||'****').slice(-4);
+                }
+            }).catch(()=>{});
+        }
+        
         function toggleTrans(){document.getElementById('transInfo').classList.toggle('show')}
-        function copiar(t){navigator.clipboard.writeText(t);alert('✅ Copiado')}
         async function pagarMP(){
             const token=localStorage.getItem('gymrock_token');
             const userData=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
             if(!token){alert('Inicia sesion');return}
             try{
-                const r=await fetch(API_URL+'/api/crear-preferencia',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({descripcion:'Suscripcion GymRock',monto:parseFloat(params.get('precio')||'450'),gimnasio_id:params.get('gym')||'',nombre:userData.nombre||'',email:userData.email||''})});
-                const d=await r.json();if(d.status==='success')window.location.href=d.init_point;else alert('Error: '+(d.error||'Intenta de nuevo'));
+                const r=await fetch(API_URL+'/api/crear-preferencia',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({descripcion:'Suscripcion GymRock',monto:parseFloat(params.get('precio')||'450'),gimnasio_id:gymId||'',nombre:userData.nombre||'',email:userData.email||''})});
+                const d=await r.json();if(d.status==='success')window.location.href=d.init_point;else alert('Error');
             }catch(e){alert('Error de conexion')}
         }
     </script>
