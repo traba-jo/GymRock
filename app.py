@@ -346,13 +346,13 @@ def entrenadores_gimnasio(gym_id):
     if not supabase:
         return jsonify({'error': 'Servicio no disponible'}), 500
     try:
-        result = supabase.rpc('get_entrenadores_by_gym', {'gym_id_param': gym_id}).execute()
-        data = result.data if result.data else []
+        result = supabase.table('entrenadores').select('*').execute()
+        all_data = result.data if result.data else []; data = [e for e in all_data if str(e.get("gimnasio_id","")) == gym_id]
         return jsonify({'status': 'success', 'data': data}), 200
     except:
         try:
             result = supabase.table('entrenadores').select('*').execute()
-            all_data = result.data if result.data else []
+            all_all_data = result.data if result.data else []; data = [e for e in all_data if str(e.get("gimnasio_id","")) == gym_id]
             data = [e for e in all_data if str(e.get('gimnasio_id','')) == str(gym_id)]
             return jsonify({'status': 'success', 'data': data}), 200
         except Exception as e:
