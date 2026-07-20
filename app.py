@@ -346,16 +346,17 @@ def entrenadores_gimnasio(gym_id):
     if not supabase:
         return jsonify({'error': 'Servicio no disponible'}), 500
     try:
-        # Sin filtrar por activo para debug
-        result = supabase.table('entrenadores').select('*').execute()
+        result = supabase.rpc('get_entrenadores_by_gym', {'gym_id_param': gym_id}).execute()
         data = result.data if result.data else []
-        return jsonify({
-            'status': 'success',
-            'data': data,
-            'debug': {'gym_id_recibido': gym_id, 'total_resultados': len(data)}
-        }), 200
-    except Exception as e:
-        return jsonify({'error': str(e), 'debug': str(e)}), 500
+        return jsonify({'status': 'success', 'data': data}), 200
+    except:
+        try:
+            result = supabase.table('entrenadores').select('*').execute()
+            all_data = result.data if result.data else []
+            data = [e for e in all_data if str(e.get('gimnasio_id','')) == str(gym_id) and e.get('activo') == True]
+            return jsonify({'status': 'success', 'data': data}), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
 
 # ---------- CERTIFICACIONES ----------
 @app.route('/api/gimnasio/<gym_id>/certificaciones', methods=['GET'])
