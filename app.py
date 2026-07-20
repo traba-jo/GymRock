@@ -353,7 +353,7 @@ def entrenadores_gimnasio(gym_id):
         try:
             result = supabase.table('entrenadores').select('*').execute()
             all_data = result.data if result.data else []
-            data = [e for e in all_data if str(e.get('gimnasio_id','')) == str(gym_id) and e.get('activo') == True]
+            data = [e for e in all_data if str(e.get('gimnasio_id','')) == str(gym_id)]
             return jsonify({'status': 'success', 'data': data}), 200
         except Exception as e:
             return jsonify({'error': str(e)}), 500
