@@ -277,7 +277,6 @@ def revocar_entrenador(ent_id):
         return jsonify({'error':str(e)}), 500
 
 
-@app.route('/api/gimnasio/<gym_id>/entrenadores', methods=['GET'])
 def ver_entrenadores_gimnasio(gym_id):
     if not supabase: return jsonify({'error':'No DB'}), 500
     try:
