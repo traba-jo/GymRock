@@ -347,7 +347,7 @@ def entrenadores_gimnasio(gym_id):
         return jsonify({'error': 'Servicio no disponible'}), 500
     try:
         # Sin filtrar por activo para debug
-        result = supabase.table('entrenadores').select('*').filter('gimnasio_id', 'eq', gym_id).execute()
+        result = supabase.table('entrenadores').select('*').execute()
         data = result.data if result.data else []
         return jsonify({
             'status': 'success',
