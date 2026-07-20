@@ -185,7 +185,7 @@ def registrar_cliente():
         return jsonify({'error': 'Error al crear registro'}), 500
     except Exception as e:
         print(f"Error registro cliente: {e}")
-        return jsonify({'error': 'Error interno'}), 500
+        return jsonify({'error': str(e)}), 500
 
 # ---------- LOGIN ----------
 @app.route('/api/login', methods=['POST'])
