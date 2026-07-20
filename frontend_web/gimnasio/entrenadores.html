@@ -235,7 +235,7 @@
             const t=localStorage.getItem('gymrock_token');
             if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}
             const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
-            if(u.nombre){cargarCertificaciones();document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();gymId=u.id}
+            if(u.nombre){console.log('Gym ID:',u.id);gymId=u.id;setTimeout(()=>cargarCertificaciones(),500);document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();gymId=u.id}
         });
     </script>
 </body>
