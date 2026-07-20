@@ -1,4 +1,4 @@
-import os, hashlib, jwt, mercadopago
+import os, hashlib, jwt, mercadopago, random, string
 from datetime import datetime, timedelta, timezone
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -23,23 +23,24 @@ BASE_URL = os.getenv('BASE_URL', 'https://gymrock.onrender.com')
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
 print("✅ Supabase:", "OK" if supabase else "NO")
-print("💳 MP:", "OK" if MP_ACCESS_TOKEN else "NO")
 
 def hash_password(p): return hashlib.sha256(p.encode()).hexdigest()
 def generate_token(uid, email, rol):
     return jwt.encode({'user':{'id':uid,'email':email,'rol':rol},'exp':datetime.now(timezone.utc)+timedelta(days=JWT_EXPIRATION)}, SECRET_KEY, algorithm='HS256')
 
-# API
+# ========== HEALTH ==========
 @app.route('/api/health', methods=['GET'])
 def health():
-    return jsonify({'status':'ok','message':'GymRock API','version':'2.3.0','supabase':'ok' if supabase else 'no','mp':'ok' if MP_ACCESS_TOKEN else 'no'}), 200
+    return jsonify({'status':'ok','message':'GymRock API','version':'3.0'}), 200
 
+# ========== GIMNASIOS ==========
 @app.route('/api/gimnasios', methods=['GET'])
 def gimnasios():
     if not supabase: return jsonify({'error':'No DB'}), 500
     r = supabase.table('gimnasios').select('*').eq('visible_publico',True).eq('estado_licencia','activa').execute()
     return jsonify({'status':'success','data':r.data or [],'total':len(r.data) if r.data else 0}), 200
 
+# ========== REGISTRO GIMNASIO ==========
 @app.route('/api/registro/gimnasio', methods=['POST'])
 def reg_gym():
     if not supabase: return jsonify({'error':'No DB'}), 500
@@ -47,18 +48,19 @@ def reg_gym():
     for f in ['nombre','email','password','estado','municipio']:
         if not d.get(f): return jsonify({'error':f'Falta {f}'}), 400
     email = d['email'].strip().lower()
-    if '@' not in email or '.' not in email: return jsonify({'error':'Email invalido'}), 400
+    if '@' not in email: return jsonify({'error':'Email invalido'}), 400
     if len(d['password'])<6: return jsonify({'error':'Contraseña corta'}), 400
     if supabase.table('gimnasios').select('id').eq('email',email).execute().data: return jsonify({'error':'Ya existe'}), 409
     h = hash_password(d['password'])
     ahora = datetime.now(timezone.utc)
-    nuevo = {'nombre':d['nombre'].strip(),'email':email,'password_hash':h,'estado':d['estado'].strip(),'municipio':d['municipio'].strip(),'direccion':d.get('direccion','').strip(),'telefono':d.get('telefono','').strip(),'plan':d.get('plan','basico'),'licencia_fecha_corte':(ahora+timedelta(days=15)).isoformat(),'estado_licencia':'activa','visible_publico':True,'periodo_prueba':True,'fecha_registro':ahora.isoformat()}
+    nuevo = {'nombre':d['nombre'].strip(),'email':email,'password_hash':h,'estado':d['estado'].strip(),'municipio':d['municipio'].strip(),'plan':d.get('plan','basico'),'licencia_fecha_corte':(ahora+timedelta(days=15)).isoformat(),'estado_licencia':'activa','visible_publico':True,'periodo_prueba':True,'fecha_registro':ahora.isoformat()}
     r = supabase.table('gimnasios').insert(nuevo).execute()
     if r.data:
         g = r.data[0]
         return jsonify({'status':'success','data':{'id':g['id'],'nombre':g['nombre'],'email':g['email'],'token':generate_token(g['id'],g['email'],'gimnasio'),'dias_prueba':15,'fecha_corte':(ahora+timedelta(days=15)).strftime('%d/%m/%Y')}}), 201
     return jsonify({'error':'Error'}), 500
 
+# ========== REGISTRO CLIENTE ==========
 @app.route('/api/registro/cliente', methods=['POST'])
 def reg_cli():
     if not supabase: return jsonify({'error':'No DB'}), 500
@@ -66,17 +68,18 @@ def reg_cli():
     for f in ['nombre','email','password','estado','municipio']:
         if not d.get(f): return jsonify({'error':f'Falta {f}'}), 400
     email = d['email'].strip().lower()
-    if '@' not in email or '.' not in email: return jsonify({'error':'Email invalido'}), 400
+    if '@' not in email: return jsonify({'error':'Email invalido'}), 400
     if len(d['password'])<6: return jsonify({'error':'Contraseña corta'}), 400
     if supabase.table('usuarios').select('id').eq('email',email).execute().data: return jsonify({'error':'Ya existe'}), 409
     h = hash_password(d['password'])
-    nuevo = {'nombre':d['nombre'].strip(),'email':email,'password_hash':h,'estado':d['estado'].strip(),'municipio':d['municipio'].strip(),'telefono':d.get('telefono','').strip(),'fecha_registro':datetime.now(timezone.utc).isoformat()}
+    nuevo = {'nombre':d['nombre'].strip(),'email':email,'password_hash':h,'estado':d['estado'].strip(),'municipio':d['municipio'].strip(),'telefono':d.get('telefono',''),'fecha_registro':datetime.now(timezone.utc).isoformat()}
     r = supabase.table('usuarios').insert(nuevo).execute()
     if r.data:
         u = r.data[0]
         return jsonify({'status':'success','data':{'id':u['id'],'nombre':u['nombre'],'email':u['email'],'token':generate_token(u['id'],u['email'],'cliente')}}), 201
     return jsonify({'error':'Error'}), 500
 
+# ========== LOGIN ==========
 @app.route('/api/login', methods=['POST'])
 def login():
     if not supabase: return jsonify({'error':'No DB'}), 500
@@ -92,11 +95,12 @@ def login():
     u = r.data[0]
     resp = {'id':u['id'],'nombre':u['nombre'],'email':u['email'],'rol':rol,'token':generate_token(u['id'],u['email'],rol)}
     if rol=='gimnasio':
-        resp['plan'] = u.get('plan','basico')
-        resp['periodo_prueba'] = u.get('periodo_prueba',False)
-        if u.get('licencia_fecha_corte'): resp['fecha_corte'] = u['licencia_fecha_corte'][:10]
+        resp['plan']=u.get('plan','basico')
+        resp['periodo_prueba']=u.get('periodo_prueba',False)
+        if u.get('licencia_fecha_corte'): resp['fecha_corte']=str(u['licencia_fecha_corte'])[:10]
     return jsonify({'status':'success','data':resp}), 200
 
+# ========== ADMIN LOGIN ==========
 @app.route('/api/admin/login', methods=['POST'])
 def admin_login():
     if not supabase: return jsonify({'error':'No DB'}), 500
@@ -131,31 +135,19 @@ def dashboard():
     u = supabase.table('usuarios').select('*').execute()
     return jsonify({'status':'success','data':{'total_gimnasios':len(g.data or []),'total_usuarios':len(u.data or []),'gimnasios':g.data or []}}), 200
 
-@app.route('/api/crear-preferencia', methods=['POST'])
-def preferencia():
-    if not MP_ACCESS_TOKEN: return jsonify({'error':'No MP'}), 500
-    d = request.get_json()
-    sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
-    pref = {"items":[{"title":d.get('descripcion','Suscripcion'),"quantity":1,"unit_price":float(d.get('monto',0)),"currency_id":"MXN"}],"back_urls":{"success":f"{BASE_URL}/cliente/suscripciones.html?status=success","failure":f"{BASE_URL}/cliente/suscripciones.html?status=failure","pending":f"{BASE_URL}/cliente/suscripciones.html?status=pending"},"auto_return":"approved"}
-    r = sdk.preference().create(pref)
-    return jsonify({'status':'success','init_point':r['response']['init_point']}), 200
-
-
+# ========== ENTRENADOR LOGIN ==========
 @app.route('/api/entrenador/login', methods=['POST'])
 def entrenador_login():
     if not supabase: return jsonify({'error':'No DB'}), 500
-    try:
-        d = request.get_json()
-        codigo = d.get('codigo_acceso','').strip().upper()
-        if not codigo: return jsonify({'error':'Codigo requerido'}), 400
-        r = supabase.table('entrenadores').select('*').eq('codigo_acceso',codigo).eq('activo',True).execute()
-        if not r.data: return jsonify({'error':'Codigo invalido'}), 401
-        e = r.data[0]
-        token = generate_token(e['id'],e['email'],'entrenador')
-        return jsonify({'status':'success','data':{'id':e['id'],'nombre':e['nombre'],'email':e['email'],'codigo_acceso':e['codigo_acceso'],'token':token,'rol':'entrenador'}}),200
-    except Exception as e: return jsonify({'error':str(e)}),500
+    d = request.get_json()
+    codigo = d.get('codigo_acceso','').strip().upper()
+    if not codigo: return jsonify({'error':'Codigo requerido'}), 400
+    r = supabase.table('entrenadores').select('*').eq('codigo_acceso',codigo).eq('activo',True).execute()
+    if not r.data: return jsonify({'error':'Codigo invalido'}), 401
+    e = r.data[0]
+    return jsonify({'status':'success','data':{'id':e['id'],'nombre':e['nombre'],'email':e['email'],'codigo_acceso':e['codigo_acceso'],'token':generate_token(e['id'],e['email'],'entrenador'),'rol':'entrenador'}}), 200
 
-
+# ========== ENTRENADORES DEL GIMNASIO ==========
 @app.route('/api/gimnasio/<gym_id>/entrenadores', methods=['GET'])
 def listar_entrenadores_gym(gym_id):
     if not supabase: return jsonify({'error':'No DB'}), 500
@@ -165,99 +157,65 @@ def listar_entrenadores_gym(gym_id):
     except Exception as e:
         return jsonify({'error':str(e)}), 500
 
-
-@app.route('/api/certificacion/resultado', methods=['POST'])
-def guardar_resultado_certificacion():
-    if not supabase: return jsonify({'error':'No DB'}), 500
-    try:
-        d = request.get_json()
-        supabase.table('certificaciones').insert({
-            'gimnasio_id': d.get('gimnasio_id',''),
-            'nombre_solicitante': d.get('nombre',''),
-            'email_solicitante': d.get('email',''),
-            'puntuacion': int(d.get('puntuacion',0)),
-            'total_preguntas': int(d.get('total',0)),
-            'clase': d.get('clase',''),
-            'estado': 'pendiente',
-            'fecha_envio': datetime.now(timezone.utc).isoformat()
-        }).execute()
-        return jsonify({'status':'success','message':'Resultado enviado'}), 200
-    except Exception as e:
-        return jsonify({'error':str(e)}), 500
-
+# ========== CERTIFICACIONES ==========
 @app.route('/api/gimnasio/<gym_id>/certificaciones', methods=['GET'])
 def ver_certificaciones(gym_id):
     if not supabase: return jsonify({'error':'No DB'}), 500
-    try:
-        result = supabase.table('certificaciones').select('*').eq('gimnasio_id', gym_id).order('fecha_envio', desc=True).execute()
-        return jsonify({'status':'success','data':result.data if result.data else []}), 200
-    except Exception as e:
-        return jsonify({'error':str(e)}), 500
+    result = supabase.table('certificaciones').select('*').eq('gimnasio_id', gym_id).order('fecha_envio', desc=True).execute()
+    return jsonify({'status':'success','data':result.data if result.data else []}), 200
+
+@app.route('/api/certificacion/resultado', methods=['POST'])
+def guardar_resultado():
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    d = request.get_json()
+    supabase.table('certificaciones').insert({
+        'gimnasio_id': d.get('gimnasio_id',''),
+        'nombre_solicitante': d.get('nombre',''),
+        'email_solicitante': d.get('email',''),
+        'puntuacion': int(d.get('puntuacion',0)),
+        'total_preguntas': int(d.get('total',0)),
+        'clase': d.get('clase',''),
+        'estado': 'pendiente',
+        'fecha_envio': datetime.now(timezone.utc).isoformat()
+    }).execute()
+    return jsonify({'status':'success','message':'Resultado enviado'}), 200
 
 @app.route('/api/certificacion/<cert_id>/revisar', methods=['POST'])
-def revisar_certificacion(cert_id):
+def revisar_cert(cert_id):
     if not supabase: return jsonify({'error':'No DB'}), 500
-    try:
-        d = request.get_json()
-        estado = d.get('estado','aprobado')
-        supabase.table('certificaciones').update({'estado': estado, 'fecha_revision': datetime.now(timezone.utc).isoformat()}).eq('id', cert_id).execute()
-        if estado == 'aprobado':
-            cert = supabase.table('certificaciones').select('*').eq('id', cert_id).execute()
-            if cert.data:
-                c = cert.data[0]
-                import random, string
-                codigo = 'GYM-ENT-' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-                supabase.table('entrenadores').insert({
-                    'gimnasio_id': c['gimnasio_id'],
-                    'nombre': c['nombre_solicitante'],
-                    'email': c['email_solicitante'],
-                    'codigo_acceso': codigo,
-                    'especialidad': 'Entrenador Personal',
-                    'certificado': True,
-                    'puntuacion_test': c['puntuacion'],
-                    'activo': True,
-                    'precio_sesion': 350
-                }).execute()
-                return jsonify({'status':'success','message':'Aprobado','codigo':codigo}), 200
-        return jsonify({'status':'success','message':'Certificacion '+estado}), 200
-    except Exception as e:
-        return jsonify({'error':str(e)}), 500
+    d = request.get_json()
+    estado = d.get('estado','aprobado')
+    supabase.table('certificaciones').update({'estado':estado,'fecha_revision':datetime.now(timezone.utc).isoformat()}).eq('id',cert_id).execute()
+    if estado == 'aprobado':
+        cert = supabase.table('certificaciones').select('*').eq('id',cert_id).execute()
+        if cert.data:
+            c = cert.data[0]
+            codigo = 'GYM-ENT-' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            supabase.table('entrenadores').insert({
+                'gimnasio_id': c['gimnasio_id'],
+                'nombre': c['nombre_solicitante'],
+                'email': c['email_solicitante'],
+                'codigo_acceso': codigo,
+                'especialidad': 'Entrenador Personal',
+                'certificado': True,
+                'puntuacion_test': c['puntuacion'],
+                'activo': True,
+                'precio_sesion': 350
+            }).execute()
+            return jsonify({'status':'success','codigo':codigo}), 200
+    return jsonify({'status':'success'}), 200
 
+# ========== MERCADO PAGO ==========
+@app.route('/api/crear-preferencia', methods=['POST'])
+def preferencia():
+    if not MP_ACCESS_TOKEN: return jsonify({'error':'No MP'}), 500
+    d = request.get_json()
+    sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
+    pref = {"items":[{"title":d.get('descripcion','Suscripcion'),"quantity":1,"unit_price":float(d.get('monto',0)),"currency_id":"MXN"}],"back_urls":{"success":f"{BASE_URL}/cliente/suscripciones.html?status=success","failure":f"{BASE_URL}/cliente/suscripciones.html?status=failure"},"auto_return":"approved"}
+    r = sdk.preference().create(pref)
+    return jsonify({'status':'success','init_point':r['response']['init_point']}), 200
 
-@app.route('/api/registro/cliente', methods=['POST'])
-def registrar_cliente():
-    if not supabase: return jsonify({'error':'Servicio no disponible'}), 500
-    try:
-        d = request.get_json()
-        required = ['nombre', 'email', 'password', 'estado', 'municipio']
-        for field in required:
-            if field not in d or not d[field]:
-                return jsonify({'error': f'Campo {field} requerido'}), 400
-        email = d['email'].strip().lower()
-        if '@' not in email or '.' not in email: return jsonify({'error':'Email invalido'}), 400
-        if len(d['password']) < 6: return jsonify({'error':'Contraseña muy corta'}), 400
-        existente = supabase.table('usuarios').select('id').eq('email', email).execute()
-        if existente.data: return jsonify({'error':'Este correo ya está registrado'}), 409
-        hashed = hash_password(d['password'])
-        nuevo = {
-            'nombre': d['nombre'].strip(),
-            'email': email,
-            'password_hash': hashed,
-            'estado': d['estado'].strip(),
-            'municipio': d['municipio'].strip(),
-            'telefono': d.get('telefono','').strip(),
-            'fecha_registro': datetime.now(timezone.utc).isoformat()
-        }
-        result = supabase.table('usuarios').insert(nuevo).execute()
-        if result.data:
-            u = result.data[0]
-            token = generate_token(u['id'], u['email'], 'cliente')
-            return jsonify({'status':'success','data':{'id':u['id'],'nombre':u['nombre'],'email':u['email'],'token':token}}), 201
-        return jsonify({'error':'Error al crear'}), 500
-    except Exception as e:
-        return jsonify({'error':str(e)}), 500
-
-# FRONTEND - ESTO ES LO CORREGIDO
+# ========== FRONTEND ==========
 @app.route('/')
 def index():
     return send_from_directory('frontend_web', 'index.html')
@@ -267,7 +225,6 @@ def static_files(path):
     full_path = os.path.join('frontend_web', path)
     if os.path.exists(full_path):
         return send_from_directory('frontend_web', path)
-    # Si no existe el archivo, mostrar index
     return send_from_directory('frontend_web', 'index.html')
 
 if __name__ == '__main__':
