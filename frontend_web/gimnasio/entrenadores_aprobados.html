@@ -28,6 +28,10 @@
 <body>
     <div class="container">
         <h1>✅ <span>Entrenadores Aprobados</span></h1>
+        <div class="card" style="margin-bottom:24px">
+            <h3 style="margin-bottom:16px">📋 Certificaciones Aprobadas (sin entrenador creado)</h3>
+            <div id="tablaCerts"></div>
+        </div>
         <div class="card">
             <div id="tabla"></div>
         </div>
@@ -37,11 +41,70 @@
     <script>
         // Cargar DIRECTAMENTE desde Supabase sin pasar por el backend
         const SUPABASE_URL = 'https://bsbjxkgjohskabvdloia.supabase.co';
+        
+        async function cargarCertificacionesAprobadas() {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/certificaciones?gimnasio_id=eq.${gymId}&estado=eq.aprobado&select=*`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                const certs = await response.json();
+                if (certs && certs.length > 0) {
+                    document.getElementById('tablaCerts').innerHTML = certs.map(c => `
+                        <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+                            <div>
+                                <strong>${c.nombre_solicitante}</strong> (${c.email_solicitante})<br>
+                                <span style="font-size:12px;color:var(--gray)">Clase ${c.clase} · ${c.puntuacion}/${c.total_preguntas}</span>
+                            </div>
+                            <button onclick="crearEntrenador('${c.id}','${c.nombre_solicitante}','${c.email_solicitante}','${c.clase||'A'}','${c.puntuacion||0}')" style="background:var(--green);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600">
+                                Crear Entrenador
+                            </button>
+                        </div>
+                    `).join('');
+                } else {
+                    document.getElementById('tablaCerts').innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px">No hay certificaciones aprobadas pendientes</p>';
+                }
+            } catch(e) { console.log(e); }
+        }
+        
+        async function crearEntrenador(certId, nombre, email, clase, puntuacion) {
+            const codigo = 'GYM-ENT-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/entrenadores`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify({
+                        gimnasio_id: gymId,
+                        nombre: nombre,
+                        email: email,
+                        codigo_acceso: codigo,
+                        especialidad: 'Entrenador Personal',
+                        certificado: true,
+                        puntuacion_test: parseInt(puntuacion),
+                        activo: true,
+                        precio_sesion: 350
+                    })
+                });
+                if (response.ok) {
+                    alert('✅ Entrenador creado! Código: ' + codigo);
+                    location.reload();
+                } else {
+                    const err = await response.json();
+                    alert('Error: ' + err.message);
+                }
+            } catch(e) { alert('Error: ' + e.message); }
+        }
+        
+        let gymId = '';
         const SUPABASE_KEY = 'sb_publishable_KZljZ0Z1c2jAzMzG34Yc1Q_4RtnQPdk';
         
         async function cargarEntrenadores() {
             const userData = JSON.parse(localStorage.getItem('gymrock_user') || '{}');
-            const gymId = userData.id;
+            gymId = userData.id;
             
             if (!gymId) {
                 document.getElementById('tabla').innerHTML = '<div class="error">No se encontró el ID del gimnasio. Inicia sesión de nuevo.</div>';
@@ -94,6 +157,7 @@
             window.location.href = 'index.html';
         } else {
             cargarEntrenadores();
+            cargarCertificacionesAprobadas();
         }
     </script>
 </body>
