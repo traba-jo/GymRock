@@ -140,6 +140,89 @@ def preferencia():
     r = sdk.preference().create(pref)
     return jsonify({'status':'success','init_point':r['response']['init_point']}), 200
 
+
+@app.route('/api/entrenador/login', methods=['POST'])
+def entrenador_login():
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    try:
+        d = request.get_json()
+        codigo = d.get('codigo_acceso','').strip().upper()
+        if not codigo: return jsonify({'error':'Codigo requerido'}), 400
+        r = supabase.table('entrenadores').select('*').eq('codigo_acceso',codigo).eq('activo',True).execute()
+        if not r.data: return jsonify({'error':'Codigo invalido'}), 401
+        e = r.data[0]
+        token = generate_token(e['id'],e['email'],'entrenador')
+        return jsonify({'status':'success','data':{'id':e['id'],'nombre':e['nombre'],'email':e['email'],'codigo_acceso':e['codigo_acceso'],'token':token,'rol':'entrenador'}}),200
+    except Exception as e: return jsonify({'error':str(e)}),500
+
+
+@app.route('/api/gimnasio/<gym_id>/entrenadores', methods=['GET'])
+def listar_entrenadores_gym(gym_id):
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    try:
+        result = supabase.table('entrenadores').select('*').eq('gimnasio_id', gym_id).eq('activo', True).execute()
+        return jsonify({'status':'success','data':result.data if result.data else []}), 200
+    except Exception as e:
+        return jsonify({'error':str(e)}), 500
+
+
+@app.route('/api/certificacion/resultado', methods=['POST'])
+def guardar_resultado_certificacion():
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    try:
+        d = request.get_json()
+        supabase.table('certificaciones').insert({
+            'gimnasio_id': d.get('gimnasio_id',''),
+            'nombre_solicitante': d.get('nombre',''),
+            'email_solicitante': d.get('email',''),
+            'puntuacion': int(d.get('puntuacion',0)),
+            'total_preguntas': int(d.get('total',0)),
+            'clase': d.get('clase',''),
+            'estado': 'pendiente',
+            'fecha_envio': datetime.now(timezone.utc).isoformat()
+        }).execute()
+        return jsonify({'status':'success','message':'Resultado enviado'}), 200
+    except Exception as e:
+        return jsonify({'error':str(e)}), 500
+
+@app.route('/api/gimnasio/<gym_id>/certificaciones', methods=['GET'])
+def ver_certificaciones(gym_id):
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    try:
+        result = supabase.table('certificaciones').select('*').eq('gimnasio_id', gym_id).order('fecha_envio', desc=True).execute()
+        return jsonify({'status':'success','data':result.data if result.data else []}), 200
+    except Exception as e:
+        return jsonify({'error':str(e)}), 500
+
+@app.route('/api/certificacion/<cert_id>/revisar', methods=['POST'])
+def revisar_certificacion(cert_id):
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    try:
+        d = request.get_json()
+        estado = d.get('estado','aprobado')
+        supabase.table('certificaciones').update({'estado': estado, 'fecha_revision': datetime.now(timezone.utc).isoformat()}).eq('id', cert_id).execute()
+        if estado == 'aprobado':
+            cert = supabase.table('certificaciones').select('*').eq('id', cert_id).execute()
+            if cert.data:
+                c = cert.data[0]
+                import random, string
+                codigo = 'GYM-ENT-' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+                supabase.table('entrenadores').insert({
+                    'gimnasio_id': c['gimnasio_id'],
+                    'nombre': c['nombre_solicitante'],
+                    'email': c['email_solicitante'],
+                    'codigo_acceso': codigo,
+                    'especialidad': 'Entrenador Personal',
+                    'certificado': True,
+                    'puntuacion_test': c['puntuacion'],
+                    'activo': True,
+                    'precio_sesion': 350
+                }).execute()
+                return jsonify({'status':'success','message':'Aprobado','codigo':codigo}), 200
+        return jsonify({'status':'success','message':'Certificacion '+estado}), 200
+    except Exception as e:
+        return jsonify({'error':str(e)}), 500
+
 # FRONTEND - ESTO ES LO CORREGIDO
 @app.route('/')
 def index():
