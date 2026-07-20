@@ -80,7 +80,7 @@
                     body: JSON.stringify({
                         gimnasio_id: gymId,
                         nombre: nombre,
-                        email: email,
+                        email: email.replace('@', '+entrenador@'),
                         codigo_acceso: codigo,
                         especialidad: 'Entrenador Personal',
                         certificado: true,
