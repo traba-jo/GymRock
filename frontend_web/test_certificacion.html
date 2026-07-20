@@ -285,6 +285,7 @@
             }
             if(completas<10){alert('Responde todas las preguntas con al menos 20 caracteres');return}
             mostrarResultado(completas,10,'A');
+            enviarResultado(completas,10,'A');
         }
         
         function evaluarClaseB(){
@@ -295,6 +296,7 @@
                 if(sel&&sel.value===correctas['b'+i])puntaje++;
             }
             mostrarResultado(puntaje,15,'B');
+            enviarResultado(puntaje,15,'B');
         }
         
         function evaluarClaseC(){
@@ -305,6 +307,7 @@
                 if(sel&&sel.value===correctas['c'+i])puntaje++;
             }
             mostrarResultado(puntaje,25,'C');
+            enviarResultado(puntaje,25,'C');
         }
         
         
