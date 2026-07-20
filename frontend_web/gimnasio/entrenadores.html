@@ -204,23 +204,40 @@
                         </tr>`).join('');
                     }
                     
-                    // Tabla aprobados
+                    // Tabla aprobados - también buscar en entrenadores
                     const tbodyA=document.getElementById('tablaAprobados');
-                    if(aprobados.length){
-                        tbodyA.innerHTML=aprobados.map(c=>`<tr>
-                            <td><strong>${c.nombre_solicitante}</strong></td>
-                            <td>${c.email_solicitante}</td>
-                            <td><span class="badge badge-blue">Clase ${c.clase||'A'}</span></td>
-                            <td>${c.codigo_generado||'Pendiente'}</td>
-                            <td>--</td>
-                            <td><span class="badge badge-green">Aprobado</span></td>
-                            <td><button class="btn" style="padding:6px 12px;font-size:12px;background:rgba(255,255,255,0.05)">Revocar</button></td>
-                        </tr>`).join('');
-                    }
+                    // Cargar entrenadores reales
+                    try{
+                        const r2=await fetch(API_URL+'/api/gimnasio/'+gymId+'/entrenadores');
+                        const d2=await r2.json();
+                        if(d2.status==='success'&&d2.data.length>0){
+                            tbodyA.innerHTML=d2.data.map(e=>`<tr>
+                                <td><strong>${e.nombre}</strong></td>
+                                <td>${e.email}</td>
+                                <td><span class="badge badge-blue">Clase ${e.clase_cert||'B'}</span></td>
+                                <td><span style="font-family:monospace;background:rgba(34,197,94,0.1);color:#22c55e;padding:4px 8px;border-radius:6px;font-weight:700">${e.codigo_acceso||'N/A'}</span></td>
+                                <td>$${e.precio_sesion||350}</td>
+                                <td><span class="badge badge-green">Activo</span></td>
+                                <td><button class="btn" style="padding:6px 12px;font-size:12px;background:rgba(255,255,255,0.05)" onclick="revocarEntrenador('${e.id}')">Revocar</button></td>
+                            </tr>`).join('');
+                        }else{
+                            tbodyA.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--gray);padding:20px">No hay entrenadores aprobados</td></tr>';
+                        }
+                    }catch(e){console.log(e)}
                 }
             }catch(e){console.log('Error cargando certificaciones:',e)}
         }
         
+        
+        async function revocarEntrenador(id){
+            if(confirm('¿Revocar este entrenador? Perderá acceso al sistema.')){
+                try{
+                    await fetch(API_URL+'/api/entrenador/'+id+'/revocar',{method:'POST'});
+                    mostrarToast('Entrenador revocado');
+                    cargarCertificaciones();
+                }catch(e){}
+            }
+        }
         async function revisarCert(id,estado){
             try{
                 const r=await fetch(API_URL+'/api/certificacion/'+id+'/revisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({estado})});
