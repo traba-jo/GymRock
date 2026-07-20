@@ -293,6 +293,26 @@ def revocar_entrenador(ent_id):
     except Exception as e:
         return jsonify({'error':str(e)}), 500
 
+
+
+@app.route('/api/gimnasio/<gym_id>/entrenadores', methods=['GET'])
+def listar_entrenadores_gym(gym_id):
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    try:
+        result = supabase.table('entrenadores').select('*').eq('gimnasio_id', gym_id).eq('activo', True).execute()
+        return jsonify({'status':'success','data':result.data if result.data else []}), 200
+    except Exception as e:
+        return jsonify({'error':str(e)}), 500
+
+@app.route('/api/entrenador/<ent_id>/revocar', methods=['POST'])
+def desactivar_entrenador(ent_id):
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    try:
+        supabase.table('entrenadores').update({'activo':False}).eq('id', ent_id).execute()
+        return jsonify({'status':'success','message':'Entrenador revocado'}), 200
+    except Exception as e:
+        return jsonify({'error':str(e)}), 500
+
 # FRONTEND - ESTO ES LO CORREGIDO
 @app.route('/')
 def index():
