@@ -238,6 +238,16 @@
                 }catch(e){}
             }
         }
+        
+        async function revocarEntrenador(id){
+            if(confirm('¿Revocar este entrenador? Perderá acceso al sistema.')){
+                try{
+                    await fetch(API_URL+'/api/entrenador/'+id+'/revocar',{method:'POST'});
+                    mostrarToast('Entrenador revocado');
+                    cargarCertificaciones();
+                }catch(e){}
+            }
+        }
         async function revisarCert(id,estado){
             try{
                 const r=await fetch(API_URL+'/api/certificacion/'+id+'/revisar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({estado})});
