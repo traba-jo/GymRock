@@ -470,3 +470,4 @@ if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     print(f"🚀 GymRock API v4.0 iniciada en puerto {port}")
     app.run(host='0.0.0.0', port=port)
+
