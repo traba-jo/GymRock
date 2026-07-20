@@ -223,6 +223,40 @@ def revisar_certificacion(cert_id):
     except Exception as e:
         return jsonify({'error':str(e)}), 500
 
+
+@app.route('/api/registro/cliente', methods=['POST'])
+def registrar_cliente():
+    if not supabase: return jsonify({'error':'Servicio no disponible'}), 500
+    try:
+        d = request.get_json()
+        required = ['nombre', 'email', 'password', 'estado', 'municipio']
+        for field in required:
+            if field not in d or not d[field]:
+                return jsonify({'error': f'Campo {field} requerido'}), 400
+        email = d['email'].strip().lower()
+        if '@' not in email or '.' not in email: return jsonify({'error':'Email invalido'}), 400
+        if len(d['password']) < 6: return jsonify({'error':'Contraseña muy corta'}), 400
+        existente = supabase.table('usuarios').select('id').eq('email', email).execute()
+        if existente.data: return jsonify({'error':'Este correo ya está registrado'}), 409
+        hashed = hash_password(d['password'])
+        nuevo = {
+            'nombre': d['nombre'].strip(),
+            'email': email,
+            'password_hash': hashed,
+            'estado': d['estado'].strip(),
+            'municipio': d['municipio'].strip(),
+            'telefono': d.get('telefono','').strip(),
+            'fecha_registro': datetime.now(timezone.utc).isoformat()
+        }
+        result = supabase.table('usuarios').insert(nuevo).execute()
+        if result.data:
+            u = result.data[0]
+            token = generate_token(u['id'], u['email'], 'cliente')
+            return jsonify({'status':'success','data':{'id':u['id'],'nombre':u['nombre'],'email':u['email'],'token':token}}), 201
+        return jsonify({'error':'Error al crear'}), 500
+    except Exception as e:
+        return jsonify({'error':str(e)}), 500
+
 # FRONTEND - ESTO ES LO CORREGIDO
 @app.route('/')
 def index():
