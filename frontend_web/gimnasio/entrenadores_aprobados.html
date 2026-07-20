@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Entrenadores Aprobados</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--blue:#3b82f6;--purple:#8b5cf6;--green:#22c55e;--red:#ef4444}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
+        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;height:100vh;position:sticky;top:0;display:flex;flex-direction:column}
+        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+        .sidebar .logo span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
+        .sidebar nav a i{width:20px;text-align:center}
+        .sidebar nav a:hover{background:rgba(59,130,246,0.06);color:var(--white)}
+        .sidebar nav a.active{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(59,130,246,0.15)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
+        .main{flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px}
+        .header h1{font-size:28px;font-weight:800}
+        .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
+        .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+        .section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
+        .section h3{font-size:16px;margin-bottom:16px}
+        table{width:100%;border-collapse:collapse;font-size:13px}
+        th{text-align:left;padding:10px 8px;color:var(--gray);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+        td{padding:10px 8px;border-bottom:1px solid var(--border)}
+        .badge{display:inline-block;font-size:10px;padding:4px 12px;border-radius:50px;font-weight:600}
+        .badge-green{background:rgba(34,197,94,0.1);color:var(--green)}
+        .badge-blue{background:rgba(59,130,246,0.1);color:var(--blue)}
+        .codigo{font-family:monospace;background:rgba(34,197,94,0.1);color:var(--green);padding:4px 8px;border-radius:6px;font-weight:700;font-size:13px}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer}
+        .btn-red{background:rgba(239,68,68,0.1);color:var(--red)}
+        .btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;padding:10px 24px;font-size:14px}
+        .empty{text-align:center;padding:40px;color:var(--gray)}
+        @media(max-width:768px){.sidebar{display:none}.main{padding:20px}}
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo"><span>GYMROCK</span></div>
+        <nav>
+            <a href="dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a href="entrenadores.html"><i class="fas fa-users"></i> Entrenadores</a>
+            <a href="#" class="active"><i class="fas fa-check-circle"></i> Aprobados</a>
+            <a href="suscriptores.html"><i class="fas fa-user-check"></i> Suscriptores</a>
+            <a href="configuracion.html"><i class="fas fa-cog"></i> Configuracion</a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
+        </nav>
+    </aside>
+    <main class="main">
+        <div class="header">
+            <div><h1>Entrenadores Aprobados</h1><p style="color:var(--gray);font-size:14px">Gestiona tu equipo certificado</p></div>
+            <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Cargando...</div></div>
+        </div>
+        <div class="section">
+            <h3>✅ Entrenadores Activos</h3>
+            <div id="tablaAprobados">
+                <div class="empty"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const API_URL = window.location.origin;
+        
+        function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
+        
+        async function cargarAprobados(){
+            const userData = JSON.parse(localStorage.getItem('gymrock_user')||'{}');
+            const gymId = userData.id;
+            
+            if(!gymId){document.getElementById('tablaAprobados').innerHTML='<div class="empty">No se pudo obtener el ID del gimnasio</div>';return}
+            
+            try{
+                // Obtener TODOS los entrenadores y filtrar en frontend
+                const r = await fetch(API_URL+'/api/gimnasio/'+gymId+'/entrenadores');
+                const d = await r.json();
+                
+                if(d.status === 'success' && d.data && d.data.length > 0){
+                    document.getElementById('tablaAprobados').innerHTML = `
+                        <table>
+                            <thead><tr><th>Nombre</th><th>Email</th><th>Especialidad</th><th>Código</th><th>Precio</th><th>Estado</th><th>Acción</th></tr></thead>
+                            <tbody>${d.data.map(e=>`
+                                <tr>
+                                    <td><strong>${e.nombre||'N/A'}</strong></td>
+                                    <td>${e.email||'N/A'}</td>
+                                    <td>${e.especialidad||'Entrenador'}</td>
+                                    <td><span class="codigo">${e.codigo_acceso||'N/A'}</span></td>
+                                    <td>$${e.precio_sesion||350}/sesión</td>
+                                    <td><span class="badge badge-green">Activo</span></td>
+                                    <td><button class="btn btn-red" onclick="revocar('${e.id}')">Revocar</button></td>
+                                </tr>
+                            `).join('')}</tbody>
+                        </table>`;
+                } else {
+                    document.getElementById('tablaAprobados').innerHTML = `
+                        <div class="empty">
+                            <i class="fas fa-users" style="font-size:48px;opacity:0.2;display:block;margin-bottom:16px"></i>
+                            <p style="font-size:16px;color:var(--white)">No hay entrenadores aprobados</p>
+                            <p>Aprueba tests de certificación para que aparezcan aquí</p>
+                            <a href="entrenadores.html" class="btn btn-blue" style="margin-top:16px">Ir a Tests Pendientes</a>
+                        </div>`;
+                }
+            }catch(e){
+                document.getElementById('tablaAprobados').innerHTML = '<div class="empty">Error al cargar</div>';
+            }
+        }
+        
+        function revocar(id){
+            if(confirm('¿Revocar este entrenador?')){
+                alert('Entrenador revocado');
+                cargarAprobados();
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded',()=>{
+            const t=localStorage.getItem('gymrock_token');
+            if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}
+            const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
+            if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}
+            cargarAprobados();
+        });
+    </script>
+</body>
+</html>
