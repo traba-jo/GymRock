@@ -42,13 +42,13 @@
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="logo" style="display:flex;justify-content:space-between;align-items:center">GymRock <span onclick="document.getElementById('sidebar').classList.toggle('closed')" style="cursor:pointer;font-size:18px">✕</span></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">GymRock <button onclick="toggleSidebar()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:18px;float:right">☰</button></div>
         <nav>
-            <a class="active" onclick="mostrar('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a onclick="mostrar('gimnasios')"><i class="fas fa-dumbbell"></i> Gimnasios</a>
-            <a onclick="mostrar('extras')"><i class="fas fa-gem"></i> Servicios Extra</a>
-            <a class="logout" onclick="salir()"><i class="fas fa-sign-out-alt"></i> Salir</a>
+            <a class="active" onclick="mostrar('dashboard')"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
+            <a onclick="mostrar('gimnasios')"><i class="fas fa-dumbbell"></i> <span>Gimnasios</span></a>
+            <a onclick="mostrar('extras')"><i class="fas fa-gem"></i> <span>Servicios Extra</span></a>
+            <a class="logout" onclick="salir()"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
         </nav>
     </aside>
     
@@ -99,6 +99,7 @@
     <script>
         if(!localStorage.getItem('adminToken')) location.href='login.html';
         
+        function toggleSidebar(){var s=document.getElementById("sidebar");s.classList.toggle("closed")}
         function mostrar(s){
             document.querySelectorAll('[id^="sec"]').forEach(e=>e.style.display='none');
             document.getElementById('sec'+s.charAt(0).toUpperCase()+s.slice(1)).style.display='block';
