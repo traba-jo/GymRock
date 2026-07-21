@@ -3,123 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>GymRock · Super Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>GymRock · Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
+        :root{--bg:#06060c;--card:#0f0f1a;--text:#e8e8f0;--sub:#8888a0;--pink:#f06595;--border:#181828}
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--purple:#8b5cf6;--blue:#3b82f6;--red:#ef4444;--green:#22c55e;--amber:#f59e0b;--pink:#ec4899}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
-        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100}
-        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-        .sidebar .logo span{background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .sidebar .user-info{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(236,72,153,0.06);border:1px solid rgba(236,72,153,0.1);border-radius:12px;margin-bottom:24px}
-        .sidebar .user-info .avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px}
-        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
-        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.2s}
-        .sidebar nav a i{width:20px;text-align:center}
-        .sidebar nav a:hover{background:rgba(236,72,153,0.06);color:var(--white)}
-        .sidebar nav a.active{background:linear-gradient(135deg,rgba(236,72,153,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(236,72,153,0.15)}
-        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
-        .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
-        .header{margin-bottom:36px}
-        .header h1{font-size:28px;font-weight:800}.header h1 i{color:var(--pink)}
-        .header p{color:var(--gray);font-size:14px;margin-top:4px}
-        .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
-        .metric{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all 0.3s}
-        .metric:hover{border-color:rgba(236,72,153,0.2);transform:translateY(-2px)}
-        .metric .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:8px}
-        .metric .value{font-size:36px;font-weight:800}
-        .metric .icon{float:right;font-size:30px;opacity:0.08}
-        .section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
-        .section h2{font-size:18px;font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-        .section h2 i{color:var(--pink)}
-        table{width:100%;border-collapse:collapse;font-size:13px}
-        th{text-align:left;padding:12px 10px;color:var(--gray);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border)}
-        td{padding:12px 10px;border-bottom:1px solid var(--border)}
-        .badge{display:inline-block;font-size:10px;font-weight:600;padding:4px 12px;border-radius:50px;text-transform:uppercase;letter-spacing:0.5px}
-        .badge-active{background:rgba(34,197,94,0.1);color:var(--green)}
-        .badge-trial{background:rgba(245,158,11,0.1);color:var(--amber)}
-        .badge-expired{background:rgba(239,68,68,0.1);color:var(--red)}
-        .btn-action{padding:8px 20px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:600;cursor:pointer}
-        .loading{text-align:center;padding:40px;color:var(--gray)}
-        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.metrics{grid-template-columns:1fr 1fr}}
-        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
-        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--pink);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:40px}
+        .container{max-width:900px;margin:0 auto}
+        h1{font-family:'Space Grotesk',sans-serif;font-size:32px;margin-bottom:8px}
+        h1 span{color:var(--pink)}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:24px 0}
+        .kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
+        .kpi .num{font-size:36px;font-weight:800}
+        .kpi .lbl{font-size:12px;color:var(--sub);margin-top:4px}
+        table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+        th{text-align:left;padding:12px;color:var(--sub);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+        td{padding:12px;border-bottom:1px solid var(--border)}
+        .btn{display:inline-block;padding:10px 20px;background:var(--pink);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;text-decoration:none;margin-top:16px}
     </style>
 </head>
 <body>
-    <aside class="sidebar" id="sidebar">
-        <div class="logo"><span>GYMROCK</span></div>
-        <div class="user-info">
-            <div class="avatar" id="adminAvatar">SA</div>
-            <div><strong id="adminName">Super Admin</strong><br><small style="color:var(--gray);font-size:11px">Acceso total</small></div>
+    <div class="container">
+        <h1>Gym<span>Rock</span> Admin</h1>
+        <p style="color:var(--sub)">Panel de administración</p>
+        <div class="grid">
+            <div class="kpi"><div class="num" id="gimnasios">--</div><div class="lbl">Gimnasios</div></div>
+            <div class="kpi"><div class="num" id="usuarios">--</div><div class="lbl">Clientes</div></div>
         </div>
-        <nav>
-            <a href="#" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a href="#gimnasios"><i class="fas fa-dumbbell"></i> Gimnasios</a>
-            <a href="#usuarios"><i class="fas fa-users"></i> Usuarios</a>
-            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
-        </nav>
-    </aside>
-    <main class="main">
-        <div class="header">
-            <div style="display:flex;align-items:center;gap:14px">
-                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
-                <div><h1><i class="fas fa-crown"></i> Panel de Administracion</h1><p>Control total de la plataforma GymRock</p></div>
-            </div>
-        </div>
-        <div class="metrics">
-            <div class="metric"><div class="icon"><i class="fas fa-dumbbell"></i></div><div class="label">Gimnasios</div><div class="value" id="totalGimnasios" style="color:var(--blue)">--</div></div>
-            <div class="metric"><div class="icon"><i class="fas fa-users"></i></div><div class="label">Usuarios</div><div class="value" id="totalUsuarios" style="color:var(--green)">--</div></div>
-            <div class="metric"><div class="icon"><i class="fas fa-check-circle"></i></div><div class="label">Activos</div><div class="value" style="color:var(--green)">--</div></div>
-            <div class="metric"><div class="icon"><i class="fas fa-clock"></i></div><div class="label">Actualizado</div><div class="value" style="font-size:14px" id="ultimaAct">--</div></div>
-        </div>
-        <div class="section" id="gimnasios">
-            <h2><i class="fas fa-dumbbell"></i> Gimnasios Registrados</h2>
-            <div style="overflow-x:auto">
-                <table><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Estado</th><th>Registro</th><th>Accion</th></tr></thead>
-                    <tbody id="tablaGimnasios"><tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-    <div class="toast" id="toast"></div>
+        <h3 style="margin-bottom:12px">Gimnasios Registrados</h3>
+        <table><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Licencia</th></tr></thead><tbody id="tabla"><tr><td colspan="4" style="text-align:center;color:var(--sub)">Cargando...</td></tr></tbody></table>
+        <a href="#" class="btn" onclick="salir()">Cerrar sesión</a>
+    </div>
     <script>
-        function cerrarSesion(){localStorage.removeItem('adminToken');localStorage.removeItem('adminUser');window.location.href='../index.html'}
-        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
-        async function cargarDashboard(){
-            const token=localStorage.getItem('adminToken');
-            if(!token){window.location.href='../index.html';return}
-            try{
-                const r=await fetch('/api/admin/dashboard?token='+encodeURIComponent(token));
-                const d=await r.json();
-                if(d.status==='success'){
-                    document.getElementById('totalGimnasios').textContent=d.data.total_gimnasios||0;
-                    document.getElementById('totalUsuarios').textContent=d.data.total_usuarios||0;
-                    document.getElementById('ultimaAct').textContent=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-                    const gimnasios=d.data.gimnasios||[];
-                    if(gimnasios.length){
-                        document.getElementById('tablaGimnasios').innerHTML=gimnasios.map(g=>{
-                            const estado=g.estado_licencia||'activa';
-                            const badge=estado==='activa'?'badge-active':estado==='vencida'?'badge-expired':'badge-trial';
-                            const fecha=g.fecha_registro?g.fecha_registro.slice(0,10):'--';
-                            return`<tr><td><strong>${g.nombre||'N/A'}</strong></td><td>${g.email||'N/A'}</td><td style="text-transform:capitalize">${g.plan||'basico'}</td><td><span class="badge ${badge}">${estado}</span></td><td>${fecha}</td><td><button class="btn-action" onclick="mostrarToast('Gimnasio: ${g.nombre}')"><i class="fas fa-eye"></i> Ver</button></td></tr>`
-                        }).join('');
-                    }else{
-                        document.getElementById('tablaGimnasios').innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:30px">No hay gimnasios registrados</td></tr>';
-                    }
-                }
-            }catch(e){
-                document.getElementById('tablaGimnasios').innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--red);padding:30px">Error al cargar datos</td></tr>';
+        if(!localStorage.getItem('adminToken')) location.href='login.html';
+        async function cargar(){
+            const t=localStorage.getItem('adminToken');
+            const r=await fetch('/api/admin/dashboard?token='+t);
+            const d=await r.json();
+            if(d.status=='success'){
+                document.getElementById('gimnasios').textContent=d.data.total_gimnasios||0;
+                document.getElementById('usuarios').textContent=d.data.total_usuarios||0;
+                const g=d.data.gimnasios||[];
+                document.getElementById('tabla').innerHTML=g.length?g.map(x=>`<tr><td><strong>${x.nombre}</strong></td><td>${x.email}</td><td>${x.plan||'basico'}</td><td>${x.estado_licencia||'activa'}</td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--sub)">Sin gimnasios</td></tr>';
             }
         }
-        document.addEventListener('DOMContentLoaded',()=>{
-            const token=localStorage.getItem('adminToken');
-            if(!token){window.location.href='../index.html';return}
-            fetch('/api/admin/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})})
-            .then(r=>r.json()).then(d=>{if(d.valid){const u=JSON.parse(localStorage.getItem('adminUser')||'{}');if(u.usuario){document.getElementById('adminName').textContent=u.usuario;document.getElementById('adminAvatar').textContent=u.usuario.substring(0,2).toUpperCase()}cargarDashboard()}else{cerrarSesion()}}).catch(()=>cerrarSesion());
-        });
+        function salir(){localStorage.clear();location.href='../index.html'}
+        cargar();
     </script>
 </body>
 </html>
