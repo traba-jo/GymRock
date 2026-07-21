@@ -2,797 +2,133 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>GymRock · Cliente</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --bg-primary: #0D0D1A;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --border-glass: rgba(255, 255, 255, 0.06);
-            --text-white: #F0F0F5;
-            --text-gray: #8A8AA8;
-            --text-muted: #5A5A7A;
-            --oro: #D4AF37;
-            --oro-suave: #E8D5A3;
-            --marfil: #F5F0E8;
-            --negro-elegante: #1A1A2E;
-            --verde: #22C55E;
-            --rojo: #DC2626;
-            --shadow-glow: 0 25px 60px rgba(212, 175, 55, 0.08);
+            --bg: #0f0f13;
+            --card: #18181d;
+            --text: #e4e4e8;
+            --sub: #9898a8;
+            --cyan: #22d3ee;
+            --border: #27272d;
+            --input: #131318;
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .bg-animated {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.12;
-            animation: float 30s infinite ease-in-out;
-        }
-
-        .orb-1 {
-            width: 500px;
-            height: 500px;
-            background: var(--oro);
-            top: -200px;
-            right: -100px;
-        }
-        .orb-2 {
-            width: 400px;
-            height: 400px;
-            background: var(--marfil);
-            bottom: -150px;
-            left: -100px;
-            animation-delay: -10s;
-        }
-        .orb-3 {
-            width: 300px;
-            height: 300px;
-            background: var(--oro-suave);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: -20s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(40px, -30px) scale(1.05); }
-            66% { transform: translate(-20px, 40px) scale(0.95); }
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 480px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glass);
-            border-radius: 24px;
-            padding: 40px 32px;
-            box-shadow: var(--shadow-glow);
-            animation: slideUp 0.8s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--oro), var(--oro-suave), var(--oro), transparent);
-            background-size: 300% 100%;
-            animation: shimmer 6s linear infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0%; }
-            100% { background-position: 200% 0%; }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px) scale(0.97); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .live-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 10px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            background: rgba(212, 175, 55, 0.04);
-            padding: 5px 14px;
-            border-radius: 50px;
-            border: 1px solid rgba(212, 175, 55, 0.06);
-            margin-bottom: 20px;
-        }
-
-        .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--oro);
-            animation: pulse-dot 2s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.7); }
-        }
-
-        .brand {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .logo-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        .logo {
-            width: 100%;
-            max-width: 280px;
-            height: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.15));
-            animation: logo-glow 4s ease-in-out infinite;
-        }
-
-        @keyframes logo-glow {
-            0%, 100% { filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.1)); }
-            50% { filter: drop-shadow(0 0 50px rgba(212, 175, 55, 0.2)); }
-        }
-
-        .brand h2 {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-white);
-        }
-
-        .brand .subtitle {
-            font-size: 13px;
-            color: var(--text-gray);
-            letter-spacing: 0.5px;
-            margin-top: 4px;
-        }
-
-        .brand .subtitle i {
-            margin-right: 6px;
-            color: var(--oro);
-        }
-
-        .form {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .input-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-gray);
-            letter-spacing: 0.3px;
-        }
-
-        .input-group label i {
-            margin-right: 6px;
-            color: var(--oro);
-            width: 16px;
-        }
-
-        .input-group input,
-        .input-group select {
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            color: var(--text-white);
-            font-size: 15px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.12);
-        }
-
-        .input-group input:focus,
-        .input-group select:focus {
-            outline: none;
-            border-color: var(--oro);
-            background: rgba(212, 175, 55, 0.03);
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.03);
-        }
-
-        .input-group select {
-            appearance: none;
-            cursor: pointer;
-            color: var(--text-white);
-        }
-
-        .input-group select option {
-            background: #0D0D1A;
-            color: var(--text-white);
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-wrapper input {
-            width: 100%;
-            padding-right: 44px;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 14px;
-            opacity: 0.4;
-            transition: all 0.3s ease;
-            padding: 4px;
-        }
-
-        .toggle-password:hover {
-            opacity: 0.7;
-        }
-
-        .btn-primary {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 13px;
-            background: linear-gradient(135deg, var(--negro-elegante), #2A2A4A);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 12px;
-            color: var(--text-white);
-            font-size: 15px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            margin-top: 4px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            border-color: var(--oro);
-            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.06);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-primary i {
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover i {
-            transform: translateX(3px);
-        }
-
-        .btn-primary .spinner {
-            display: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: var(--oro);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .links {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .links a {
-            font-size: 12px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .link-primary {
-            color: var(--oro);
-            font-weight: 500;
-            letter-spacing: 0.3px;
-        }
-
-        .link-primary:hover {
-            color: var(--oro-suave);
-        }
-
-        .link-secondary {
-            color: rgba(255, 255, 255, 0.15);
-        }
-
-        .link-secondary:hover {
-            color: var(--text-gray);
-        }
-
-        .mensaje {
-            margin-top: 16px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 500;
-            display: none;
-            text-align: center;
-        }
-
-        .mensaje.success {
-            display: block;
-            background: rgba(34, 197, 94, 0.06);
-            color: var(--verde);
-            border: 1px solid rgba(34, 197, 94, 0.08);
-        }
-
-        .mensaje.error {
-            display: block;
-            background: rgba(239, 68, 68, 0.04);
-            color: #F87171;
-            border: 1px solid rgba(239, 68, 68, 0.06);
-        }
-
-        .mensaje.loading {
-            display: block;
-            background: rgba(212, 175, 55, 0.04);
-            color: var(--oro-suave);
-            border: 1px solid rgba(212, 175, 55, 0.06);
-        }
-
-        .row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .card.hidden {
-            display: none;
-        }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 640px) {
-            .card {
-                padding: 30px 20px;
-            }
-            
-            .logo {
-                max-width: 220px;
-            }
-            
-            .brand .subtitle {
-                font-size: 12px;
-            }
-            
-            .row-2 {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-            
-            .links {
-                flex-direction: column;
-                align-items: center;
-                gap: 4px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .logo {
-                max-width: 180px;
-            }
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,#0f0f13 0%,#131318 100%);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        
+        .container{width:100%;max-width:400px}
+        
+        .logo{text-align:center;margin-bottom:28px}
+        .logo img{max-width:140px;height:auto}
+        
+        .tabs{display:flex;gap:0;margin-bottom:20px;background:var(--card);border-radius:10px;padding:3px;border:1px solid var(--border)}
+        .tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;border-radius:8px;color:var(--sub);transition:all 0.2s;border:none;background:none;font-family:'Inter',sans-serif}
+        .tab.active{background:rgba(34,211,238,0.08);color:var(--cyan)}
+        
+        .form-box{display:none}
+        .form-box.active{display:block}
+        
+        .field{margin-bottom:14px}
+        .field label{display:block;font-size:12px;color:var(--sub);margin-bottom:5px;font-weight:500;letter-spacing:0.3px}
+        .field input{width:100%;padding:12px 14px;background:var(--input);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;outline:none;font-family:'Inter',sans-serif;transition:all 0.2s}
+        .field input:focus{border-color:var(--cyan)}
+        .field input::placeholder{color:#3a3a45}
+        
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        
+        .btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif}
+        .btn-primary{background:linear-gradient(135deg,var(--cyan),#0891b2);color:#0f0f13}
+        .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 25px rgba(34,211,238,0.15)}
+        
+        .msg{margin-top:12px;padding:10px;border-radius:8px;font-size:12px;text-align:center;display:none}
+        .msg.success{display:block;background:rgba(52,211,153,0.08);color:#34d399;border:1px solid rgba(52,211,153,0.15)}
+        .msg.error{display:block;background:rgba(248,113,113,0.08);color:#f87171;border:1px solid rgba(248,113,113,0.15)}
+        
+        .back{text-align:center;margin-top:20px}
+        .back a{color:var(--sub);font-size:12px;text-decoration:none;transition:color 0.2s}
+        .back a:hover{color:var(--text)}
     </style>
 </head>
 <body>
-    <div class="bg-animated">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-    </div>
-
     <div class="container">
-        <!-- ======================================== -->
-        <!-- LOGIN DEL CLIENTE                       -->
-        <!-- ======================================== -->
-        <div class="card" id="loginCard">
-            <div class="live-badge">
-                <span class="dot"></span> Cliente · Área Personal
-            </div>
-
-            <div class="brand">
-                <div class="logo-wrapper">
-                    <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" 
-                         alt="GymRock" 
-                         class="logo"
-                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%2290%22 font-size=%2290%22%3E🏋️%3C/text%3E%3C/svg%3E'">
-                </div>
-                <p class="subtitle"><i class="fas fa-user"></i> Área de Clientes</p>
-            </div>
-
-            <form id="loginForm" class="form">
-                <div class="input-group">
-                    <label for="email"><i class="fas fa-envelope"></i> Correo Electrónico</label>
-                    <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required autocomplete="email">
-                </div>
-                <div class="input-group">
-                    <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
-                        <button type="button" class="toggle-password" data-target="password">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary" id="btnLoginSubmit">
-                    <span id="btnLoginText">Ingresar</span>
-                    <div class="spinner" id="btnLoginSpinner"></div>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </form>
-
-            <div class="links">
-                <a id="btnMostrarRegistro" class="link-primary">
-                    <i class="fas fa-user-plus"></i> Crear cuenta
-                </a>
-                <a href="../index.html" class="link-secondary">
-                    <i class="fas fa-home"></i> Volver al inicio
-                </a>
-            </div>
-
-            <div id="mensajeLogin" class="mensaje"></div>
+        <div class="logo">
+            <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock">
         </div>
-
-        <!-- ======================================== -->
-        <!-- REGISTRO DEL CLIENTE                     -->
-        <!-- ======================================== -->
-        <div class="card hidden" id="registroCard">
-            <div class="brand">
-                <h2>📋 Crear Cuenta</h2>
-                <p class="subtitle"><i class="fas fa-rocket"></i> Únete a GymRock en 1 minuto</p>
-            </div>
-
-            <form id="registerForm" class="form">
-                <div class="input-group">
-                    <label><i class="fas fa-user"></i> Nombre Completo</label>
-                    <input type="text" id="reg_nombre" placeholder="Juan Pérez" required autocomplete="name">
-                </div>
-                <div class="input-group">
-                    <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
-                    <input type="email" id="reg_email" placeholder="juan@ejemplo.com" required autocomplete="email">
-                </div>
-                <div class="input-group">
-                    <label><i class="fas fa-lock"></i> Contraseña</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="reg_password" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
-                        <button type="button" class="toggle-password" data-target="reg_password">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="row-2">
-                    <div class="input-group">
-                        <label><i class="fas fa-map-marker-alt"></i> Estado</label>
-                        <input type="text" id="reg_estado" placeholder="CDMX" required>
-                    </div>
-                    <div class="input-group">
-                        <label><i class="fas fa-map-pin"></i> Municipio</label>
-                        <input type="text" id="reg_municipio" placeholder="Benito Juárez" required>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label><i class="fas fa-phone"></i> Teléfono</label>
-                    <input type="tel" id="reg_telefono" placeholder="5512345678">
-                </div>
-                <button type="submit" class="btn-primary" id="btnRegisterSubmit">
-                    <span id="btnRegisterText">Registrarme</span>
-                    <div class="spinner" id="btnRegisterSpinner"></div>
-                    <i class="fas fa-user-check"></i>
-                </button>
-            </form>
-
-            <div class="links">
-                <a id="btnMostrarLogin" class="link-primary">
-                    <i class="fas fa-arrow-left"></i> Volver al login
-                </a>
-            </div>
-
-            <div id="mensajeRegistro" class="mensaje"></div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('login')">Iniciar Sesión</button>
+            <button class="tab" onclick="switchTab('register')">Crear Cuenta</button>
         </div>
+        
+        <!-- LOGIN -->
+        <div class="form-box active" id="loginBox">
+            <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="email"></div>
+            <div class="field"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"></div>
+            <button class="btn btn-primary" onclick="login()">Acceder</button>
+            <div class="msg" id="loginMsg"></div>
+        </div>
+        
+        <!-- REGISTRO -->
+        <div class="form-box" id="registerBox">
+            <div class="field"><label>Nombre completo</label><input type="text" id="regNombre" placeholder="Tu nombre"></div>
+            <div class="field"><label>Email</label><input type="email" id="regEmail" placeholder="tu@email.com" autocomplete="email"></div>
+            <div class="field"><label>Contraseña</label><input type="password" id="regPass" placeholder="Mínimo 6 caracteres" autocomplete="new-password"></div>
+            <div class="row">
+                <div class="field"><label>Estado</label><input type="text" id="regEstado" placeholder="CDMX"></div>
+                <div class="field"><label>Municipio</label><input type="text" id="regMunicipio" placeholder="Benito Juárez"></div>
+            </div>
+            <button class="btn btn-primary" onclick="register()">Crear Cuenta</button>
+            <div class="msg" id="registerMsg"></div>
+        </div>
+        
+        <div class="back"><a href="../index.html">← Volver al inicio</a></div>
     </div>
-
+    
     <script>
-        // ============================================
-        // GYMROCK · SCRIPT CLIENTE v2.1
-        // ============================================
-
-        const API_URL = window.location.origin;
-
-        // ============================================
-        // TOGGLE LOGIN/REGISTRO
-        // ============================================
-        document.getElementById('btnMostrarRegistro').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('loginCard').classList.add('hidden');
-            document.getElementById('registroCard').classList.remove('hidden');
-            limpiarMensajes();
-        });
-
-        document.getElementById('btnMostrarLogin').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('registroCard').classList.add('hidden');
-            document.getElementById('loginCard').classList.remove('hidden');
-            limpiarMensajes();
-        });
-
-        // ============================================
-        // TOGGLE PASSWORD (múltiples)
-        // ============================================
-        document.querySelectorAll('.toggle-password').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-target');
-                const input = document.getElementById(targetId);
-                const icon = this.querySelector('i');
-                
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    input.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
-            });
-        });
-
-        // ============================================
-        // MENSAJES
-        // ============================================
-        function mostrarMensaje(id, tipo, texto) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.textContent = texto;
-            el.className = 'mensaje ' + tipo;
-            el.style.display = 'block';
-            
-            if (tipo === 'success') {
-                setTimeout(() => { el.style.display = 'none'; }, 4000);
-            }
+        const API=window.location.origin;
+        
+        function switchTab(tab){
+            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+            document.querySelectorAll('.form-box').forEach(f=>f.classList.remove('active'));
+            if(tab==='login'){document.querySelectorAll('.tab')[0].classList.add('active');document.getElementById('loginBox').classList.add('active')}
+            else{document.querySelectorAll('.tab')[1].classList.add('active');document.getElementById('registerBox').classList.add('active')}
+            document.querySelectorAll('.msg').forEach(m=>{m.style.display='none';m.className='msg'});
         }
-
-        function limpiarMensajes() {
-            document.querySelectorAll('.mensaje').forEach(el => {
-                el.style.display = 'none';
-            });
+        
+        function showMsg(id,type,text){const m=document.getElementById(id);m.textContent=text;m.className='msg '+type;m.style.display='block'}
+        
+        async function login(){
+            const email=document.getElementById('loginEmail').value.trim();
+            const pass=document.getElementById('loginPass').value;
+            if(!email||!pass){showMsg('loginMsg','error','Completa todos los campos');return}
+            showMsg('loginMsg','success','Verificando...');
+            try{
+                const r=await fetch(API+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,rol:'cliente'})});
+                const d=await r.json();
+                if(d.status==='success'){localStorage.setItem('gymrock_token',d.data.token);localStorage.setItem('gymrock_user',JSON.stringify(d.data));localStorage.setItem('gymrock_rol','cliente');window.location.href='gimnasios.html'}
+                else showMsg('loginMsg','error',d.error||'Error');
+            }catch(e){showMsg('loginMsg','error','Error de conexión')}
         }
-
-        // ============================================
-        // LOADING
-        // ============================================
-        function setLoading(formType, loading) {
-            const btn = document.getElementById(formType === 'login' ? 'btnLoginSubmit' : 'btnRegisterSubmit');
-            const text = document.getElementById(formType === 'login' ? 'btnLoginText' : 'btnRegisterText');
-            const spinner = document.getElementById(formType === 'login' ? 'btnLoginSpinner' : 'btnRegisterSpinner');
-            
-            if (loading) {
-                btn.disabled = true;
-                text.style.display = 'none';
-                spinner.style.display = 'inline-block';
-            } else {
-                btn.disabled = false;
-                text.style.display = 'inline';
-                spinner.style.display = 'none';
-            }
+        
+        async function register(){
+            const nombre=document.getElementById('regNombre').value.trim();
+            const email=document.getElementById('regEmail').value.trim();
+            const pass=document.getElementById('regPass').value;
+            const estado=document.getElementById('regEstado').value.trim();
+            const municipio=document.getElementById('regMunicipio').value.trim();
+            if(!nombre||!email||!pass||!estado||!municipio){showMsg('registerMsg','error','Completa todos los campos');return}
+            if(pass.length<6){showMsg('registerMsg','error','Contraseña: mínimo 6 caracteres');return}
+            showMsg('registerMsg','success','Creando cuenta...');
+            try{
+                const r=await fetch(API+'/api/registro/cliente',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,email,password:pass,estado,municipio})});
+                const d=await r.json();
+                if(d.status==='success'){localStorage.setItem('gymrock_token',d.data.token);localStorage.setItem('gymrock_user',JSON.stringify(d.data));localStorage.setItem('gymrock_rol','cliente');window.location.href='gimnasios.html'}
+                else showMsg('registerMsg','error',d.error||'Error');
+            }catch(e){showMsg('registerMsg','error','Error de conexión')}
         }
-
-        // ============================================
-        // LOGIN
-        // ============================================
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            
-            if (!email || !password) {
-                mostrarMensaje('mensajeLogin', 'error', '⚠️ Completa todos los campos');
-                return;
-            }
-            
-            setLoading('login', true);
-            mostrarMensaje('mensajeLogin', 'loading', '⏳ Verificando credenciales...');
-
-            try {
-                const res = await fetch(`${API_URL}/api/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password, rol: 'cliente' })
-                });
-                const data = await res.json();
-                
-                setLoading('login', false);
-
-                if (data.status === 'success') {
-                    localStorage.setItem('gymrock_token', data.data.token);
-                    localStorage.setItem('gymrock_user', JSON.stringify(data.data));
-                    localStorage.setItem('gymrock_rol', 'cliente');
-                    
-                    mostrarMensaje('mensajeLogin', 'success', '✅ ¡Bienvenido ' + data.data.nombre + '! Redirigiendo...');
-                    
-                    setTimeout(() => {
-                        window.location.href = 'gimnasios.html';
-                    }, 1500);
-                } else {
-                    mostrarMensaje('mensajeLogin', 'error', '❌ ' + (data.error || 'Credenciales incorrectas'));
-                    document.getElementById('password').value = '';
-                    document.getElementById('password').focus();
-                }
-            } catch (error) {
-                setLoading('login', false);
-                console.error('Error:', error);
-                mostrarMensaje('mensajeLogin', 'error', '❌ Error de conexión. Verifica tu internet.');
-            }
-        });
-
-        // ============================================
-        // REGISTRO
-        // ============================================
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const nombre = document.getElementById('reg_nombre').value.trim();
-            const email = document.getElementById('reg_email').value.trim();
-            const password = document.getElementById('reg_password').value;
-            const estado = document.getElementById('reg_estado').value.trim();
-            const municipio = document.getElementById('reg_municipio').value.trim();
-            const telefono = document.getElementById('reg_telefono').value.trim();
-            
-            // Validaciones
-            if (!nombre || !email || !password || !estado || !municipio) {
-                mostrarMensaje('mensajeRegistro', 'error', '⚠️ Completa todos los campos obligatorios');
-                return;
-            }
-            
-            if (password.length < 6) {
-                mostrarMensaje('mensajeRegistro', 'error', '⚠️ La contraseña debe tener al menos 6 caracteres');
-                return;
-            }
-            
-            if (!email.includes('@') || !email.includes('.')) {
-                mostrarMensaje('mensajeRegistro', 'error', '⚠️ Ingresa un correo electrónico válido');
-                return;
-            }
-            
-            const payload = {
-                nombre,
-                email,
-                password,
-                estado,
-                municipio,
-                telefono: telefono || ''
-            };
-            
-            setLoading('register', true);
-            mostrarMensaje('mensajeRegistro', 'loading', '⏳ Creando tu cuenta...');
-
-            try {
-                const res = await fetch(`${API_URL}/api/registro/cliente`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                
-                setLoading('register', false);
-
-                if (data.status === 'success') {
-                    localStorage.setItem('gymrock_token', data.data.token);
-                    localStorage.setItem('gymrock_user', JSON.stringify(data.data));
-                    localStorage.setItem('gymrock_rol', 'cliente');
-                    
-                    mostrarMensaje('mensajeRegistro', 'success', '✅ ¡Registro exitoso! Redirigiendo...');
-                    
-                    setTimeout(() => {
-                        window.location.href = 'gimnasios.html';
-                    }, 2000);
-                } else {
-                    mostrarMensaje('mensajeRegistro', 'error', '❌ ' + (data.error || 'Error al registrar'));
-                }
-            } catch (error) {
-                setLoading('register', false);
-                console.error('Error:', error);
-                mostrarMensaje('mensajeRegistro', 'error', '❌ Error de conexión. Verifica tu internet.');
-            }
-        });
-
-        // ============================================
-        // VERIFICAR SESIÓN EXISTENTE
-        // ============================================
-        (function verificarSesion() {
-            const token = localStorage.getItem('gymrock_token');
-            const rol = localStorage.getItem('gymrock_rol');
-            
-            if (token && rol === 'cliente') {
-                window.location.href = 'gimnasios.html';
-            }
-        })();
-
-        console.log('💪 GymRock - Panel del Cliente v2.1');
-        console.log('📡 API:', API_URL);
     </script>
 </body>
 </html>
