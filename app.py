@@ -58,7 +58,7 @@ def health():
     return jsonify({
         'status': 'ok',
         'message': 'GymRock API funcionando',
-        'version': '4.0.2'
+        'version': '5.0.0'
     }), 200
 
 # ---------- GIMNASIOS ----------
@@ -230,86 +230,7 @@ def login():
         print(f"Error login: {e}")
         return jsonify({'error': 'Error interno'}), 500
 
-# ---------- ADMIN ----------
-@app.route('/api/admin/login', methods=['POST'])
-def admin_login():
-    if not supabase:
-        return jsonify({'error': 'Servicio no disponible'}), 500
-    try:
-        d = request.get_json()
-        usuario = d.get('usuario', '').strip()
-        password = d.get('password', '')
-        
-        if not usuario or not password:
-            return jsonify({'error': 'Usuario y contraseña requeridos'}), 400
-        
-        hashed = hash_password(password)
-        result = supabase.table('super_admin').select('*').eq('usuario', usuario).eq('password_hash', hashed).execute()
-        
-        if not result.data:
-            return jsonify({'error': 'Credenciales inválidas'}), 401
-        
-        a = result.data[0]
-        token = generate_token(a['id'], a['usuario'], 'super_admin')
-        return jsonify({
-            'status': 'success',
-            'data': {
-                'id': a['id'],
-                'usuario': a['usuario'],
-                'rol': 'super_admin',
-                'token': token
-            }
-        }), 200
-    except Exception as e:
-        print(f"Error admin login: {e}")
-        return jsonify({'error': 'Error interno'}), 500
 
-@app.route('/api/admin/verify', methods=['POST'])
-def admin_verify():
-    try:
-        token = request.get_json().get('token', '')
-        if token == ADMIN_TOKEN:
-            return jsonify({'valid': True}), 200
-        try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-            if payload['user']['rol'] == 'super_admin':
-                return jsonify({'valid': True}), 200
-        except:
-            pass
-        return jsonify({'valid': False}), 401
-    except:
-        return jsonify({'valid': False}), 401
-
-@app.route('/api/admin/dashboard', methods=['GET'])
-def admin_dashboard():
-    if not supabase:
-        return jsonify({'error': 'Servicio no disponible'}), 500
-    try:
-        token = request.args.get('token', '')
-        ok = (token == ADMIN_TOKEN)
-        if not ok:
-            try:
-                ok = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])['user']['rol'] == 'super_admin'
-            except:
-                pass
-        if not ok:
-            return jsonify({'error': 'No autorizado'}), 401
-        
-        gimnasios = supabase.table('gimnasios').select('*').execute()
-        usuarios = supabase.table('usuarios').select('*').execute()
-        return jsonify({
-            'status': 'success',
-            'data': {
-                'total_gimnasios': len(gimnasios.data or []),
-                'total_usuarios': len(usuarios.data or []),
-                'gimnasios': gimnasios.data or []
-            }
-        }), 200
-    except Exception as e:
-        print(f"Error dashboard: {e}")
-        return jsonify({'error': 'Error interno'}), 500
-
-# ---------- ENTRENADORES ----------
 @app.route('/api/entrenador/login', methods=['POST'])
 def entrenador_login():
     if not supabase:
