@@ -1,64 +1,146 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>GymRock · Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root{--bg:#06060c;--card:#0f0f1a;--text:#e8e8f0;--sub:#8888a0;--pink:#f06595;--border:#181828}
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:40px}
-        .container{max-width:900px;margin:0 auto}
-        h1{font-family:'Space Grotesk',sans-serif;font-size:32px;margin-bottom:8px}
-        h1 span{color:var(--pink)}
-        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:24px 0}
-        .kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center}
-        .kpi .num{font-size:36px;font-weight:800}
-        .kpi .lbl{font-size:12px;color:var(--sub);margin-top:4px}
-        table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-        th{text-align:left;padding:12px;color:var(--sub);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
-        td{padding:12px;border-bottom:1px solid var(--border)}
-        .btn{display:inline-block;padding:10px 20px;background:var(--pink);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;text-decoration:none;margin-top:16px}
+        :root{--bg:#06060c;--card:#0f0f1a;--text:#e8e8f0;--sub:#8888a0;--pink:#f06595;--purple:#9775fa;--green:#38d9a9;--blue:#4dabf7;--amber:#ffc078;--border:#181828;--gradient:linear-gradient(135deg,#f06595,#9775fa)}
+        [data-theme="light"]{--bg:#f8f9fc;--card:#fff;--text:#1a1a2e;--sub:#6b7280;--pink:#d6336c;--purple:#7950f2;--green:#12b886;--blue:#228be6;--amber:#f59f00;--border:#e5e7eb}
+        *{margin:0;padding:0;box-sizing:border-box;transition:background 0.3s,color 0.2s}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+        .sidebar{width:260px;background:var(--card);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column}
+        .sidebar .logo{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:32px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
+        .sidebar nav a{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:8px;color:var(--sub);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer}
+        .sidebar nav a:hover,.sidebar nav a.active{background:rgba(240,101,149,0.06);color:var(--pink)}
+        .sidebar nav a.logout{margin-top:auto;color:#ff6b6b}
+        .main{flex:1;margin-left:260px;padding:28px 32px;overflow-y:auto;height:100vh}
+        h1{font-family:'Space Grotesk',sans-serif;font-size:26px;margin-bottom:4px}
+        h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+        .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+        .kpi-card .val{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700}
+        .kpi-card .lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-top:2px}
+        .section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+        .section h3{font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .section h3 i{color:var(--pink)}
+        table{width:100%;border-collapse:collapse;font-size:12px}
+        th{text-align:left;padding:8px;color:var(--sub);font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+        td{padding:8px;border-bottom:1px solid var(--border)}
+        .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--gradient);border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+        .btn-outline{background:transparent;border:1px solid var(--border);color:var(--sub)}
+        .field{margin-bottom:10px}
+        .field input,.field textarea{width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;outline:none;font-family:'Inter',sans-serif}
+        .field textarea{resize:vertical;min-height:50px}
+        .tag{display:inline-block;font-size:9px;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase;margin-right:4px}
+        .tag-green{background:rgba(56,217,169,0.1);color:var(--green)}
+        .tag-amber{background:rgba(255,192,120,0.1);color:var(--amber)}
+        .tag-blue{background:rgba(77,171,247,0.1);color:var(--blue)}
+        @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:16px}.kpi{grid-template-columns:1fr 1fr}}
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Gym<span>Rock</span> Admin</h1>
-        <p style="color:var(--sub)">Panel de administración</p>
-        <div class="grid">
-            <div class="kpi"><div class="num" id="gimnasios">--</div><div class="lbl">Gimnasios</div></div>
-            <div class="kpi"><div class="num" id="usuarios">--</div><div class="lbl">Clientes</div></div>
+    <aside class="sidebar">
+        <div class="logo">GymRock</div>
+        <nav>
+            <a class="active" onclick="mostrar('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a onclick="mostrar('gimnasios')"><i class="fas fa-dumbbell"></i> Gimnasios</a>
+            <a onclick="mostrar('extras')"><i class="fas fa-gem"></i> Servicios Extra</a>
+            <a class="logout" onclick="salir()"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </nav>
+    </aside>
+    <main class="main">
+        <!-- DASHBOARD -->
+        <div id="secDashboard">
+            <h1><span>Dashboard</span></h1>
+            <p style="color:var(--sub);font-size:13px">Panel de administración</p>
+            <div class="kpi">
+                <div class="kpi-card"><div class="val" id="kGimnasios" style="color:var(--blue)">--</div><div class="lbl">Gimnasios</div></div>
+                <div class="kpi-card"><div class="val" id="kClientes" style="color:var(--green)">--</div><div class="lbl">Clientes</div></div>
+                <div class="kpi-card"><div class="val" id="kEntrenadores" style="color:var(--amber)">--</div><div class="lbl">Entrenadores</div></div>
+                <div class="kpi-card"><div class="val" id="kIngresos" style="color:var(--purple)">$0</div><div class="lbl">Ingresos Est.</div></div>
+            </div>
+            <div class="section">
+                <h3><i class="fas fa-dumbbell"></i> Gimnasios</h3>
+                <table><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Licencia</th></tr></thead><tbody id="tablaGimnasios"></tbody></table>
+            </div>
         </div>
-        <h3 style="margin-bottom:12px">Gimnasios Registrados</h3>
-        <table><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Licencia</th></tr></thead><tbody id="tabla"><tr><td colspan="4" style="text-align:center;color:var(--sub)">Cargando...</td></tr></tbody></table>
-        <a href="#" class="btn" onclick="salir()">Cerrar sesión</a>
-    </div>
+        
+        <!-- GIMNASIOS -->
+        <div id="secGimnasios" style="display:none">
+            <h1><span>Gimnasios</span></h1>
+            <div class="section"><table><thead><tr><th>Nombre</th><th>Email</th><th>Estado</th><th>Plan</th><th>Registro</th></tr></thead><tbody id="tablaGimnasiosFull"></tbody></table></div>
+        </div>
+        
+        <!-- EXTRAS -->
+        <div id="secExtras" style="display:none">
+            <h1><span>Servicios Extra</span></h1>
+            <p style="color:var(--sub);font-size:13px;margin-bottom:16px">Administra los servicios que aparecen en la sección Extras del cliente</p>
+            <div class="section">
+                <h3><i class="fas fa-plus-circle"></i> Agregar Servicio</h3>
+                <div class="field"><input type="text" id="extNombre" placeholder="Nombre del servicio"></div>
+                <div class="field"><textarea id="extDesc" placeholder="Descripción"></textarea></div>
+                <div class="field"><input type="number" id="extPrecio" placeholder="Precio"></div>
+                <button class="btn" onclick="agregarExtra()">Agregar</button>
+            </div>
+            <div class="section">
+                <h3><i class="fas fa-list"></i> Servicios Actuales</h3>
+                <div id="listaExtras"></div>
+            </div>
+        </div>
+    </main>
     <script>
         if(!localStorage.getItem('adminToken')) location.href='login.html';
-        async function cargar(){
-            try{
-                const r=await fetch('/api/admin/dashboard?token='+localStorage.getItem('adminToken'));
-                const d=await r.json();
-                console.log('Dashboard:',d);
-                if(d.status=='success'){
-                    document.getElementById('gimnasios').textContent=d.data.total_gimnasios||0;
-                    document.getElementById('usuarios').textContent=d.data.total_usuarios||0;
-                    const g=d.data.gimnasios||[];
-                    if(g.length>0){
-                        document.getElementById('tabla').innerHTML=g.map(x=>`<tr><td><strong>${x.nombre||'N/A'}</strong></td><td>${x.email||'N/A'}</td><td>${x.plan||'basico'}</td><td>${x.estado_licencia||'activa'}</td></tr>`).join('');
-                    }else{
-                        document.getElementById('tabla').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--sub)">No hay gimnasios registrados</td></tr>';
-                    }
-                }else{
-                    document.getElementById('tabla').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--sub)">Error: '+JSON.stringify(d)+'</td></tr>';
-                }
-            }catch(e){
-                document.getElementById('tabla').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--sub)">Error de conexión</td></tr>';
-            }
+        
+        function mostrar(s){
+            document.querySelectorAll('[id^="sec"]').forEach(e=>e.style.display='none');
+            document.getElementById('sec'+s.charAt(0).toUpperCase()+s.slice(1)).style.display='block';
+            document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.remove('active'));
+            event.target.classList.add('active');
         }
+        
+        async function cargarDashboard(){
+            const t=localStorage.getItem('adminToken');
+            try{
+                const r=await fetch('/api/admin/dashboard?token='+t);
+                const d=await r.json();
+                if(d.status=='success'){
+                    document.getElementById('kGimnasios').textContent=d.data.total_gimnasios||0;
+                    document.getElementById('kClientes').textContent=d.data.total_usuarios||0;
+                    document.getElementById('kEntrenadores').textContent='--';
+                    document.getElementById('kIngresos').textContent='$0';
+                    const g=d.data.gimnasios||[];
+                    document.getElementById('tablaGimnasios').innerHTML=g.length?g.map(x=>`<tr><td><strong>${x.nombre||'N/A'}</strong></td><td>${x.email||''}</td><td>${x.plan||'basico'}</td><td><span class="tag tag-green">${x.estado_licencia||'activa'}</span></td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--sub)">Sin gimnasios</td></tr>';
+                    document.getElementById('tablaGimnasiosFull').innerHTML=g.length?g.map(x=>`<tr><td><strong>${x.nombre||'N/A'}</strong></td><td>${x.email||''}</td><td>${x.estado||''}, ${x.municipio||''}</td><td>${x.plan||'basico'}</td><td>${(x.fecha_registro||'').slice(0,10)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--sub)">Sin gimnasios</td></tr>';
+                }
+            }catch(e){}
+        }
+        
+        // Servicios Extra
+        let extras=JSON.parse(localStorage.getItem('admin_extras')||'[]');
+        function renderExtras(){
+            document.getElementById('listaExtras').innerHTML=extras.length?extras.map((e,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:6px"><div><strong>${e.nombre}</strong><br><span style="font-size:11px;color:var(--sub)">${e.desc}</span></div><div style="text-align:right"><span style="color:var(--green);font-weight:700">$${e.precio}</span><br><button onclick="eliminarExtra(${i})" style="background:none;border:none;color:#ff6b6b;cursor:pointer;font-size:11px">Eliminar</button></div></div>`).join(''):'<p style="color:var(--sub);text-align:center;padding:20px">No hay servicios extra</p>';
+        }
+        function agregarExtra(){
+            const n=document.getElementById('extNombre').value.trim();
+            const d=document.getElementById('extDesc').value.trim();
+            const p=document.getElementById('extPrecio').value;
+            if(!n||!d||!p)return alert('Completa todos los campos');
+            extras.push({nombre:n,desc:d,precio:p});
+            localStorage.setItem('admin_extras',JSON.stringify(extras));
+            document.getElementById('extNombre').value='';
+            document.getElementById('extDesc').value='';
+            document.getElementById('extPrecio').value='';
+            renderExtras();
+        }
+        function eliminarExtra(i){extras.splice(i,1);localStorage.setItem('admin_extras',JSON.stringify(extras));renderExtras()}
+        
         function salir(){localStorage.clear();location.href='../index.html'}
-        cargar();
+        
+        cargarDashboard();
+        renderExtras();
     </script>
 </body>
 </html>
