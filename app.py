@@ -380,25 +380,8 @@ def crear_preferencia():
 # ================================================
 
 @app.route('/api/admin/login2', methods=['POST'])
-def admin_login_nuevo():
-    if not supabase: return jsonify({'error':'No DB'}), 500
-    d = request.get_json()
-    usuario = d.get('usuario','').strip()
-    password = d.get('password','')
-    if not usuario or not password: return jsonify({'error':'Faltan datos'}), 400
-    hashed = hashlib.sha256(password.encode()).hexdigest()
-    print(f'DEBUG: {usuario} -> {hashed}')
-    result = supabase.table('super_admin').select('*').eq('usuario', usuario).execute()
-    print(f'DEBUG: encontrados={len(result.data if result.data else [])}')
-    if not result.data: return jsonify({'error':'Usuario no encontrado'}), 401
-    a = result.data[0]
-    print(f'DEBUG: BD hash={a.get("password_hash","")}')
-    if a.get('password_hash','') != hashed: return jsonify({'error':'Hash no coincide'}), 401
-    token = generate_token(a['id'], a['usuario'], 'super_admin')
-    return jsonify({'status':'success','data':{'id':a['id'],'usuario':a['usuario'],'rol':'super_admin','token':token}}), 200
-
-# FRONTEND
-# ================================================
+@app.route('/api/admin/login', methods=['POST'])
+def admin_login():
 @app.route('/')
 def serve_index():
     return send_from_directory('frontend_web', 'index.html')
