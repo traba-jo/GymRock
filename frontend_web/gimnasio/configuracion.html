@@ -1,188 +1,162 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>GymRock · Configuracion</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>GymRock · Configuración</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--blue:#3b82f6;--purple:#8b5cf6;--green:#22c55e;--gold:#f59e0b;--red:#ef4444}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
-        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100}
-        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-        .sidebar .logo span{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        :root {
+            --bg:#06060c;--side:#0a0a14;--card:#0f0f1a;--text:#e8e8f0;--sub:#8888a0;
+            --blue:#4dabf7;--purple:#9775fa;--green:#38d9a9;--amber:#ffc078;--red:#ff6b6b;
+            --border:#181828;--hover:#141424;--gradient:linear-gradient(135deg,#4dabf7,#9775fa);
+        }
+        [data-theme="light"] {
+            --bg:#f8f9fc;--side:#ffffff;--card:#ffffff;--text:#1a1a2e;--sub:#6b7280;
+            --blue:#228be6;--purple:#7950f2;--green:#12b886;--amber:#f59f00;--red:#e03131;
+            --border:#e5e7eb;--hover:#f3f4f6;--gradient:linear-gradient(135deg,#228be6,#7950f2);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;transition:background 0.3s,border-color 0.3s,color 0.2s}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+        
+        .sidebar{width:260px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;transition:transform 0.3s}
+        .sidebar .logo{text-align:center;margin-bottom:32px}
+        .sidebar .logo img{max-width:110px;height:auto;filter:drop-shadow(0 0 20px rgba(77,171,247,0.2))}
         .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
-        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500}
-        .sidebar nav a i{width:20px;text-align:center}
-        .sidebar nav a:hover{background:rgba(59,130,246,0.06);color:var(--white)}
-        .sidebar nav a.active{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(59,130,246,0.15)}
-        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
-        .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
-        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px}
-        .header h1{font-size:28px;font-weight:800}
-        .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
-        .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-        .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
-        .card h3{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:10px;color:var(--sub);text-decoration:none;font-size:13px;font-weight:500;position:relative;overflow:hidden}
+        .sidebar nav a::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gradient);border-radius:0 3px 3px 0;transform:scaleY(0);transition:transform 0.3s}
+        .sidebar nav a i{width:20px;text-align:center;font-size:16px}
+        .sidebar nav a:hover{background:var(--hover);color:var(--text)}
+        .sidebar nav a:hover::before{transform:scaleY(1)}
+        .sidebar nav a.active{background:rgba(77,171,247,0.06);color:var(--blue)}
+        .sidebar nav a.active::before{transform:scaleY(1)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red)}
+        
+        .main{flex:1;margin-left:260px;padding:28px 36px;overflow-y:auto;height:100vh}
+        .top-bar{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:24px}
+        .pill{display:flex;gap:2px;background:var(--side);border:1px solid var(--border);border-radius:10px;padding:3px}
+        .pill-btn{padding:7px 12px;border:none;background:none;color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;border-radius:8px;font-family:'Inter',sans-serif}
+        .pill-btn.active{background:var(--gradient);color:#fff}
+        .theme-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--side);color:var(--sub);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px}
+        
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+        .header h1{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;letter-spacing:-1px}
+        .user{display:flex;align-items:center;gap:12px;background:var(--card);padding:8px 16px;border-radius:50px;border:1px solid var(--border)}
+        .user .avatar{width:36px;height:36px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;cursor:pointer;overflow:hidden;background-size:cover;background-position:center;position:relative}
+        .user .avatar:hover::after{content:'📷';position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;font-size:14px}
+        .user .name{font-size:12px;font-weight:600}.user .name small{display:block;color:var(--sub);font-size:10px;font-weight:400}
+        
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
+        .card h3{font-family:'Space Grotesk',sans-serif;font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
         .card h3 i{color:var(--blue)}
-        .form-group{margin-bottom:14px}
-        .form-group label{display:block;font-size:13px;color:var(--gray);margin-bottom:4px}
-        .form-group input,.form-group select{width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:14px;outline:none}
-        .form-group input:focus,.form-group select:focus{border-color:var(--blue)}
-        .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
-        .btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
-        .btn-gold{background:linear-gradient(135deg,var(--gold),#B8941E);color:#0A0E1A}
-        .btn-green{background:var(--green);color:#fff}
-        .licencia{display:flex;justify-content:space-between;align-items:center;padding:16px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.12);border-radius:10px;flex-wrap:wrap;gap:12px}
-        .licencia .plan{font-size:18px;font-weight:700;color:var(--green)}
-        .banco-info{background:rgba(59,130,246,0.04);border:1px solid rgba(59,130,246,0.1);border-radius:10px;padding:12px;margin-top:12px;font-size:13px;color:var(--gray)}
-        .banco-info strong{color:var(--white)}
-        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.grid{grid-template-columns:1fr}}
-        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
-        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--green);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
+        .field{margin-bottom:12px}
+        .field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--sub);margin-bottom:4px;font-weight:600}
+        .field input{width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;font-family:'Inter',sans-serif}
+        .field input:focus{border-color:var(--blue)}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.3s}
+        .btn-save{background:var(--gradient);color:#fff}
+        .btn-gold{background:linear-gradient(135deg,var(--amber),#f08c00);color:#fff}
+        .btn-outline{background:transparent;border:1px solid var(--border);color:var(--sub)}
+        .btn:hover{transform:translateY(-1px)}
+        
+        .licencia-bar{display:flex;justify-content:space-between;align-items:center;padding:16px;background:rgba(56,217,169,0.04);border:1px solid rgba(56,217,169,0.12);border-radius:10px;margin-top:8px;flex-wrap:wrap;gap:10px}
+        .licencia-bar .plan-name{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--green)}
+        .licencia-bar .plan-date{font-size:12px;color:var(--sub)}
+        .banco-preview{background:rgba(77,171,247,0.04);border:1px solid rgba(77,171,247,0.1);border-radius:8px;padding:10px;font-size:11px;color:var(--sub);margin-top:8px}
+        .banco-preview strong{color:var(--text);font-family:'JetBrains Mono',monospace}
+        
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer;position:fixed;top:20px;left:20px;z-index:60}
+        @media(max-width:768px){.hamburger{display:block}.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.grid{grid-template-columns:1fr}}
     </style>
 </head>
 <body>
+    <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+    <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="cambiarAvatar(event)">
     <aside class="sidebar" id="sidebar">
-        <div class="logo"><span>GYMROCK</span></div>
+        <div class="logo"><img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock"></div>
         <nav>
-            <a href="dashboard.html"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a href="entrenadores.html"><i class="fas fa-users"></i> Entrenadores</a>
-            <a href="suscriptores.html"><i class="fas fa-user-check"></i> Suscriptores</a>
-            <a href="#" class="active"><i class="fas fa-cog"></i> Configuracion</a>
-            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
+            <a href="dashboard.html"><i class="fas fa-chart-pie"></i> <span data-es="Dashboard" data-en="Dashboard">Dashboard</span></a>
+            <a href="entrenadores.html"><i class="fas fa-users"></i> <span data-es="Entrenadores" data-en="Trainers">Entrenadores</span></a>
+            <a href="suscriptores.html"><i class="fas fa-user-check"></i> <span data-es="Suscriptores" data-en="Subscribers">Suscriptores</span></a>
+            <a href="#" class="active"><i class="fas fa-cog"></i> <span data-es="Configuración" data-en="Settings">Configuración</span></a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> <span data-es="Salir" data-en="Logout">Salir</span></a>
         </nav>
     </aside>
     <main class="main">
+        <div class="top-bar">
+            <div class="pill"><button class="pill-btn active" onclick="setLang('es',this)">ES</button><button class="pill-btn" onclick="setLang('en',this)">EN</button></div>
+            <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+        </div>
         <div class="header">
-            <div style="display:flex;align-items:center;gap:14px">
-                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
-                <div><h1>Configuracion</h1><p style="color:var(--gray);font-size:14px">Administra tu gimnasio</p></div>
-            </div>
-            <div class="user"><div class="avatar" id="ua">GR</div><div class="info" id="ui">Cargando...</div></div>
+            <div><h1 data-es="Configuración" data-en="Settings">Configuración</h1><p style="color:var(--sub);font-size:13px;margin-top:4px" data-es="Administra tu gimnasio" data-en="Manage your gym">Administra tu gimnasio</p></div>
+            <div class="user"><div class="avatar" id="ua" onclick="document.getElementById('avatarInput').click()" title="Cambiar foto">GR</div><div class="name" id="ui">Cargando...</div></div>
         </div>
         <div class="grid">
-            <!-- PERFIL -->
+            <!-- Perfil -->
             <div class="card">
-                <h3><i class="fas fa-store"></i> Perfil del Gimnasio</h3>
-                <div class="form-group"><label>Nombre</label><input type="text" id="gymNombre"></div>
-                <div class="form-group"><label>Telefono</label><input type="text" id="gymTel"></div>
-                <div class="form-group"><label>Email</label><input type="email" id="gymEmail" disabled style="opacity:0.5"></div>
-                <button class="btn btn-blue" onclick="guardarPerfil()">Guardar</button>
+                <h3><i class="fas fa-store"></i> <span data-es="Perfil del Gimnasio" data-en="Gym Profile">Perfil del Gimnasio</span></h3>
+                <div class="field"><label data-es="Nombre" data-en="Name">Nombre</label><input type="text" id="gymNombre"></div>
+                <div class="field"><label data-es="Teléfono" data-en="Phone">Teléfono</label><input type="text" id="gymTel"></div>
+                <div class="field"><label>Email</label><input type="email" id="gymEmail" disabled style="opacity:0.5"></div>
+                <button class="btn btn-save" onclick="guardarPerfil()"><i class="fas fa-save"></i> <span data-es="Guardar Cambios" data-en="Save Changes">Guardar Cambios</span></button>
             </div>
             
-            <!-- LICENCIA GYMROCK -->
+            <!-- Licencia -->
             <div class="card">
-                <h3><i class="fas fa-file-contract"></i> Licencia GymRock</h3>
-                <div class="licencia">
-                    <div><div class="plan" id="estadoLic">Activa</div><div style="font-size:13px;color:var(--gray)" id="fechaLic">--</div></div>
-                    <button class="btn btn-gold" onclick="window.location.href='pago_licencia.html'">Renovar Licencia</button>
+                <h3><i class="fas fa-file-contract"></i> <span data-es="Licencia GymRock" data-en="GymRock License">Licencia GymRock</span></h3>
+                <div class="licencia-bar">
+                    <div><div class="plan-name" id="estadoLic">✅ Activa</div><div class="plan-date" id="fechaLic">--</div></div>
+                    <button class="btn btn-gold" onclick="window.location.href='pago_licencia.html'"><i class="fas fa-sync"></i> <span data-es="Renovar Licencia" data-en="Renew License">Renovar Licencia</span></button>
                 </div>
-                <p style="font-size:12px;color:var(--gray);margin-top:8px">Pago de licencia a GymRock · BBVA 4815...</p>
             </div>
             
-            <!-- DATOS BANCARIOS DEL GIMNASIO (para cobrar a clientes) -->
-            <div class="card" style="border:1px solid rgba(59,130,246,0.2)">
-                <h3><i class="fas fa-credit-card"></i> Datos Bancarios <span style="font-size:11px;background:rgba(59,130,246,0.1);color:var(--blue);padding:4px 10px;border-radius:50px">Para cobrar a clientes</span></h3>
-                <p style="font-size:12px;color:var(--gray);margin-bottom:14px">Los clientes veran solo los ultimos 4 digitos al pagar por transferencia</p>
-                <div class="form-group"><label>Banco</label><input type="text" id="bancoNombre" placeholder="BBVA, Santander, etc"></div>
-                <div class="form-group"><label>Titular</label><input type="text" id="bancoTitular" placeholder="Nombre del titular"></div>
-                <div class="form-group"><label>Numero de Cuenta/Tarjeta</label><input type="text" id="bancoCuenta" placeholder="4815 1632 9824 3091" maxlength="20"></div>
-                <div class="banco-info">🔒 Tus datos se guardan encriptados. Los clientes solo veran: <strong id="previewBanco">--</strong></div>
-                <button class="btn btn-green" onclick="guardarBanco()" style="margin-top:12px">💾 Guardar Datos Bancarios</button>
+            <!-- Datos Bancarios -->
+            <div class="card" style="border:1px solid rgba(77,171,247,0.2)">
+                <h3><i class="fas fa-credit-card"></i> <span data-es="Datos Bancarios" data-en="Bank Details">Datos Bancarios</span> <span style="font-size:9px;background:rgba(77,171,247,0.1);color:var(--blue);padding:3px 8px;border-radius:4px" data-es="Para cobrar a clientes" data-en="To charge clients">Para cobrar a clientes</span></h3>
+                <div class="field"><label data-es="Banco" data-en="Bank">Banco</label><input type="text" id="bancoNombre" placeholder="BBVA"></div>
+                <div class="field"><label data-es="Titular" data-en="Account Holder">Titular</label><input type="text" id="bancoTitular"></div>
+                <div class="field"><label data-es="Cuenta/Tarjeta" data-en="Account/Card">Cuenta/Tarjeta</label><input type="text" id="bancoCuenta" placeholder="4815 1632 9824 3091"></div>
+                <div class="banco-preview">🔒 <span data-es="Vista del cliente:" data-en="Client view:">Vista del cliente:</span> <strong id="previewBanco">--</strong></div>
+                <button class="btn btn-save" onclick="guardarBanco()" style="margin-top:12px"><i class="fas fa-save"></i> <span data-es="Guardar Datos" data-en="Save Details">Guardar Datos</span></button>
             </div>
             
-            
-            <!-- TEST CLASE A -->
-            <div class="card" style="border:1px solid rgba(59,130,246,0.2)">
-                <h3><i class="fas fa-clipboard-check"></i> Personalizar Test Clase A <span style="font-size:10px;background:rgba(59,130,246,0.1);color:var(--blue);padding:4px 10px;border-radius:50px">Certificación</span></h3>
-                <p style="font-size:12px;color:var(--gray);margin-bottom:14px">Estas preguntas se usarán cuando envíes un test Clase A a un aspirante</p>
-                <div class="form-group"><label>Pregunta 1</label><input type="text" id="testP1" placeholder="¿Por qué quieres ser entrenador?"></div>
-                <div class="form-group"><label>Pregunta 2</label><input type="text" id="testP2" placeholder="Describe tu experiencia"></div>
-                <div class="form-group"><label>Pregunta 3</label><input type="text" id="testP3" placeholder="¿Cómo manejas un cliente nuevo?"></div>
-                <div class="form-group"><label>Pregunta 4</label><input type="text" id="testP4" placeholder="¿Qué harías si un cliente no avanza?"></div>
-                <div class="form-group"><label>Pregunta 5</label><input type="text" id="testP5" placeholder="¿Por qué deberíamos elegirte?"></div>
-                <button class="btn btn-blue" onclick="guardarTestA()">💾 Guardar Preguntas del Test</button>
-                <div id="testGuardado" style="margin-top:8px;font-size:12px;color:var(--green);display:none">✅ Preguntas guardadas</div>
-            </div>
-            <!-- PLANES DE SUSCRIPCION -->
+            <!-- Planes -->
             <div class="card">
-                <h3><i class="fas fa-crown"></i> Planes para Clientes</h3>
-                <div class="form-group"><label>Mensual (MXN)</label><input type="number" id="planMensual" value="450"></div>
-                <div class="form-group"><label>Quincenal (MXN)</label><input type="number" id="planQuincenal" value="250"></div>
-                <button class="btn btn-blue" onclick="guardarPlanes()">Guardar Planes</button>
+                <h3><i class="fas fa-crown"></i> <span data-es="Planes para Clientes" data-en="Client Plans">Planes para Clientes</span></h3>
+                <div class="field"><label data-es="Mensual (MXN)" data-en="Monthly (MXN)">Mensual (MXN)</label><input type="number" id="planMensual" value="450"></div>
+                <div class="field"><label data-es="Quincenal (MXN)" data-en="Biweekly (MXN)">Quincenal (MXN)</label><input type="number" id="planQuincenal" value="250"></div>
+                <button class="btn btn-save" onclick="guardarPlanes()"><i class="fas fa-save"></i> <span data-es="Guardar Planes" data-en="Save Plans">Guardar Planes</span></button>
+            </div>
+            
+            <!-- Test Clase A -->
+            <div class="card">
+                <h3><i class="fas fa-clipboard-check"></i> <span data-es="Personalizar Test Clase A" data-en="Customize Class A Test">Personalizar Test Clase A</span></h3>
+                <div class="field"><label data-es="Pregunta 1" data-en="Question 1">Pregunta 1</label><input type="text" id="testP1" placeholder="¿Por qué quieres ser entrenador?"></div>
+                <div class="field"><label data-es="Pregunta 2" data-en="Question 2">Pregunta 2</label><input type="text" id="testP2" placeholder="Describe tu experiencia"></div>
+                <div class="field"><label data-es="Pregunta 3" data-en="Question 3">Pregunta 3</label><input type="text" id="testP3" placeholder="¿Cómo manejas un cliente nuevo?"></div>
+                <button class="btn btn-save" onclick="guardarTestA()"><i class="fas fa-save"></i> <span data-es="Guardar Preguntas" data-en="Save Questions">Guardar Preguntas</span></button>
             </div>
         </div>
     </main>
-    <div class="toast" id="toast"></div>
     <script>
-        
-        function guardarTestA(){
-            const p1=document.getElementById('testP1').value.trim();
-            const p2=document.getElementById('testP2').value.trim();
-            const p3=document.getElementById('testP3').value.trim();
-            const p4=document.getElementById('testP4').value.trim();
-            const p5=document.getElementById('testP5').value.trim();
-            localStorage.setItem('gym_testA',JSON.stringify([p1,p2,p3,p4,p5]));
-            document.getElementById('testGuardado').style.display='block';
-            setTimeout(()=>document.getElementById('testGuardado').style.display='none',3000);
-            mostrarToast('✅ Preguntas del Test Clase A guardadas');
-        }
-        // Cargar preguntas guardadas
-        (function(){
-            const saved=JSON.parse(localStorage.getItem('gym_testA')||'[]');
-            if(saved.length){
-                document.getElementById('testP1').value=saved[0]||'';
-                document.getElementById('testP2').value=saved[1]||'';
-                document.getElementById('testP3').value=saved[2]||'';
-                document.getElementById('testP4').value=saved[3]||'';
-                document.getElementById('testP5').value=saved[4]||'';
-            }
-        })();
         function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
-        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
-        function guardarPerfil(){mostrarToast('✅ Perfil guardado')}
-        function guardarPlanes(){mostrarToast('✅ Planes guardados')}
+        function toggleTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark');localStorage.setItem('theme',h.getAttribute('data-theme'))}
+        (function(){document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')})();
+        function setLang(lang,btn){document.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('[data-es][data-en]').forEach(el=>el.textContent=el.getAttribute('data-'+lang));localStorage.setItem('lang',lang)}
+        (function(){const l=localStorage.getItem('lang')||'es';const b=document.querySelector('.pill-btn[onclick*="'+l+'"]');if(b)setLang(l,b)})();
+        function cambiarAvatar(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(ev){document.getElementById('ua').style.backgroundImage='url('+ev.target.result+')';document.getElementById('ua').textContent='';localStorage.setItem('avatar',ev.target.result)};reader.readAsDataURL(file)}
+        (function(){const saved=localStorage.getItem('avatar');if(saved){document.getElementById('ua').style.backgroundImage='url('+saved+')';document.getElementById('ua').textContent=''}})();
         
-        function guardarBanco(){
-            const banco=document.getElementById('bancoNombre').value;
-            const titular=document.getElementById('bancoTitular').value;
-            const cuenta=document.getElementById('bancoCuenta').value;
-            if(!banco||!titular||!cuenta){mostrarToast('⚠️ Completa todos los campos');return}
-            // Guardar ultimos 4 digitos visibles
-            const ultimos4=cuenta.replace(/\s/g,'').slice(-4);
-            document.getElementById('previewBanco').textContent=banco+' · ***'+ultimos4;
-            mostrarToast('✅ Datos bancarios guardados (encriptados)');
-        }
+        function guardarPerfil(){alert('✅ Perfil guardado')}
+        function guardarPlanes(){alert('✅ Planes guardados')}
+        function guardarBanco(){const b=document.getElementById('bancoNombre').value,t=document.getElementById('bancoTitular').value,c=document.getElementById('bancoCuenta').value.replace(/\s/g,'');if(!b||!t||!c){alert('Completa todos los campos');return}document.getElementById('previewBanco').textContent=b+' · ***'+c.slice(-4);alert('✅ Datos bancarios guardados')}
+        function guardarTestA(){const p=[];for(let i=1;i<=3;i++)p.push(document.getElementById('testP'+i).value.trim());localStorage.setItem('gym_testA',JSON.stringify(p));alert('✅ Preguntas guardadas')}
         
-        document.getElementById('bancoCuenta').addEventListener('input',function(){
-            const cuenta=this.value.replace(/\s/g,'');
-            if(cuenta.length>=4){
-                document.getElementById('previewBanco').textContent=(document.getElementById('bancoNombre').value||'Banco')+' · ***'+cuenta.slice(-4);
-            }
-        });
+        document.getElementById('bancoCuenta').addEventListener('input',function(){const c=this.value.replace(/\s/g,'');if(c.length>=4)document.getElementById('previewBanco').textContent=(document.getElementById('bancoNombre').value||'Banco')+' · ***'+c.slice(-4)});
         
-        document.addEventListener('DOMContentLoaded',()=>{
-            const t=localStorage.getItem('gymrock_token');
-            if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}
-            const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');
-            if(u.nombre){
-                document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Admin</small>';
-                document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();
-                document.getElementById('gymNombre').value=u.nombre;
-            }
-            if(u.email)document.getElementById('gymEmail').value=u.email;
-            if(u.fecha_corte)document.getElementById('fechaLic').textContent='Vence: '+u.fecha_corte;
-            if(u.banco_cuenta){
-                document.getElementById('bancoNombre').value=u.banco_nombre||'';
-                document.getElementById('bancoTitular').value=u.banco_titular||'';
-                document.getElementById('bancoCuenta').value=u.banco_cuenta||'';
-                document.getElementById('previewBanco').textContent=(u.banco_nombre||'Banco')+' · ***'+(u.banco_cuenta||'****').slice(-4);
-            }
-        });
+        document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='gimnasio'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small>Admin</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase();document.getElementById('gymNombre').value=u.nombre}if(u.email)document.getElementById('gymEmail').value=u.email;if(u.fecha_corte)document.getElementById('fechaLic').textContent='Vence: '+u.fecha_corte});
     </script>
 </body>
 </html>
