@@ -97,47 +97,6 @@ def login():
         if u.get('licencia_fecha_corte'): resp['fecha_corte'] = u['licencia_fecha_corte'][:10]
     return jsonify({'status':'success','data':resp}), 200
 
-@app.route('/api/admin/login', methods=['POST'])
-def admin_login():
-    if not supabase: return jsonify({'error':'No DB'}), 500
-    d = request.get_json()
-    u = d.get('usuario','').strip()
-    p = d.get('password','')
-    if not u or not p: return jsonify({'error':'Faltan datos'}), 400
-    r = supabase.table('super_admin').select('*').eq('usuario',u).eq('password_hash',hash_password(p)).execute()
-    if not r.data: return jsonify({'error':'Invalido'}), 401
-    a = r.data[0]
-    return jsonify({'status':'success','data':{'id':a['id'],'usuario':a['usuario'],'rol':'super_admin','token':generate_token(a['id'],a['usuario'],'super_admin')}}), 200
-
-@app.route('/api/admin/verify', methods=['POST'])
-def verify():
-    t = request.get_json().get('token','')
-    if t==ADMIN_TOKEN: return jsonify({'valid':True}), 200
-    try:
-        if jwt.decode(t,SECRET_KEY,algorithms=['HS256'])['user']['rol']=='super_admin': return jsonify({'valid':True}), 200
-    except: pass
-    return jsonify({'valid':False}), 401
-
-@app.route('/api/admin/dashboard', methods=['GET'])
-def dashboard():
-    if not supabase: return jsonify({'error':'No DB'}), 500
-    t = request.args.get('token','')
-    ok = t==ADMIN_TOKEN
-    if not ok:
-        try: ok = jwt.decode(t,SECRET_KEY,algorithms=['HS256'])['user']['rol']=='super_admin'
-        except: pass
-    if not ok: return jsonify({'error':'No autorizado'}), 401
-    g = supabase.table('gimnasios').select('*').execute()
-    u = supabase.table('usuarios').select('*').execute()
-    return jsonify({'status':'success','data':{'total_gimnasios':len(g.data or []),'total_usuarios':len(u.data or []),'gimnasios':g.data or []}}), 200
-
-@app.route('/api/crear-preferencia', methods=['POST'])
-def preferencia():
-    if not MP_ACCESS_TOKEN: return jsonify({'error':'No MP'}), 500
-    d = request.get_json()
-    sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
-    pref = {"items":[{"title":d.get('descripcion','Suscripcion'),"quantity":1,"unit_price":float(d.get('monto',0)),"currency_id":"MXN"}],"back_urls":{"success":f"{BASE_URL}/cliente/suscripciones.html?status=success","failure":f"{BASE_URL}/cliente/suscripciones.html?status=failure","pending":f"{BASE_URL}/cliente/suscripciones.html?status=pending"},"auto_return":"approved"}
-    r = sdk.preference().create(pref)
     return jsonify({'status':'success','init_point':r['response']['init_point']}), 200
 
 # FRONTEND - ESTO ES LO CORREGIDO
