@@ -58,7 +58,7 @@ def health():
     return jsonify({
         'status': 'ok',
         'message': 'GymRock API funcionando',
-        'version': '5.0.3',
+        'version': '6.0.0',
         'supabase': 'conectado' if supabase else 'NO CONECTADO',
         'supabase_url': SUPABASE_URL[:30] if SUPABASE_URL else 'NO URL'
     }), 200
