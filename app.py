@@ -58,7 +58,7 @@ def health():
     return jsonify({
         'status': 'ok',
         'message': 'GymRock API funcionando',
-        'version': '5.0.0'
+        'version': '5.0.1'
     }), 200
 
 # ---------- GIMNASIOS ----------
@@ -382,6 +382,19 @@ def crear_preferencia():
 @app.route('/api/admin/login2', methods=['POST'])
 @app.route('/api/admin/login', methods=['POST'])
 def admin_login():
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    d = request.get_json()
+    u = d.get('usuario','').strip()
+    p = d.get('password','')
+    if not u or not p: return jsonify({'error':'Usuario y contraseña requeridos'}), 400
+    h = hashlib.sha256(p.encode()).hexdigest()
+    r = supabase.table('super_admin').select('*').eq('usuario', u).execute()
+    if not r.data or len(r.data) == 0: return jsonify({'error':'Credenciales inválidas'}), 401
+    a = r.data[0]
+    if a['password_hash'] != h: return jsonify({'error':'Credenciales inválidas'}), 401
+    token = generate_token(a['id'], a['usuario'], 'super_admin')
+    return jsonify({'status':'success','data':{'id':a['id'],'usuario':a['usuario'],'rol':'super_admin','token':token}}), 200
+
 @app.route('/')
 def serve_index():
     return send_from_directory('frontend_web', 'index.html')
