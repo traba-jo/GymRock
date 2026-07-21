@@ -109,6 +109,14 @@ def admin_login():
         return jsonify({'status':'success','data':{'token':token}}), 200
     return jsonify({'error':'Credenciales invalidas'}), 401
 
+
+@app.route('/api/admin/dashboard', methods=['GET'])
+def admin_dashboard():
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    g = supabase.table('gimnasios').select('*').execute()
+    u = supabase.table('usuarios').select('*').execute()
+    return jsonify({'status':'success','data':{'total_gimnasios':len(g.data or []),'total_usuarios':len(u.data or []),'gimnasios':g.data or []}}), 200
+
 @app.route('/')
 def index():
     return send_from_directory('frontend_web', 'index.html')
