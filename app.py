@@ -58,7 +58,7 @@ def health():
     return jsonify({
         'status': 'ok',
         'message': 'GymRock API funcionando',
-        'version': '4.0.0'
+        'version': '4.0.1'
     }), 200
 
 # ---------- GIMNASIOS ----------
