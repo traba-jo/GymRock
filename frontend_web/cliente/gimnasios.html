@@ -65,7 +65,8 @@
         .empty{text-align:center;padding:60px 20px;color:var(--sub);grid-column:1/-1}
         .empty i{font-size:48px;opacity:0.1;display:block;margin-bottom:16px}
         
-        @media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:16px}.grid{grid-template-columns:1fr}}
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;position:fixed;top:16px;left:16px;z-index:60}
+        @media(max-width:768px){.hamburger{display:block}.sidebar{transform:translateX(-100%);position:fixed;z-index:55}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:16px}.grid{grid-template-columns:1f}}
     </style>
 </head>
 <body>
@@ -87,6 +88,7 @@
             </div>
             <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">🌓</button>
         </div>
+        <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
         <div class="header">
             <div><h1 data-es="Gimnasios" data-en="Gyms">Gimnasios</h1><p style="color:var(--sub);font-size:13px;margin-top:2px" data-es="Encuentra tu espacio ideal" data-en="Find your ideal space">Encuentra tu espacio ideal</p></div>
             <div class="user"><div class="avatar" id="ua">CL</div><div class="name" id="ui">Cargando...</div></div>
