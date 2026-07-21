@@ -115,7 +115,7 @@ def admin_dashboard():
     if not supabase: return jsonify({'error':'No DB'}), 500
     g = supabase.table('gimnasios').select('*').execute()
     u = supabase.table('usuarios').select('*').execute()
-    return jsonify({'status':'success','data':{'total_gimnasios':len(g.data or []),'total_usuarios':len(u.data or []),'gimnasios':g.data or []}}), 200
+    e = supabase.table('entrenadores').select('*').eq('activo',True).execute(); return jsonify({'status':'success','data':{'total_gimnasios':len(g.data or []),'total_usuarios':len(u.data or []),'total_entrenadores':len(e.data or []),'gimnasios':g.data or [],'entrenadores':e.data or []}}), 200
 
 @app.route('/')
 def index():
