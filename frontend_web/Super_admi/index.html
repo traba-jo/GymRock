@@ -63,6 +63,10 @@
                 <div class="kpi-card"><div class="val" id="kIngresos" style="color:var(--purple)">$0</div><div class="lbl">Ingresos Est.</div></div>
             </div>
             <div class="section">
+                <h3><i class="fas fa-user-graduate"></i> Entrenadores</h3>
+                <table><thead><tr><th>Nombre</th><th>Email</th><th>Código</th><th>Gimnasio</th></tr></thead><tbody id="tablaEntrenadores"></tbody></table>
+            </div>
+            <div class="section">
                 <h3><i class="fas fa-dumbbell"></i> Gimnasios</h3>
                 <table><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Licencia</th></tr></thead><tbody id="tablaGimnasios"></tbody></table>
             </div>
@@ -109,10 +113,12 @@
                 if(d.status=='success'){
                     document.getElementById('kGimnasios').textContent=d.data.total_gimnasios||0;
                     document.getElementById('kClientes').textContent=d.data.total_usuarios||0;
-                    document.getElementById('kEntrenadores').textContent='--';
+                    document.getElementById('kEntrenadores').textContent=d.data.total_entrenadores||0;
                     document.getElementById('kIngresos').textContent='$0';
                     const g=d.data.gimnasios||[];
                     document.getElementById('tablaGimnasios').innerHTML=g.length?g.map(x=>`<tr><td><strong>${x.nombre||'N/A'}</strong></td><td>${x.email||''}</td><td>${x.plan||'basico'}</td><td><span class="tag tag-green">${x.estado_licencia||'activa'}</span></td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--sub)">Sin gimnasios</td></tr>';
+                    const ent=d.data.entrenadores||[];
+                    document.getElementById('tablaEntrenadores').innerHTML=ent.length?ent.map(x=>`<tr><td><strong>${x.nombre||'N/A'}</strong></td><td>${x.email||''}</td><td><code style="background:rgba(56,217,169,0.1);color:var(--green);padding:2px 6px;border-radius:4px">${x.codigo_acceso||'N/A'}</code></td><td>${x.gimnasio_id||''}</td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--sub)">Sin entrenadores</td></tr>';
                     document.getElementById('tablaGimnasiosFull').innerHTML=g.length?g.map(x=>`<tr><td><strong>${x.nombre||'N/A'}</strong></td><td>${x.email||''}</td><td>${x.estado||''}, ${x.municipio||''}</td><td>${x.plan||'basico'}</td><td>${(x.fecha_registro||'').slice(0,10)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--sub)">Sin gimnasios</td></tr>';
                 }
             }catch(e){}
