@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Plataforma Fitness Profesional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#06060E;--white:#EDEDF5;--gray:#8888A0;--cyan:#06b6d4;--purple:#8b5cf6;--blue:#3b82f6;--green:#22c55e;--gold:#f59e0b;--pink:#ec4899;--red:#ef4444}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow-x:hidden}
+        
+        .bg-orb{position:fixed;border-radius:50%;filter:blur(130px);opacity:0.06;pointer-events:none;z-index:0}
+        .orb1{width:600px;height:600px;background:var(--cyan);top:-200px;right:-200px;animation:float1 20s infinite}
+        .orb2{width:500px;height:500px;background:var(--purple);bottom:-150px;left:-150px;animation:float2 25s infinite}
+        .orb3{width:300px;height:300px;background:var(--green);top:50%;left:50%;animation:float3 18s infinite}
+        @keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(-80px,50px)}}
+        @keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,-40px)}}
+        @keyframes float3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-30%,-70%)}}
+        
+        .container{position:relative;z-index:1;width:100%;max-width:900px}
+        
+        .hero{text-align:center;margin-bottom:40px}
+        .hero .logo-text{font-size:56px;font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s ease-in-out infinite}
+        @keyframes shimmer{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
+        .hero .tagline{font-size:18px;color:var(--gray);font-weight:300;letter-spacing:0.5px;margin-top:8px}
+        .hero .live{display:inline-flex;align-items:center;gap:8px;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--gray);background:rgba(34,197,94,0.08);padding:6px 20px;border-radius:50px;border:1px solid rgba(34,197,94,0.15);margin-bottom:20px}
+        .hero .live .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+        @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+        
+        .cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:700px;margin:0 auto}
+        @media(max-width:600px){.cards-grid{grid-template-columns:1fr}.hero .logo-text{font-size:36px}}
+        
+        .card{background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);border-radius:20px;padding:28px 24px;cursor:pointer;text-decoration:none;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden;display:block}
+        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity 0.4s}
+        .card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,0.1);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+        .card:hover::before{opacity:1}
+        
+        .card-client::before{background:linear-gradient(90deg,var(--cyan),var(--green))}
+        .card-client:hover{border-color:rgba(6,182,212,0.2)}
+        .card-client .icon{color:var(--cyan)}
+        
+        .card-gym::before{background:linear-gradient(90deg,var(--blue),var(--purple))}
+        .card-gym:hover{border-color:rgba(59,130,246,0.2)}
+        .card-gym .icon{color:var(--blue)}
+        
+        .card-trainer::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+        .card-trainer:hover{border-color:rgba(34,197,94,0.2)}
+        .card-trainer .icon{color:var(--green)}
+        
+        .card-admin::before{background:linear-gradient(90deg,var(--pink),var(--purple))}
+        .card-admin:hover{border-color:rgba(236,72,153,0.2)}
+        .card-admin .icon{color:var(--pink)}
+        
+        .card .icon{font-size:36px;margin-bottom:12px;display:block}
+        .card h2{font-size:20px;font-weight:700;margin-bottom:6px;color:var(--white)}
+        .card p{font-size:13px;color:var(--gray);line-height:1.5;margin-bottom:12px}
+        .card .badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:4px 14px;border-radius:50px}
+        .card-client .badge{background:rgba(6,182,212,0.1);color:var(--cyan)}
+        .card-gym .badge{background:rgba(59,130,246,0.1);color:var(--blue)}
+        .card-trainer .badge{background:rgba(34,197,94,0.1);color:var(--green)}
+        .card-admin .badge{background:rgba(236,72,153,0.1);color:var(--pink)}
+        
+        .card .arrow{position:absolute;bottom:20px;right:24px;font-size:20px;opacity:0;transform:translateX(-10px);transition:all 0.4s}
+        .card:hover .arrow{opacity:1;transform:translateX(0)}
+        .card-client .arrow{color:var(--cyan)}.card-gym .arrow{color:var(--blue)}
+        .card-trainer .arrow{color:var(--green)}.card-admin .arrow{color:var(--pink)}
+        
+        .admin-link{text-align:center;margin-top:24px}
+        .admin-link a{color:var(--gray);font-size:12px;text-decoration:none;opacity:0.4;transition:all 0.3s;cursor:pointer}
+        .admin-link a:hover{opacity:1;color:var(--pink)}
+        
+        .footer{text-align:center;margin-top:32px;color:rgba(255,255,255,0.1);font-size:11px;letter-spacing:0.5px}
+        
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+        .modal.show{display:flex}
+        .modal-box{background:#0A0A14;border:1px solid rgba(255,255,255,0.06);border-radius:24px;padding:40px;width:90%;max-width:400px;text-align:center;animation:modalIn 0.3s ease}
+        @keyframes modalIn{from{opacity:0;transform:translateY(30px)scale(0.95)}to{opacity:1;transform:translateY(0)scale(1)}}
+        .modal-box h2{font-size:24px;margin-bottom:4px}.modal-box h2 span{color:var(--pink)}
+        .modal-box p{color:var(--gray);font-size:13px;margin-bottom:20px}
+        .modal-box input{width:100%;padding:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:var(--white);font-size:14px;margin-bottom:10px;outline:none}
+        .modal-box input:focus{border-color:var(--pink)}
+        .modal-box .btn-login{width:100%;padding:12px;background:linear-gradient(135deg,var(--pink),var(--purple));border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+        .modal-box .error{color:var(--red);font-size:12px;margin-top:8px;display:none}
+        .modal-close{color:var(--gray);font-size:12px;margin-top:12px;cursor:pointer}
+    </style>
+</head>
+<body>
+    <div class="bg-orb orb1"></div><div class="bg-orb orb2"></div><div class="bg-orb orb3"></div>
+    
+    <div class="container">
+        <div class="hero">
+            <div class="live"><span class="dot"></span> Plataforma en vivo · v3.0</div>
+            <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock" style="max-width:300px;height:auto;margin:0 auto;display:block;filter:drop-shadow(0 0 40px rgba(139,92,246,0.3))">
+            <p class="tagline">Conectamos gimnasios, entrenadores certificados y clientes en una sola plataforma</p>
+        </div>
+        
+        <div class="cards-grid">
+            <a href="cliente/index.html" class="card card-client">
+                <span class="icon">💪</span>
+                <h2>Soy Cliente</h2>
+                <p>Encuentra gimnasios, contrata entrenadores certificados y recibe rutinas personalizadas.</p>
+                <span class="badge">Área de Clientes</span>
+                <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            
+            <a href="gimnasio/index.html" class="card card-gym">
+                <span class="icon">🏋️</span>
+                <h2>Soy Gimnasio</h2>
+                <p>Administra suscriptores, certifica entrenadores y gestiona pagos. 15 días gratis.</p>
+                <span class="badge">Panel de Control</span>
+                <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            
+            <a href="entrenador/login.html" class="card card-trainer">
+                <span class="icon">🎯</span>
+                <h2>Soy Entrenador</h2>
+                <p>Accede con tu ID de certificación, gestiona clientes y envía rutinas con GIFs.</p>
+                <span class="badge">Panel Entrenador</span>
+                <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+            </a>
+            
+            <div class="card card-admin" onclick="abrirModalAdmin()" style="cursor:pointer">
+                <span class="icon">👑</span>
+                <h2>Administración</h2>
+                <p>Panel de control global. Supervisa gimnasios, usuarios y métricas del sistema.</p>
+                <span class="badge">Acceso Restringido</span>
+                <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+            </div>
+        </div>
+        
+        <p class="footer">© 2026 GymRock · Todos los derechos reservados · Hecho con ❤️ para la comunidad fitness</p>
+    </div>
+    
+    <!-- Modal Admin -->
+    <div class="modal" id="modalAdmin">
+        <div class="modal-box">
+            <h2>GYM<span>ROCK</span> Admin</h2>
+            <p>Acceso restringido a administradores</p>
+            <input type="text" id="adminUser" placeholder="Usuario" autocomplete="username">
+            <input type="password" id="adminPass" placeholder="Contraseña" autocomplete="current-password">
+            <button class="btn-login" onclick="loginAdmin()">Acceder al Panel</button>
+            <p class="error" id="adminError">Credenciales inválidas</p>
+            <p class="modal-close" onclick="cerrarModalAdmin()">Cancelar</p>
+        </div>
+    </div>
+    
+    <script>
+        function abrirModalAdmin(){document.getElementById('modalAdmin').classList.add('show');document.getElementById('adminUser').focus()}
+        function cerrarModalAdmin(){document.getElementById('modalAdmin').classList.remove('show')}
+        
+        document.getElementById('modalAdmin').addEventListener('click',function(e){if(e.target===this)cerrarModalAdmin()});
+        
+        async function loginAdmin(){
+            const u=document.getElementById('adminUser').value.trim();
+            const p=document.getElementById('adminPass').value;
+            if(!u||!p)return;
+            try{
+                const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({usuario:u,password:p})});
+                const d=await r.json();
+                if(d.status==='success'){
+                    localStorage.setItem('adminToken',d.data.token);
+                    localStorage.setItem('adminUser',JSON.stringify(d.data));
+                    window.location.href='Super_admi/index.html';
+                }else{
+                    document.getElementById('adminError').style.display='block';
+                }
+            }catch(e){alert('Error de conexión')}
+        }
+        
+        document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrarModalAdmin()});
+    </script>
+</body>
+</html>
