@@ -4,139 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>GymRock · Plataforma Fitness</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
-            --bg: #f8f9fc;
-            --card: #ffffff;
-            --text: #1a1a2e;
-            --sub: #6b7280;
-            --cyan: #06b6d4;
-            --blue: #3b82f6;
-            --green: #10b981;
-            --purple: #8b5cf6;
-            --border: #e5e7eb;
-            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+            --bg: #0f0f13;
+            --card: #18181d;
+            --text: #e4e4e8;
+            --sub: #9898a8;
+            --cyan: #22d3ee;
+            --blue: #60a5fa;
+            --green: #34d399;
+            --purple: #a78bfa;
+            --border: #27272d;
+            --hover: #1f1f26;
         }
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
         
-        .bg-pattern{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.03;background:radial-gradient(circle at 20% 50%,#06b6d4 0%,transparent 50%),radial-gradient(circle at 80% 20%,#8b5cf6 0%,transparent 50%),radial-gradient(circle at 50% 80%,#10b981 0%,transparent 50%)}
+        .container{width:100%;max-width:820px;position:relative;z-index:1}
         
-        .container{position:relative;z-index:1;width:100%;max-width:850px}
+        .top-bar{display:flex;justify-content:flex-end;margin-bottom:20px}
+        .lang-switch{display:flex;gap:2px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:3px}
+        .lang-btn{padding:8px 16px;border:none;background:none;color:var(--sub);font-size:12px;font-weight:600;cursor:pointer;border-radius:8px;transition:all 0.2s;font-family:'Inter',sans-serif}
+        .lang-btn.active{background:var(--cyan);color:#0f0f13}
         
-        .top-bar{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:16px}
-        .lang-selector{display:flex;gap:4px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:3px}
-        .lang-btn{padding:6px 14px;border:none;background:none;cursor:pointer;font-size:12px;font-weight:600;color:var(--sub);border-radius:6px;transition:all 0.2s;font-family:'Inter',sans-serif}
-        .lang-btn.active{background:var(--cyan);color:#fff}
-        .lang-btn:hover:not(.active){background:#f3f4f6}
+        .hero{text-align:center;margin-bottom:40px}
+        .hero img{max-width:180px;height:auto;margin-bottom:20px}
+        .hero .brand{font-family:'Playfair Display',serif;font-size:48px;font-weight:800;letter-spacing:-1px;margin-bottom:10px;background:linear-gradient(135deg,var(--text),var(--sub));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero .line{width:60px;height:3px;background:linear-gradient(90deg,var(--cyan),var(--purple));margin:0 auto 16px;border-radius:2px}
+        .hero p{font-size:15px;color:var(--sub);font-weight:300;max-width:480px;margin:0 auto;line-height:1.7}
         
-        .hero{text-align:center;margin-bottom:36px}
-        .hero img{max-width:220px;height:auto;margin-bottom:16px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.08))}
-        .hero h1{font-size:40px;font-weight:900;letter-spacing:-1px;margin-bottom:8px;background:linear-gradient(135deg,#06b6d4,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .hero p{font-size:17px;color:var(--sub);font-weight:400;max-width:500px;margin:0 auto;line-height:1.6}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        @media(max-width:600px){.grid{grid-template-columns:1fr}.hero .brand{font-size:34px}}
         
-        .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:700px;margin:0 auto}
-        @media(max-width:600px){.cards{grid-template-columns:1fr}.hero h1{font-size:30px}}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px 20px;cursor:pointer;text-decoration:none;color:var(--text);transition:all 0.3s;display:flex;align-items:flex-start;gap:16px;position:relative}
+        .card:hover{background:var(--hover);border-color:#333}
+        .card .icon-wrap{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+        .card-client .icon-wrap{background:rgba(34,211,238,0.08);color:var(--cyan)}
+        .card-gym .icon-wrap{background:rgba(96,165,250,0.08);color:var(--blue)}
+        .card-trainer .icon-wrap{background:rgba(52,211,153,0.08);color:var(--green)}
+        .card-admin .icon-wrap{background:rgba(167,139,250,0.08);color:var(--purple)}
         
-        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px 22px;cursor:pointer;text-decoration:none;color:var(--text);transition:all 0.3s;position:relative;overflow:hidden}
-        .card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:transparent}
-        .card .icon{font-size:32px;margin-bottom:10px;display:block}
-        .card h3{font-size:17px;font-weight:700;margin-bottom:4px}
-        .card p{font-size:13px;color:var(--sub);line-height:1.5;margin-bottom:8px}
-        .card .tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:4px 12px;border-radius:50px}
-        .card-client{border-top:3px solid var(--cyan)}.card-client .tag{background:#e0f7fe;color:#06b6d4}
-        .card-gym{border-top:3px solid var(--blue)}.card-gym .tag{background:#e0edfe;color:#3b82f6}
-        .card-trainer{border-top:3px solid var(--green)}.card-trainer .tag{background:#d1fae5;color:#10b981}
-        .card-admin{border-top:3px solid var(--purple)}.card-admin .tag{background:#ede9fe;color:#8b5cf6}
+        .card .info{flex:1}
+        .card h3{font-size:15px;font-weight:700;margin-bottom:3px}
+        .card p{font-size:12px;color:var(--sub);line-height:1.5}
+        .card .label{display:inline-block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-top:8px;padding:3px 10px;border-radius:4px}
+        .card-client .label{color:var(--cyan);border:1px solid rgba(34,211,238,0.2)}
+        .card-gym .label{color:var(--blue);border:1px solid rgba(96,165,250,0.2)}
+        .card-trainer .label{color:var(--green);border:1px solid rgba(52,211,153,0.2)}
+        .card-admin .label{color:var(--purple);border:1px solid rgba(167,139,250,0.2)}
         
-        .card .arrow{position:absolute;bottom:18px;right:20px;font-size:18px;opacity:0;transform:translateX(-8px);transition:all 0.3s}
-        .card:hover .arrow{opacity:0.5;transform:translateX(0)}
-        .card-client .arrow{color:var(--cyan)}.card-gym .arrow{color:var(--blue)}
-        .card-trainer .arrow{color:var(--green)}.card-admin .arrow{color:var(--purple)}
+        .card .chevron{position:absolute;right:20px;top:50%;transform:translateY(-50%);color:var(--border);font-size:16px;transition:all 0.3s}
+        .card:hover .chevron{color:var(--sub);right:16px}
         
-        .footer{text-align:center;margin-top:28px;color:#9ca3af;font-size:11px;letter-spacing:0.3px}
+        .footer{text-align:center;margin-top:32px;color:#3a3a45;font-size:11px;letter-spacing:0.5px}
         
-        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
         .modal.show{display:flex}
-        .modal-box{background:#fff;border:1px solid var(--border);border-radius:20px;padding:36px;width:90%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
-        .modal-box h2{font-size:20px;margin-bottom:4px}.modal-box h2 span{color:var(--purple)}
+        .modal-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px;width:90%;max-width:380px;text-align:center}
+        .modal-box h2{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:4px}
+        .modal-box h2 span{color:var(--purple)}
         .modal-box p{color:var(--sub);font-size:13px;margin-bottom:18px}
-        .modal-box input{width:100%;padding:12px;background:#f9fafb;border:1px solid var(--border);border-radius:10px;font-size:14px;margin-bottom:8px;outline:none;font-family:'Inter',sans-serif}
+        .modal-box input{width:100%;padding:12px;background:#0f0f13;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;margin-bottom:8px;outline:none;font-family:'Inter',sans-serif}
         .modal-box input:focus{border-color:var(--purple)}
         .modal-box .btn-login{width:100%;padding:12px;background:linear-gradient(135deg,var(--purple),#7c3aed);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
-        .modal-box .error{color:#ef4444;font-size:12px;margin-top:6px;display:none}
-        .modal-close{color:var(--sub);font-size:12px;margin-top:10px;cursor:pointer;display:block}
+        .modal-box .error{color:#f87171;font-size:12px;margin-top:6px;display:none}
+        .modal-close{color:var(--sub);font-size:12px;margin-top:10px;cursor:pointer}
     </style>
 </head>
 <body>
-    <div class="bg-pattern"></div>
-    
     <div class="container">
         <div class="top-bar">
-            <div class="lang-selector">
-                <button class="lang-btn active" onclick="cambiarIdioma('es',this)">ES</button>
-                <button class="lang-btn" onclick="cambiarIdioma('en',this)">EN</button>
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="switchLang('es',this)">ES</button>
+                <button class="lang-btn" onclick="switchLang('en',this)">EN</button>
             </div>
         </div>
         
         <div class="hero">
-            <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock Logo" onerror="this.style.display='none'">
-            <h1 data-es="GYMROCK" data-en="GYMROCK">GYMROCK</h1>
-            <p data-es="Conectamos gimnasios, entrenadores certificados y clientes en una plataforma de alto rendimiento." data-en="We connect gyms, certified trainers and clients in a high-performance platform.">Conectamos gimnasios, entrenadores certificados y clientes en una plataforma de alto rendimiento.</p>
+            <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock" onerror="this.style.display='none'">
+            <div class="brand">GymRock</div>
+            <div class="line"></div>
+            <p data-es="La plataforma que conecta gimnasios, entrenadores certificados y clientes en un ecosistema de alto rendimiento." data-en="The platform connecting gyms, certified trainers and clients in a high-performance ecosystem.">La plataforma que conecta gimnasios, entrenadores certificados y clientes en un ecosistema de alto rendimiento.</p>
         </div>
         
-        <div class="cards">
+        <div class="grid">
             <a href="cliente/index.html" class="card card-client">
-                <span class="icon">💪</span>
-                <h3 data-es="Soy Cliente" data-en="I'm a Client">Soy Cliente</h3>
-                <p data-es="Encuentra gimnasios, contrata entrenadores y recibe rutinas personalizadas." data-en="Find gyms, hire trainers and receive personalized routines.">Encuentra gimnasios, contrata entrenadores y recibe rutinas personalizadas.</p>
-                <span class="tag" data-es="Área Clientes" data-en="Client Area">Área Clientes</span>
-                <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                <div class="icon-wrap"><i class="fas fa-user"></i></div>
+                <div class="info">
+                    <h3 data-es="Cliente" data-en="Client">Cliente</h3>
+                    <p data-es="Encuentra tu gimnasio ideal y entrena con los mejores." data-en="Find your ideal gym and train with the best.">Encuentra tu gimnasio ideal y entrena con los mejores.</p>
+                    <span class="label" data-es="Acceder" data-en="Access">Acceder</span>
+                </div>
+                <span class="chevron"><i class="fas fa-chevron-right"></i></span>
             </a>
             <a href="gimnasio/index.html" class="card card-gym">
-                <span class="icon">🏋️</span>
-                <h3 data-es="Soy Gimnasio" data-en="I'm a Gym">Soy Gimnasio</h3>
-                <p data-es="Administra suscriptores, certifica entrenadores y crece tu negocio." data-en="Manage subscribers, certify trainers and grow your business.">Administra suscriptores, certifica entrenadores y crece tu negocio.</p>
-                <span class="tag" data-es="Panel de Control" data-en="Control Panel">Panel de Control</span>
-                <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                <div class="icon-wrap"><i class="fas fa-building"></i></div>
+                <div class="info">
+                    <h3 data-es="Gimnasio" data-en="Gym">Gimnasio</h3>
+                    <p data-es="Gestiona tu negocio, entrenadores y suscriptores." data-en="Manage your business, trainers and subscribers.">Gestiona tu negocio, entrenadores y suscriptores.</p>
+                    <span class="label" data-es="Panel" data-en="Panel">Panel</span>
+                </div>
+                <span class="chevron"><i class="fas fa-chevron-right"></i></span>
             </a>
             <a href="entrenador/login.html" class="card card-trainer">
-                <span class="icon">🎯</span>
-                <h3 data-es="Soy Entrenador" data-en="I'm a Trainer">Soy Entrenador</h3>
-                <p data-es="Accede con tu código, gestiona clientes y envía rutinas profesionales." data-en="Access with your code, manage clients and send professional routines.">Accede con tu código, gestiona clientes y envía rutinas profesionales.</p>
-                <span class="tag" data-es="Panel Entrenador" data-en="Trainer Panel">Panel Entrenador</span>
-                <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                <div class="icon-wrap"><i class="fas fa-graduation-cap"></i></div>
+                <div class="info">
+                    <h3 data-es="Entrenador" data-en="Trainer">Entrenador</h3>
+                    <p data-es="Accede con tu código de certificación profesional." data-en="Access with your professional certification code.">Accede con tu código de certificación profesional.</p>
+                    <span class="label" data-es="Acceso" data-en="Access">Acceso</span>
+                </div>
+                <span class="chevron"><i class="fas fa-chevron-right"></i></span>
             </a>
-            <div class="card card-admin" onclick="abrirModalAdmin()">
-                <span class="icon">👑</span>
-                <h3 data-es="Administración" data-en="Administration">Administración</h3>
-                <p data-es="Panel de control global. Supervisa toda la plataforma." data-en="Global control panel. Monitor the entire platform.">Panel de control global. Supervisa toda la plataforma.</p>
-                <span class="tag" data-es="Acceso Restringido" data-en="Restricted Access">Acceso Restringido</span>
-                <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+            <div class="card card-admin" onclick="abrirModal()">
+                <div class="icon-wrap"><i class="fas fa-shield-haltered"></i></div>
+                <div class="info">
+                    <h3 data-es="Admin" data-en="Admin">Admin</h3>
+                    <p data-es="Panel de control y métricas de la plataforma." data-en="Platform control panel and metrics.">Panel de control y métricas de la plataforma.</p>
+                    <span class="label" data-es="Privado" data-en="Private">Privado</span>
+                </div>
+                <span class="chevron"><i class="fas fa-chevron-right"></i></span>
             </div>
         </div>
         
-        <p class="footer" data-es="© 2026 GymRock · Plataforma Fitness Profesional" data-en="© 2026 GymRock · Professional Fitness Platform">© 2026 GymRock · Plataforma Fitness Profesional</p>
+        <p class="footer">GymRock © 2026</p>
     </div>
     
     <div class="modal" id="modalAdmin">
         <div class="modal-box">
-            <h2>GYM<span>ROCK</span></h2>
-            <p data-es="Acceso de administrador" data-en="Admin access">Acceso de administrador</p>
-            <input type="text" id="adminUser" placeholder="Usuario" autocomplete="username">
-            <input type="password" id="adminPass" placeholder="Contraseña" autocomplete="current-password">
-            <button class="btn-login" onclick="loginAdmin()" data-es="Acceder" data-en="Login">Acceder</button>
+            <h2>Gym<span>Rock</span></h2>
+            <p>Admin Access</p>
+            <input type="text" id="adminUser" placeholder="Usuario">
+            <input type="password" id="adminPass" placeholder="Contraseña">
+            <button class="btn-login" onclick="loginAdmin()">Entrar</button>
             <p class="error" id="adminError">Credenciales inválidas</p>
-            <span class="modal-close" onclick="cerrarModalAdmin()" data-es="Cancelar" data-en="Cancel">Cancelar</span>
+            <span class="modal-close" onclick="document.getElementById('modalAdmin').classList.remove('show')">Cancelar</span>
         </div>
     </div>
     
     <script>
-        function abrirModalAdmin(){document.getElementById('modalAdmin').classList.add('show');document.getElementById('adminUser').focus()}
-        function cerrarModalAdmin(){document.getElementById('modalAdmin').classList.remove('show')}
-        document.getElementById('modalAdmin').addEventListener('click',function(e){if(e.target===this)cerrarModalAdmin()});
+        function abrirModal(){document.getElementById('modalAdmin').classList.add('show')}
+        document.getElementById('modalAdmin').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show')});
         
         async function loginAdmin(){
             const u=document.getElementById('adminUser').value.trim();
@@ -147,18 +156,16 @@
                 const d=await r.json();
                 if(d.status==='success'){localStorage.setItem('adminToken',d.data.token);localStorage.setItem('adminUser',JSON.stringify(d.data));window.location.href='Super_admi/index.html'}
                 else{document.getElementById('adminError').style.display='block'}
-            }catch(e){alert('Error de conexión')}
+            }catch(e){alert('Error')}
         }
         
-        function cambiarIdioma(idioma,btn){
+        function switchLang(lang,btn){
             document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
             btn.classList.add('active');
-            document.querySelectorAll('[data-es][data-en]').forEach(el=>{
-                el.textContent=el.getAttribute('data-'+idioma);
-            });
+            document.querySelectorAll('[data-es][data-en]').forEach(el=>{el.textContent=el.getAttribute('data-'+lang)});
         }
         
-        document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrarModalAdmin()});
+        document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('modalAdmin').classList.remove('show')});
     </script>
 </body>
 </html>
