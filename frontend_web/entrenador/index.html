@@ -172,11 +172,24 @@
             <h2>📋 <span data-es="Nueva Rutina" data-en="New Routine">Nueva Rutina</span></h2>
             <div class="field"><label data-es="Cliente" data-en="Client">Cliente</label><select id="rutCliente"><option value="">Seleccionar...</option></select></div>
             <div class="field"><label data-es="Título" data-en="Title">Título</label><input type="text" id="rutTitulo" placeholder="Rutina de Fuerza - Semana 1"></div>
-            <div class="field"><label data-es="Descripción" data-en="Description">Descripción</label><textarea id="rutDesc" placeholder="Objetivo de la rutina..."></textarea></div>
-            <div class="field"><label data-es="URL de imagen/GIF del ejercicio" data-en="Exercise image/GIF URL">URL de imagen/GIF del ejercicio</label><input type="url" id="rutURL" placeholder="https://giphy.com/..."></div>
-            <div class="field"><label data-es="Instrucciones" data-en="Instructions">Instrucciones</label><input type="text" id="rutInst" placeholder="3x12 · 60s descanso · Peso moderado"></div>
-            <div style="display:flex;gap:8px;margin-top:16px">
-                <button class="btn btn-primary" onclick="crearRutina()" style="flex:1"><i class="fas fa-paper-plane"></i> <span data-es="Enviar al Cliente" data-en="Send to Client">Enviar al Cliente</span></button>
+            <div class="field"><label data-es="Descripción General" data-en="General Description">Descripción General</label><textarea id="rutDesc" placeholder="Objetivo de la rutina, recomendaciones..."></textarea></div>
+            
+            <div id="ejerciciosContainer">
+                <div class="ejercicio-item" style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                        <strong style="font-size:12px;color:var(--green)">🏋️ Ejercicio 1</strong>
+                    </div>
+                    <div class="field"><label data-es="Nombre del ejercicio" data-en="Exercise name">Nombre del ejercicio</label><input type="text" class="ej-nombre" placeholder="Press de banca"></div>
+                    <div class="field"><label data-es="Series x Repeticiones" data-en="Sets x Reps">Series x Repeticiones</label><input type="text" class="ej-series" placeholder="3x12"></div>
+                    <div class="field"><label data-es="URL de imagen/GIF" data-en="Image/GIF URL">URL de imagen/GIF</label><input type="url" class="ej-url" placeholder="https://giphy.com/..."></div>
+                    <div class="field"><label data-es="Notas" data-en="Notes">Notas</label><input type="text" class="ej-notas" placeholder="Descanso 60s, peso moderado..."></div>
+                </div>
+            </div>
+            
+            <button class="btn btn-outline" onclick="agregarEjercicio()" style="width:100%;margin-bottom:16px;justify-content:center"><i class="fas fa-plus"></i> <span data-es="Agregar Ejercicio" data-en="Add Exercise">Agregar Ejercicio</span></button>
+            
+            <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn btn-primary" onclick="crearRutina()" style="flex:1"><i class="fas fa-paper-plane"></i> <span data-es="Enviar Rutina" data-en="Send Routine">Enviar Rutina</span></button>
                 <button class="btn btn-outline" onclick="cerrarModalRutina()" style="flex:1"><span data-es="Cancelar" data-en="Cancel">Cancelar</span></button>
             </div>
         </div>
@@ -203,7 +216,68 @@
         function cerrarModalRutina(){document.getElementById('modalRutina').classList.remove('show')}
         function guardarPrecios(){alert('✅ Precios actualizados');document.getElementById('precioActual').textContent='$'+document.getElementById('precioSesion').value}
         function agregarMaterial(){const n=document.getElementById('matNombre').value,u=document.getElementById('matURL').value;if(!n||!u)return;alert('✅ Material guardado');document.getElementById('matNombre').value='';document.getElementById('matURL').value=''}
-        function crearRutina(){const t=document.getElementById('rutTitulo').value;if(!t)return;alert('✅ Rutina enviada al cliente');cerrarModalRutina()}
+        let ejercicioCount=1;
+        function agregarEjercicio(){
+            ejercicioCount++;
+            const container=document.getElementById('ejerciciosContainer');
+            const div=document.createElement('div');
+            div.className='ejercicio-item';
+            div.style.cssText='background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px';
+            div.innerHTML=`
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                    <strong style="font-size:12px;color:var(--green)">🏋️ Ejercicio ${ejercicioCount}</strong>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px">✕</button>
+                </div>
+                <div class="field"><label>Nombre</label><input type="text" class="ej-nombre" placeholder="Nombre del ejercicio"></div>
+                <div class="field"><label>Series x Reps</label><input type="text" class="ej-series" placeholder="3x12"></div>
+                <div class="field"><label>URL imagen/GIF</label><input type="url" class="ej-url" placeholder="https://..."></div>
+                <div class="field"><label>Notas</label><input type="text" class="ej-notas" placeholder="Descanso, peso..."></div>`;
+            container.appendChild(div);
+        }
+        
+        function crearRutina(){
+            const titulo=document.getElementById('rutTitulo').value;
+            const desc=document.getElementById('rutDesc').value;
+            if(!titulo)return alert('Ingresa un título');
+            
+            const ejercicios=[];
+            document.querySelectorAll('.ejercicio-item').forEach((item,i)=>{
+                ejercicios.push({
+                    nombre:item.querySelector('.ej-nombre')?.value||'Ejercicio '+(i+1),
+                    series:item.querySelector('.ej-series')?.value||'3x12',
+                    url:item.querySelector('.ej-url')?.value||'',
+                    notas:item.querySelector('.ej-notas')?.value||''
+                });
+            });
+            
+            // Crear tarjeta de rutina
+            let html=`<div class="rutina-card"><h4>🏋️ ${titulo}</h4><p class="meta">${desc||''} · <span style="color:var(--green)">Recién enviada</span></p><div class="media">`;
+            ejercicios.forEach(e=>{
+                if(e.url)html+=`<div style="text-align:center"><img src="${e.url}" style="max-width:100px;max-height:100px;border-radius:8px" onerror="this.style.display='none'"><br><small style="color:var(--sub);font-size:10px">${e.nombre} - ${e.series}</small></div>`;
+            });
+            html+='</div>';
+            ejercicios.forEach(e=>{
+                if(e.notas)html+=`<div class="instrucciones" style="margin-top:4px">💡 <strong>${e.nombre}:</strong> ${e.notas}</div>`;
+            });
+            html+='</div>';
+            
+            document.getElementById('listaRutinas').innerHTML=html+document.getElementById('listaRutinas').innerHTML;
+            document.getElementById('rutinasCount').textContent=parseInt(document.getElementById('rutinasCount').textContent)+1;
+            
+            // Limpiar modal
+            document.getElementById('rutTitulo').value='';
+            document.getElementById('rutDesc').value='';
+            document.getElementById('ejerciciosContainer').innerHTML=`
+                <div class="ejercicio-item" style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong style="font-size:12px;color:var(--green)">🏋️ Ejercicio 1</strong></div>
+                    <div class="field"><label>Nombre</label><input type="text" class="ej-nombre" placeholder="Press de banca"></div>
+                    <div class="field"><label>Series x Reps</label><input type="text" class="ej-series" placeholder="3x12"></div>
+                    <div class="field"><label>URL imagen/GIF</label><input type="url" class="ej-url" placeholder="https://giphy.com/..."></div>
+                    <div class="field"><label>Notas</label><input type="text" class="ej-notas" placeholder="Descanso 60s..."></div>
+                </div>`;
+            ejercicioCount=1;
+            cerrarModalRutina();
+        }
         
         document.getElementById('matURL').addEventListener('input',function(){const p=document.getElementById('previewMat');if(this.value){p.src=this.value;p.style.display='block'}else p.style.display='none'});
         
