@@ -45,7 +45,7 @@
         .header h1{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;letter-spacing:-1px}
         .header h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .user{display:flex;align-items:center;gap:12px;background:var(--card);padding:8px 16px;border-radius:50px;border:1px solid var(--border)}
-        .user .avatar{width:36px;height:36px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff}
+        .user .avatar{width:36px;height:36px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;cursor:pointer;overflow:hidden;background-size:cover;background-position:center;position:relative}.user .avatar:hover::after{content:'📷';position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;font-size:14px}
         .user .name{font-size:12px;font-weight:600}.user .name small{display:block;color:var(--sub);font-size:10px;font-weight:400}
         
         .empty{text-align:center;padding:80px 40px;background:var(--card);border:1px solid var(--border);border-radius:20px;position:relative;overflow:hidden}
@@ -72,6 +72,7 @@
             <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> <span data-es="Salir" data-en="Logout">Salir</span></a>
         </nav>
     </aside>
+    <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="cambiarAvatar(event)">
     <main class="main">
         <div class="top-bar">
             <div class="pill">
@@ -82,7 +83,7 @@
         </div>
         <div class="header">
             <div><h1><span>Mis</span> Suscripciones</h1><p style="color:var(--sub);font-size:13px;margin-top:4px" data-es="Tus membresías activas" data-en="Your active memberships">Tus membresías activas</p></div>
-            <div class="user"><div class="avatar" id="ua">CL</div><div class="name" id="ui">Cargando...</div></div>
+            <div class="user"><div class="avatar" id="ua" onclick="document.getElementById('avatarInput').click()" title="Cambiar foto">CL</div><div class="name" id="ui">Cargando...</div></div>
         </div>
         <div class="empty">
             <span class="icon">📋</span>
@@ -104,6 +105,25 @@
         }
         (function(){const l=localStorage.getItem('lang')||'es';const b=document.querySelector('.pill-btn[onclick*="'+l+'"]');if(b)setLang(l,b)})();
         
+        
+        function cambiarAvatar(e){
+            const file=e.target.files[0];
+            if(!file)return;
+            const reader=new FileReader();
+            reader.onload=function(ev){
+                document.getElementById('ua').style.backgroundImage='url('+ev.target.result+')';
+                document.getElementById('ua').textContent='';
+                localStorage.setItem('avatar',ev.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+        (function(){
+            const saved=localStorage.getItem('avatar');
+            if(saved){
+                document.getElementById('ua').style.backgroundImage='url('+saved+')';
+                document.getElementById('ua').textContent='';
+            }
+        })();
         document.addEventListener('DOMContentLoaded',()=>{
             const t=localStorage.getItem('gymrock_token');
             if(!t||localStorage.getItem('gymrock_rol')!=='cliente'){window.location.href='index.html';return}
