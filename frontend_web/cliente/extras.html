@@ -1,77 +1,149 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>GymRock · Extras</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#06060E;--side:#0A0A14;--card:rgba(255,255,255,0.02);--border:rgba(255,255,255,0.04);--white:#EDEDF5;--gray:#8888A0;--cyan:#06b6d4;--purple:#8b5cf6;--red:#ef4444}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);display:flex;min-height:100vh}
-        .sidebar{width:270px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:100}
-        .sidebar .logo{font-size:24px;font-weight:900;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-        .sidebar .logo span{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        :root {
+            --bg:#0a0a10;--side:#0f0f18;--card:#14141e;--text:#e8e8f0;--sub:#8888a0;
+            --cyan:#00e5ff;--green:#00e676;--purple:#b388ff;--pink:#ff4081;--amber:#ffab00;
+            --border:#1e1e2e;--hover:#1a1a28;--red:#ff5252;
+            --gradient:linear-gradient(135deg,#00e5ff,#b388ff);
+        }
+        [data-theme="light"] {
+            --bg:#f5f5fa;--side:#ffffff;--card:#ffffff;--text:#1a1a2e;--sub:#6b6b80;
+            --cyan:#0091ea;--green:#00c853;--purple:#651fff;--pink:#c51162;--amber:#ff6d00;
+            --border:#e0e0ee;--hover:#f0f0f8;--red:#d32f2f;
+            --gradient:linear-gradient(135deg,#0091ea,#651fff);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;transition:background 0.3s,border-color 0.3s,color 0.2s}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+        
+        .sidebar{width:260px;background:var(--side);border-right:1px solid var(--border);padding:28px 20px;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;transition:transform 0.3s}
+        .sidebar .logo{text-align:center;margin-bottom:32px}
+        .sidebar .logo img{max-width:110px;height:auto;filter:drop-shadow(0 0 20px rgba(0,229,255,0.2))}
         .sidebar nav{display:flex;flex-direction:column;gap:6px;flex:1}
-        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:13px 18px;border-radius:12px;color:var(--gray);text-decoration:none;font-size:14px;font-weight:500;transition:all 0.2s}
-        .sidebar nav a i{width:20px;text-align:center}
-        .sidebar nav a:hover{background:rgba(6,182,212,0.06);color:var(--white)}
-        .sidebar nav a.active{background:linear-gradient(135deg,rgba(6,182,212,0.12),rgba(139,92,246,0.08));color:var(--white);border:1px solid rgba(6,182,212,0.15)}
-        .sidebar nav a.logout{margin-top:auto;color:var(--red);border-top:1px solid var(--border);padding-top:20px}
-        .main{margin-left:270px;flex:1;padding:32px 40px;overflow-y:auto;height:100vh}
-        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:36px}
-        .header h1{font-size:28px;font-weight:800}.header h1 i{color:var(--cyan)}
-        .user{display:flex;align-items:center;gap:14px;background:var(--card);padding:8px 18px;border-radius:50px;border:1px solid var(--border)}
-        .user .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
-        .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden}
-        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--purple));opacity:0;transition:opacity 0.3s}
-        .card:hover{border-color:rgba(6,182,212,0.2);transform:translateY(-3px)}.card:hover::before{opacity:1}
-        .card .icon{font-size:48px;margin-bottom:16px}
-        .card h3{font-size:20px;font-weight:700;margin-bottom:8px}
-        .card p{color:var(--gray);font-size:13px;margin-bottom:16px;line-height:1.5}
-        .card .precio{font-size:28px;font-weight:800;color:var(--cyan);margin-bottom:16px}
-        .card .precio small{font-size:13px;color:var(--gray);font-weight:400}
-        .card button{width:100%;padding:12px;background:linear-gradient(135deg,var(--cyan),#0ea5e9);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s}
-        .card button:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(6,182,212,0.3)}
-        .badge-pop{position:absolute;top:16px;right:16px;font-size:10px;font-weight:700;padding:5px 14px;border-radius:50px;background:rgba(245,158,11,0.15);color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px}
-        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.grid{grid-template-columns:1fr}}
-        .hamburger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer}@media(max-width:768px){.hamburger{display:block}}
-        .toast{position:fixed;bottom:30px;right:30px;padding:14px 24px;border-radius:12px;background:#1a1a2e;border:1px solid var(--cyan);color:var(--white);font-size:14px;z-index:999;opacity:0;transition:all 0.4s}.toast.show{opacity:1}
+        .sidebar nav a{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:10px;color:var(--sub);text-decoration:none;font-size:13px;font-weight:500;position:relative;overflow:hidden}
+        .sidebar nav a::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gradient);border-radius:0 3px 3px 0;transform:scaleY(0);transition:transform 0.3s}
+        .sidebar nav a i{width:20px;text-align:center;font-size:16px}
+        .sidebar nav a:hover{background:var(--hover);color:var(--text)}
+        .sidebar nav a:hover::before{transform:scaleY(1)}
+        .sidebar nav a.active{background:rgba(0,229,255,0.06);color:var(--cyan)}
+        .sidebar nav a.active::before{transform:scaleY(1)}
+        .sidebar nav a.logout{margin-top:auto;color:var(--red)}
+        
+        .main{flex:1;margin-left:260px;padding:28px 36px;overflow-y:auto;height:100vh}
+        .top-bar{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:24px}
+        .pill{display:flex;gap:2px;background:var(--side);border:1px solid var(--border);border-radius:10px;padding:3px}
+        .pill-btn{padding:7px 12px;border:none;background:none;color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;border-radius:8px;font-family:'Inter',sans-serif}
+        .pill-btn.active{background:var(--gradient);color:#fff}
+        .theme-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--side);color:var(--sub);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px}
+        .theme-btn:hover{border-color:var(--cyan)}
+        
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+        .header h1{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;letter-spacing:-1px}
+        .header h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .user{display:flex;align-items:center;gap:12px;background:var(--card);padding:8px 16px;border-radius:50px;border:1px solid var(--border)}
+        .user .avatar{width:36px;height:36px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;cursor:pointer;overflow:hidden;background-size:cover;background-position:center;position:relative}
+        .user .avatar:hover::after{content:'📷';position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;font-size:14px}
+        .user .name{font-size:12px;font-weight:600}.user .name small{display:block;color:var(--sub);font-size:10px;font-weight:400}
+        
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;text-align:center;transition:all 0.35s;position:relative;overflow:hidden}
+        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient);opacity:0;transition:opacity 0.35s}
+        .card:hover{border-color:var(--cyan);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.3)}
+        .card:hover::before{opacity:1}
+        .card .icon{font-size:44px;margin-bottom:14px;display:block}
+        .card .badge{position:absolute;top:14px;right:14px;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;padding:4px 10px;border-radius:4px}
+        .card .badge.popular{background:rgba(255,64,129,0.08);color:var(--pink);border:1px solid rgba(255,64,129,0.15)}
+        .card .badge.premium{background:rgba(255,171,0,0.08);color:var(--amber);border:1px solid rgba(255,171,0,0.15)}
+        .card h3{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px}
+        .card p{color:var(--sub);font-size:12px;line-height:1.6;margin-bottom:14px}
+        .card .precio{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:16px;color:var(--cyan)}
+        .card .precio small{font-size:11px;color:var(--sub);font-weight:400;font-family:'Inter',sans-serif}
+        .card button{width:100%;padding:11px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;background:var(--gradient);color:#fff;letter-spacing:0.3px}
+        .card button:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,229,255,0.2)}
+        
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer;position:fixed;top:20px;left:20px;z-index:60}
+        @media(max-width:768px){.hamburger{display:block}.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:20px}.grid{grid-template-columns:1fr}}
     </style>
 </head>
 <body>
+    <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+    <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="cambiarAvatar(event)">
     <aside class="sidebar" id="sidebar">
-        <div class="logo"><span>GYMROCK</span></div>
+        <div class="logo"><img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock"></div>
         <nav>
-            <a href="gimnasios.html"><i class="fas fa-dumbbell"></i> Gimnasios</a>
-            <a href="suscripciones.html"><i class="fas fa-receipt"></i> Suscripciones</a>
-            <a href="entrenadores.html"><i class="fas fa-user-graduate"></i> Entrenadores</a>
-            <a href="#" class="active"><i class="fas fa-gem"></i> Extras</a>
-            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar sesion</a>
+            <a href="gimnasios.html"><i class="fas fa-dumbbell"></i> <span data-es="Gimnasios" data-en="Gyms">Gimnasios</span></a>
+            <a href="suscripciones.html"><i class="fas fa-receipt"></i> <span data-es="Suscripciones" data-en="Subscriptions">Suscripciones</span></a>
+            <a href="entrenadores.html"><i class="fas fa-user-graduate"></i> <span data-es="Entrenadores" data-en="Trainers">Entrenadores</span></a>
+            <a href="#" class="active"><i class="fas fa-gem"></i> <span data-es="Extras" data-en="Extras">Extras</span></a>
+            <a href="#" class="logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> <span data-es="Salir" data-en="Logout">Salir</span></a>
         </nav>
     </aside>
     <main class="main">
-        <div class="header">
-            <div style="display:flex;align-items:center;gap:14px">
-                <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
-                <div><h1><i class="fas fa-gem"></i> Extras</h1><p style="color:var(--gray);font-size:14px">Servicios adicionales premium</p></div>
+        <div class="top-bar">
+            <div class="pill">
+                <button class="pill-btn active" onclick="setLang('es',this)">ES</button>
+                <button class="pill-btn" onclick="setLang('en',this)">EN</button>
             </div>
-            <div class="user"><div class="avatar" id="ua">CL</div><div class="info" id="ui">Cargando...</div></div>
+            <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+        </div>
+        <div class="header">
+            <div><h1><span>Ex</span>tras</h1><p style="color:var(--sub);font-size:13px;margin-top:4px" data-es="Servicios premium exclusivos" data-en="Exclusive premium services">Servicios premium exclusivos</p></div>
+            <div class="user"><div class="avatar" id="ua" onclick="document.getElementById('avatarInput').click()" title="Cambiar foto">CL</div><div class="name" id="ui">Cargando...</div></div>
         </div>
         <div class="grid">
-            <div class="card"><span class="badge-pop">Popular</span><div class="icon">💪</div><h3>Entrenador Personal</h3><p>Sesiones 1-on-1 con entrenadores certificados</p><div class="precio">$350<small>/sesion</small></div><button onclick="mostrarToast('Proximamente disponible')">Contratar</button></div>
-            <div class="card"><div class="icon">🥗</div><h3>Plan Alimenticio</h3><p>Planes personalizados por nutriologos</p><div class="precio">$250<small>/plan</small></div><button onclick="mostrarToast('Proximamente disponible')">Contratar</button></div>
-            <div class="card"><span class="badge-pop">Premium</span><div class="icon">🏆</div><h3>Paquete Completo</h3><p>Entrenador + Plan alimenticio + Seguimiento</p><div class="precio">$550<small>/mes</small></div><button onclick="mostrarToast('Proximamente disponible')">Contratar</button></div>
-            <div class="card"><div class="icon">🧘</div><h3>Clases Grupales</h3><p>Yoga, Pilates, HIIT, Zumba y mas</p><div class="precio">$150<small>/clase</small></div><button onclick="mostrarToast('Proximamente disponible')">Contratar</button></div>
+            <div class="card">
+                <span class="badge popular">Popular</span>
+                <span class="icon">💪</span>
+                <h3 data-es="Entrenador Personal" data-en="Personal Trainer">Entrenador Personal</h3>
+                <p data-es="Sesiones 1-on-1 con entrenadores certificados. Rutinas personalizadas y seguimiento continuo." data-en="1-on-1 sessions with certified trainers. Personalized routines and continuous follow-up.">Sesiones 1-on-1 con entrenadores certificados. Rutinas personalizadas y seguimiento continuo.</p>
+                <div class="precio">$350<small>/sesión</small></div>
+                <button onclick="mostrarToast('🚧 Próximamente')"><span data-es="Contratar" data-en="Hire">Contratar</span></button>
+            </div>
+            <div class="card">
+                <span class="icon">🥗</span>
+                <h3 data-es="Plan Alimenticio" data-en="Meal Plan">Plan Alimenticio</h3>
+                <p data-es="Planes de alimentación personalizados por nutriólogos certificados." data-en="Personalized meal plans by certified nutritionists.">Planes de alimentación personalizados por nutriólogos certificados.</p>
+                <div class="precio">$250<small>/plan</small></div>
+                <button onclick="mostrarToast('🚧 Próximamente')"><span data-es="Contratar" data-en="Hire">Contratar</span></button>
+            </div>
+            <div class="card">
+                <span class="badge premium">Premium</span>
+                <span class="icon">🏆</span>
+                <h3 data-es="Paquete Completo" data-en="Complete Package">Paquete Completo</h3>
+                <p data-es="Entrenador + Plan alimenticio + Seguimiento semanal. Resultados garantizados." data-en="Trainer + Meal plan + Weekly follow-up. Guaranteed results.">Entrenador + Plan alimenticio + Seguimiento semanal. Resultados garantizados.</p>
+                <div class="precio">$550<small>/mes</small></div>
+                <button onclick="mostrarToast('🚧 Próximamente')"><span data-es="Contratar" data-en="Hire">Contratar</span></button>
+            </div>
+            <div class="card">
+                <span class="icon">🧘</span>
+                <h3 data-es="Clases Grupales" data-en="Group Classes">Clases Grupales</h3>
+                <p data-es="Yoga, Pilates, HIIT, Zumba y más. Entrena en grupo con la mejor energía." data-en="Yoga, Pilates, HIIT, Zumba and more. Train in group with the best energy.">Yoga, Pilates, HIIT, Zumba y más. Entrena en grupo con la mejor energía.</p>
+                <div class="precio">$150<small>/clase</small></div>
+                <button onclick="mostrarToast('🚧 Próximamente')"><span data-es="Contratar" data-en="Hire">Contratar</span></button>
+            </div>
         </div>
     </main>
-    <div class="toast" id="toast"></div>
     <script>
         function cerrarSesion(){localStorage.clear();window.location.href='../index.html'}
-        function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
-        document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='cliente'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small style="color:var(--gray);font-size:11px">Cliente</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}});
+        function toggleTheme(){const h=document.documentElement;const t=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',t);localStorage.setItem('theme',t)}
+        (function(){const t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t)})();
+        function setLang(lang,btn){
+            document.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('[data-es][data-en]').forEach(el=>el.textContent=el.getAttribute('data-'+lang));
+            localStorage.setItem('lang',lang);
+        }
+        (function(){const l=localStorage.getItem('lang')||'es';const b=document.querySelector('.pill-btn[onclick*="'+l+'"]');if(b)setLang(l,b)})();
+        function cambiarAvatar(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(ev){document.getElementById('ua').style.backgroundImage='url('+ev.target.result+')';document.getElementById('ua').textContent='';localStorage.setItem('avatar',ev.target.result)};reader.readAsDataURL(file)}
+        (function(){const saved=localStorage.getItem('avatar');if(saved){document.getElementById('ua').style.backgroundImage='url('+saved+')';document.getElementById('ua').textContent=''}})();
+        function mostrarToast(m){alert(m)}
+        document.addEventListener('DOMContentLoaded',()=>{const t=localStorage.getItem('gymrock_token');if(!t||localStorage.getItem('gymrock_rol')!=='cliente'){window.location.href='index.html';return}const u=JSON.parse(localStorage.getItem('gymrock_user')||'{}');if(u.nombre){document.getElementById('ui').innerHTML=u.nombre+'<br><small>Cliente</small>';document.getElementById('ua').textContent=u.nombre.substring(0,2).toUpperCase()}});
     </script>
 </body>
 </html>
