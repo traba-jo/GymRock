@@ -4,131 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>GymRock · Cliente</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #0f0f13;
-            --card: #18181d;
-            --text: #e4e4e8;
-            --sub: #9898a8;
-            --cyan: #22d3ee;
-            --border: #27272d;
-            --input: #131318;
-        }
+        :root{--bg:#0f0f13;--card:#18181d;--text:#e4e4e8;--sub:#9898a8;--cyan:#22d3ee;--border:#27272d;--input:#131318}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,#0f0f13 0%,#131318 100%);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-        
         .container{width:100%;max-width:400px}
-        
-        .logo{text-align:center;margin-bottom:28px}
-        .logo img{max-width:140px;height:auto}
-        
-        .tabs{display:flex;gap:0;margin-bottom:20px;background:var(--card);border-radius:10px;padding:3px;border:1px solid var(--border)}
+        .top-bar{display:flex;justify-content:flex-end;margin-bottom:16px}
+        .lang-switch{display:flex;gap:2px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2px}
+        .lang-btn{padding:6px 12px;border:none;background:none;color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;border-radius:6px;font-family:'Inter',sans-serif}
+        .lang-btn.active{background:var(--cyan);color:#0f0f13}
+        .logo{text-align:center;margin-bottom:24px}
+        .logo img{max-width:130px;height:auto}
+        .tabs{display:flex;gap:0;margin-bottom:18px;background:var(--card);border-radius:10px;padding:3px;border:1px solid var(--border)}
         .tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;border-radius:8px;color:var(--sub);transition:all 0.2s;border:none;background:none;font-family:'Inter',sans-serif}
         .tab.active{background:rgba(34,211,238,0.08);color:var(--cyan)}
-        
         .form-box{display:none}
         .form-box.active{display:block}
-        
-        .field{margin-bottom:14px}
-        .field label{display:block;font-size:12px;color:var(--sub);margin-bottom:5px;font-weight:500;letter-spacing:0.3px}
-        .field input{width:100%;padding:12px 14px;background:var(--input);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;outline:none;font-family:'Inter',sans-serif;transition:all 0.2s}
+        .field{margin-bottom:12px}
+        .field label{display:block;font-size:11px;color:var(--sub);margin-bottom:4px;font-weight:500;letter-spacing:0.3px;text-transform:uppercase}
+        .field input{width:100%;padding:11px 14px;background:var(--input);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;outline:none;font-family:'Inter',sans-serif;transition:all 0.2s}
         .field input:focus{border-color:var(--cyan)}
         .field input::placeholder{color:#3a3a45}
-        
-        .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-        
-        .btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif}
         .btn-primary{background:linear-gradient(135deg,var(--cyan),#0891b2);color:#0f0f13}
         .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 25px rgba(34,211,238,0.15)}
-        
-        .msg{margin-top:12px;padding:10px;border-radius:8px;font-size:12px;text-align:center;display:none}
+        .msg{margin-top:10px;padding:10px;border-radius:8px;font-size:12px;text-align:center;display:none}
         .msg.success{display:block;background:rgba(52,211,153,0.08);color:#34d399;border:1px solid rgba(52,211,153,0.15)}
         .msg.error{display:block;background:rgba(248,113,113,0.08);color:#f87171;border:1px solid rgba(248,113,113,0.15)}
-        
-        .back{text-align:center;margin-top:20px}
-        .back a{color:var(--sub);font-size:12px;text-decoration:none;transition:color 0.2s}
+        .back{text-align:center;margin-top:18px}
+        .back a{color:var(--sub);font-size:12px;text-decoration:none}
         .back a:hover{color:var(--text)}
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock">
+        <div class="top-bar">
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="setLang('es',this)">ES</button>
+                <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+            </div>
         </div>
-        
+        <div class="logo"><img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" alt="GymRock"></div>
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('login')">Iniciar Sesión</button>
-            <button class="tab" onclick="switchTab('register')">Crear Cuenta</button>
+            <button class="tab active" onclick="switchTab('login')" data-es="Iniciar Sesión" data-en="Sign In">Iniciar Sesión</button>
+            <button class="tab" onclick="switchTab('register')" data-es="Crear Cuenta" data-en="Create Account">Crear Cuenta</button>
         </div>
-        
-        <!-- LOGIN -->
         <div class="form-box active" id="loginBox">
-            <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="email"></div>
-            <div class="field"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"></div>
-            <button class="btn btn-primary" onclick="login()">Acceder</button>
+            <div class="field"><label data-es="Email" data-en="Email">Email</label><input type="email" id="loginEmail" placeholder="tu@email.com"></div>
+            <div class="field"><label data-es="Contraseña" data-en="Password">Contraseña</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+            <button class="btn btn-primary" onclick="login()" data-es="Acceder" data-en="Sign In">Acceder</button>
             <div class="msg" id="loginMsg"></div>
         </div>
-        
-        <!-- REGISTRO -->
         <div class="form-box" id="registerBox">
-            <div class="field"><label>Nombre completo</label><input type="text" id="regNombre" placeholder="Tu nombre"></div>
-            <div class="field"><label>Email</label><input type="email" id="regEmail" placeholder="tu@email.com" autocomplete="email"></div>
-            <div class="field"><label>Contraseña</label><input type="password" id="regPass" placeholder="Mínimo 6 caracteres" autocomplete="new-password"></div>
+            <div class="field"><label data-es="Nombre completo" data-en="Full Name">Nombre completo</label><input type="text" id="regNombre" placeholder="Tu nombre"></div>
+            <div class="field"><label data-es="Email" data-en="Email">Email</label><input type="email" id="regEmail" placeholder="tu@email.com"></div>
+            <div class="field"><label data-es="Contraseña" data-en="Password">Contraseña</label><input type="password" id="regPass" placeholder="Mínimo 6 caracteres"></div>
             <div class="row">
-                <div class="field"><label>Estado</label><input type="text" id="regEstado" placeholder="CDMX"></div>
-                <div class="field"><label>Municipio</label><input type="text" id="regMunicipio" placeholder="Benito Juárez"></div>
+                <div class="field"><label data-es="Estado" data-en="State">Estado</label><input type="text" id="regEstado" placeholder="CDMX"></div>
+                <div class="field"><label data-es="Municipio" data-en="City">Municipio</label><input type="text" id="regMunicipio" placeholder="Benito Juárez"></div>
             </div>
-            <button class="btn btn-primary" onclick="register()">Crear Cuenta</button>
+            <button class="btn btn-primary" onclick="register()" data-es="Crear Cuenta" data-en="Create Account">Crear Cuenta</button>
             <div class="msg" id="registerMsg"></div>
         </div>
-        
-        <div class="back"><a href="../index.html">← Volver al inicio</a></div>
+        <div class="back"><a href="../index.html" data-es="← Volver al inicio" data-en="← Back to home">← Volver al inicio</a></div>
     </div>
-    
     <script>
         const API=window.location.origin;
-        
-        function switchTab(tab){
-            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-            document.querySelectorAll('.form-box').forEach(f=>f.classList.remove('active'));
-            if(tab==='login'){document.querySelectorAll('.tab')[0].classList.add('active');document.getElementById('loginBox').classList.add('active')}
-            else{document.querySelectorAll('.tab')[1].classList.add('active');document.getElementById('registerBox').classList.add('active')}
-            document.querySelectorAll('.msg').forEach(m=>{m.style.display='none';m.className='msg'});
-        }
-        
+        function setLang(lang,btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('[data-es][data-en]').forEach(el=>{el.textContent=el.getAttribute('data-'+lang)})}
+        function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.form-box').forEach(f=>f.classList.remove('active'));if(tab==='login'){document.querySelectorAll('.tab')[0].classList.add('active');document.getElementById('loginBox').classList.add('active')}else{document.querySelectorAll('.tab')[1].classList.add('active');document.getElementById('registerBox').classList.add('active')}document.querySelectorAll('.msg').forEach(m=>{m.style.display='none';m.className='msg'})}
         function showMsg(id,type,text){const m=document.getElementById(id);m.textContent=text;m.className='msg '+type;m.style.display='block'}
-        
-        async function login(){
-            const email=document.getElementById('loginEmail').value.trim();
-            const pass=document.getElementById('loginPass').value;
-            if(!email||!pass){showMsg('loginMsg','error','Completa todos los campos');return}
-            showMsg('loginMsg','success','Verificando...');
-            try{
-                const r=await fetch(API+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,rol:'cliente'})});
-                const d=await r.json();
-                if(d.status==='success'){localStorage.setItem('gymrock_token',d.data.token);localStorage.setItem('gymrock_user',JSON.stringify(d.data));localStorage.setItem('gymrock_rol','cliente');window.location.href='gimnasios.html'}
-                else showMsg('loginMsg','error',d.error||'Error');
-            }catch(e){showMsg('loginMsg','error','Error de conexión')}
-        }
-        
-        async function register(){
-            const nombre=document.getElementById('regNombre').value.trim();
-            const email=document.getElementById('regEmail').value.trim();
-            const pass=document.getElementById('regPass').value;
-            const estado=document.getElementById('regEstado').value.trim();
-            const municipio=document.getElementById('regMunicipio').value.trim();
-            if(!nombre||!email||!pass||!estado||!municipio){showMsg('registerMsg','error','Completa todos los campos');return}
-            if(pass.length<6){showMsg('registerMsg','error','Contraseña: mínimo 6 caracteres');return}
-            showMsg('registerMsg','success','Creando cuenta...');
-            try{
-                const r=await fetch(API+'/api/registro/cliente',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,email,password:pass,estado,municipio})});
-                const d=await r.json();
-                if(d.status==='success'){localStorage.setItem('gymrock_token',d.data.token);localStorage.setItem('gymrock_user',JSON.stringify(d.data));localStorage.setItem('gymrock_rol','cliente');window.location.href='gimnasios.html'}
-                else showMsg('registerMsg','error',d.error||'Error');
-            }catch(e){showMsg('registerMsg','error','Error de conexión')}
-        }
+        async function login(){const email=document.getElementById('loginEmail').value.trim();const pass=document.getElementById('loginPass').value;if(!email||!pass){showMsg('loginMsg','error','Completa todos los campos');return}showMsg('loginMsg','success','Verificando...');try{const r=await fetch(API+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,rol:'cliente'})});const d=await r.json();if(d.status==='success'){localStorage.setItem('gymrock_token',d.data.token);localStorage.setItem('gymrock_user',JSON.stringify(d.data));localStorage.setItem('gymrock_rol','cliente');window.location.href='gimnasios.html'}else showMsg('loginMsg','error',d.error||'Error')}catch(e){showMsg('loginMsg','error','Error de conexión')}}
+        async function register(){const nombre=document.getElementById('regNombre').value.trim();const email=document.getElementById('regEmail').value.trim();const pass=document.getElementById('regPass').value;const estado=document.getElementById('regEstado').value.trim();const municipio=document.getElementById('regMunicipio').value.trim();if(!nombre||!email||!pass||!estado||!municipio){showMsg('registerMsg','error','Completa todos los campos');return}if(pass.length<6){showMsg('registerMsg','error','Contraseña: mínimo 6 caracteres');return}showMsg('registerMsg','success','Creando cuenta...');try{const r=await fetch(API+'/api/registro/cliente',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre,email,password:pass,estado,municipio})});const d=await r.json();if(d.status==='success'){localStorage.setItem('gymrock_token',d.data.token);localStorage.setItem('gymrock_user',JSON.stringify(d.data));localStorage.setItem('gymrock_rol','cliente');window.location.href='gimnasios.html'}else showMsg('registerMsg','error',d.error||'Error')}catch(e){showMsg('registerMsg','error','Error de conexión')}}
     </script>
 </body>
 </html>

@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymRock · Gimnasio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0A0E1A;
+            --bg-card: rgba(10, 14, 30, 0.85);
+            --border-glass: rgba(59, 130, 246, 0.15);
+            --text-white: #E8EDF5;
+            --text-gray: #94A3B8;
+            --azul: #2563EB;
+            --azul-oscuro: #1E3A8A;
+            --azul-claro: #60A5FA;
+            --rojo: #DC2626;
+            --rojo-oscuro: #991B1B;
+            --verde: #22C55E;
+            --dorado: #F59E0B;
+            --shadow-glow: 0 25px 60px rgba(37, 99, 235, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-animated {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.25;
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--azul);
+            top: -150px;
+            left: -150px;
+        }
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--rojo);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -8s;
+        }
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--azul-oscuro);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 40px) scale(0.95); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 40px 32px;
+            box-shadow: var(--shadow-glow);
+            animation: slideUp 0.7s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--azul), var(--rojo), var(--azul));
+            background-size: 200% 100%;
+            animation: gradientMove 4s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-gray);
+            background: rgba(37, 99, 235, 0.08);
+            padding: 5px 14px;
+            border-radius: 50px;
+            border: 1px solid rgba(37, 99, 235, 0.12);
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #34D399;
+            animation: pulse-dot 1.8s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 30px rgba(37, 99, 235, 0.25));
+            animation: logo-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes logo-glow {
+            0%, 100% { filter: drop-shadow(0 0 30px rgba(37, 99, 235, 0.2)); }
+            50% { filter: drop-shadow(0 0 50px rgba(37, 99, 235, 0.35)); }
+        }
+
+        .brand h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+        .brand .subtitle {
+            font-size: 13px;
+            color: var(--text-gray);
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .brand .subtitle i {
+            margin-right: 5px;
+            color: var(--rojo);
+        }
+
+        /* ============================================
+           BANNER DE PRUEBA GRATIS
+           ============================================ */
+        .trial-banner {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.1));
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse-border 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(34, 197, 94, 0.3); }
+            50% { border-color: rgba(34, 197, 94, 0.6); }
+        }
+
+        .trial-banner .trial-icon {
+            font-size: 28px;
+            animation: bounce 1.5s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .trial-banner .trial-text {
+            flex: 1;
+        }
+
+        .trial-banner .trial-text strong {
+            color: var(--verde);
+            font-size: 14px;
+            display: block;
+        }
+
+        .trial-banner .trial-text span {
+            color: var(--text-gray);
+            font-size: 12px;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .input-group label i {
+            margin-right: 5px;
+            color: var(--azul);
+            width: 16px;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 11px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: var(--text-white);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.18);
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--azul);
+            background: rgba(37, 99, 235, 0.06);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.06);
+        }
+
+        .input-group select {
+            appearance: none;
+            cursor: pointer;
+            color: var(--text-white);
+        }
+
+        .input-group select option {
+            background: #0A0E1A;
+            color: var(--text-white);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+            padding-right: 44px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+            padding: 4px;
+        }
+
+        .toggle-password:hover {
+            opacity: 0.8;
+        }
+
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--verde), #059669);
+            border: none;
+            border-radius: 12px;
+            color: var(--text-white);
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 35px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary i {
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover i {
+            transform: translateX(3px);
+        }
+
+        .btn-primary .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Botón de login (azul normal) */
+        .btn-login {
+            background: linear-gradient(135deg, var(--azul), var(--azul-oscuro));
+        }
+
+        .btn-login:hover {
+            box-shadow: 0 10px 35px rgba(37, 99, 235, 0.3);
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .links a {
+            font-size: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .link-primary {
+            color: var(--azul-claro);
+            font-weight: 600;
+        }
+
+        .link-primary:hover {
+            color: var(--rojo);
+        }
+
+        .link-secondary {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .link-secondary:hover {
+            color: var(--text-gray);
+        }
+
+        .mensaje {
+            margin-top: 16px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            display: none;
+            text-align: center;
+        }
+
+        .mensaje.success {
+            display: block;
+            background: rgba(34, 197, 94, 0.08);
+            color: #34D399;
+            border: 1px solid rgba(34, 197, 94, 0.15);
+        }
+
+        .mensaje.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.08);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+
+        .mensaje.loading {
+            display: block;
+            background: rgba(37, 99, 235, 0.06);
+            color: var(--azul-claro);
+            border: 1px solid rgba(37, 99, 235, 0.12);
+        }
+
+        .mensaje.warning {
+            display: block;
+            background: rgba(245, 158, 11, 0.08);
+            color: var(--dorado);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .card.hidden {
+            display: none;
+        }
+
+        /* ============================================
+           INFO DE PRUEBA EN REGISTRO
+           ============================================ */
+        .trial-info {
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px dashed rgba(34, 197, 94, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-gray);
+            text-align: center;
+        }
+
+        .trial-info i {
+            color: var(--verde);
+            margin-right: 4px;
+        }
+
+        .trial-info strong {
+            color: var(--verde);
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 640px) {
+            .card {
+                padding: 30px 20px;
+            }
+            
+            .logo {
+                max-width: 220px;
+            }
+            
+            .brand .subtitle {
+                font-size: 12px;
+            }
+            
+            .row-2 {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .links {
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                max-width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animated">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- ======================================== -->
+        <!-- LOGIN DEL GIMNASIO                       -->
+        <!-- ======================================== -->
+        <div class="card" id="loginCard">
+            <div class="live-badge">
+                <span class="dot"></span> Gimnasio · Panel de Control
+            </div>
+
+            <div class="brand">
+                <div class="logo-wrapper">
+                    <img src="https://i.ibb.co/kVLPrPZR/Photo-Room-20260712-151139.png" 
+                         alt="GymRock" 
+                         class="logo"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%2290%22 font-size=%2290%22%3E🏋️%3C/text%3E%3C/svg%3E'">
+                </div>
+                <p class="subtitle"><i class="fas fa-dumbbell"></i> Panel de Control · Gimnasios</p>
+            </div>
+
+            <form id="loginForm" class="form">
+                <div class="input-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                    <input type="email" id="email" placeholder="tu@gimnasio.com" required autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+                        <button type="button" class="toggle-password" data-target="password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary btn-login" id="btnLoginSubmit">
+                    <span id="btnLoginText">Acceder</span>
+                    <div class="spinner" id="btnLoginSpinner"></div>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="links">
+                <a id="btnMostrarRegistro" class="link-primary">
+                    <i class="fas fa-user-plus"></i> Crear cuenta
+                </a>
+                <a href="../index.html" class="link-secondary">
+                    <i class="fas fa-home"></i> Volver al inicio
+                </a>
+            </div>
+
+            <div id="mensajeLogin" class="mensaje"></div>
+        </div>
+
+        <!-- ======================================== -->
+        <!-- REGISTRO DEL GIMNASIO                    -->
+        <!-- ======================================== -->
+        <div class="card hidden" id="registroCard">
+            <div class="brand">
+                <h2>📋 Registrar Gimnasio</h2>
+                <p class="subtitle"><i class="fas fa-rocket"></i> Activa tu cuenta en 2 minutos</p>
+            </div>
+
+            <!-- 🎁 Banner de prueba gratis -->
+            <div class="trial-banner">
+                <div class="trial-icon">🎁</div>
+                <div class="trial-text">
+                    <strong>¡15 Días de Prueba Gratis!</strong>
+                    <span>Sin tarjeta de crédito · Cancela cuando quieras</span>
+                </div>
+            </div>
+
+            <form id="registerForm" class="form">
+                <div class="input-group">
+                    <label><i class="fas fa-building"></i> Nombre del Gimnasio</label>
+                    <input type="text" id="reg_nombre" placeholder="PowerFit Gym" required>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                    <input type="email" id="reg_email" placeholder="contacto@gimnasio.com" required autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-lock"></i> Contraseña</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="reg_password" placeholder="Mínimo 6 caracteres" required minlength="6">
+                        <button type="button" class="toggle-password" data-target="reg_password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="row-2">
+                    <div class="input-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Estado</label>
+                        <input type="text" id="reg_estado" placeholder="CDMX" required>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-map-pin"></i> Municipio</label>
+                        <input type="text" id="reg_municipio" placeholder="Benito Juárez" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-phone"></i> Teléfono</label>
+                    <input type="tel" id="reg_telefono" placeholder="5512345678">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-crown"></i> Plan después de la prueba</label>
+                    <select id="reg_plan">
+                        <option value="basico">Básico ($500/mes)</option>
+                        <option value="pro">Pro ($800/mes)</option>
+                        <option value="premium">Premium ($1200/mes)</option>
+                    </select>
+                </div>
+
+                <!-- Info de prueba -->
+                <div class="trial-info">
+                    <i class="fas fa-info-circle"></i>
+                    Tu prueba gratuita de <strong>15 días</strong> comienza hoy.<br>
+                    Después pagarás el plan <strong id="planSeleccionado">Básico ($500/mes)</strong>.
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnRegisterSubmit">
+                    <span id="btnRegisterText">🎁 Comenzar Prueba Gratis</span>
+                    <div class="spinner" id="btnRegisterSpinner"></div>
+                    <i class="fas fa-gift"></i>
+                </button>
+            </form>
+
+            <div class="links">
+                <a id="btnMostrarLogin" class="link-primary">
+                    <i class="fas fa-arrow-left"></i> Volver al login
+                </a>
+            </div>
+
+            <div id="mensajeRegistro" class="mensaje"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // GYMROCK · SCRIPT GIMNASIO v2.2
+        // ============================================
+
+        const API_URL = window.location.origin;
+
+        // ============================================
+        // ACTUALIZAR PLAN SELECCIONADO
+        // ============================================
+        document.getElementById('reg_plan').addEventListener('change', function() {
+            const planTexto = this.options[this.selectedIndex].text;
+            document.getElementById('planSeleccionado').textContent = planTexto;
+        });
+
+        // ============================================
+        // TOGGLE LOGIN/REGISTRO
+        // ============================================
+        document.getElementById('btnMostrarRegistro').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('loginCard').classList.add('hidden');
+            document.getElementById('registroCard').classList.remove('hidden');
+            limpiarMensajes();
+        });
+
+        document.getElementById('btnMostrarLogin').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('registroCard').classList.add('hidden');
+            document.getElementById('loginCard').classList.remove('hidden');
+            limpiarMensajes();
+        });
+
+        // ============================================
+        // TOGGLE PASSWORD
+        // ============================================
+        document.querySelectorAll('.toggle-password').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+
+        // ============================================
+        // MENSAJES
+        // ============================================
+        function mostrarMensaje(id, tipo, texto) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = texto;
+            el.className = 'mensaje ' + tipo;
+            el.style.display = 'block';
+            
+            if (tipo === 'success') {
+                setTimeout(() => { el.style.display = 'none'; }, 5000);
+            }
+        }
+
+        function limpiarMensajes() {
+            document.querySelectorAll('.mensaje').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+
+        // ============================================
+        // LOADING
+        // ============================================
+        function setLoading(formType, loading) {
+            const btn = document.getElementById(formType === 'login' ? 'btnLoginSubmit' : 'btnRegisterSubmit');
+            const text = document.getElementById(formType === 'login' ? 'btnLoginText' : 'btnRegisterText');
+            const spinner = document.getElementById(formType === 'login' ? 'btnLoginSpinner' : 'btnRegisterSpinner');
+            
+            if (loading) {
+                btn.disabled = true;
+                text.style.display = 'none';
+                spinner.style.display = 'inline-block';
+            } else {
+                btn.disabled = false;
+                text.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        }
+
+        // ============================================
+        // LOGIN
+        // ============================================
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                mostrarMensaje('mensajeLogin', 'error', '⚠️ Completa todos los campos');
+                return;
+            }
+            
+            setLoading('login', true);
+            mostrarMensaje('mensajeLogin', 'loading', '⏳ Verificando credenciales...');
+
+            try {
+                const res = await fetch(`${API_URL}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, rol: 'gimnasio' })
+                });
+                const data = await res.json();
+                
+                setLoading('login', false);
+
+                if (data.status === 'success') {
+                    localStorage.setItem('gymrock_token', data.data.token);
+                    localStorage.setItem('gymrock_user', JSON.stringify(data.data));
+                    localStorage.setItem('gymrock_rol', 'gimnasio');
+                    
+                    mostrarMensaje('mensajeLogin', 'success', '✅ ¡Bienvenido ' + data.data.nombre + '! Redirigiendo...');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    mostrarMensaje('mensajeLogin', 'error', '❌ ' + (data.error || 'Credenciales incorrectas'));
+                    document.getElementById('password').value = '';
+                    document.getElementById('password').focus();
+                }
+            } catch (error) {
+                setLoading('login', false);
+                console.error('Error:', error);
+                mostrarMensaje('mensajeLogin', 'error', '❌ Error de conexión. Verifica tu internet.');
+            }
+        });
+
+        // ============================================
+        // REGISTRO CON PRUEBA GRATIS
+        // ============================================
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('reg_nombre').value.trim();
+            const email = document.getElementById('reg_email').value.trim();
+            const password = document.getElementById('reg_password').value;
+            const estado = document.getElementById('reg_estado').value.trim();
+            const municipio = document.getElementById('reg_municipio').value.trim();
+            const telefono = document.getElementById('reg_telefono').value.trim();
+            const plan = document.getElementById('reg_plan').value;
+            
+            // Validaciones
+            if (!nombre || !email || !password || !estado || !municipio) {
+                mostrarMensaje('mensajeRegistro', 'error', '⚠️ Completa todos los campos obligatorios');
+                return;
+            }
+            
+            if (password.length < 6) {
+                mostrarMensaje('mensajeRegistro', 'error', '⚠️ La contraseña debe tener al menos 6 caracteres');
+                return;
+            }
+            
+            if (!email.includes('@') || !email.includes('.')) {
+                mostrarMensaje('mensajeRegistro', 'error', '⚠️ Ingresa un correo electrónico válido');
+                return;
+            }
+            
+            const payload = {
+                nombre,
+                email,
+                password,
+                estado,
+                municipio,
+                telefono: telefono || '',
+                plan
+            };
+            
+            setLoading('register', true);
+            mostrarMensaje('mensajeRegistro', 'loading', '⏳ Creando tu cuenta con 15 días gratis...');
+
+            try {
+                const res = await fetch(`${API_URL}/api/registro/gimnasio`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                
+                setLoading('register', false);
+
+                if (data.status === 'success') {
+                    localStorage.setItem('gymrock_token', data.data.token);
+                    localStorage.setItem('gymrock_user', JSON.stringify(data.data));
+                    localStorage.setItem('gymrock_rol', 'gimnasio');
+                    
+                    // Mostrar mensaje con información de la prueba
+                    const fechaCorte = data.data.fecha_corte || '15 días';
+                    mostrarMensaje('mensajeRegistro', 'success', 
+                        '🎁 ¡Gimnasio registrado con éxito!\n' +
+                        'Tu prueba gratuita vence el ' + fechaCorte + '\n' +
+                        'Redirigiendo al panel...');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2500);
+                } else {
+                    // Manejar errores específicos
+                    if (data.code === 'DUPLICATE_DOMAIN') {
+                        mostrarMensaje('mensajeRegistro', 'warning', 
+                            '⚠️ ' + data.error + '\n\nUsa un correo de otro dominio para obtener la prueba gratis.');
+                    } else if (data.code === 'IP_LIMIT') {
+                        mostrarMensaje('mensajeRegistro', 'warning', 
+                            '⚠️ ' + data.error + '\n\nContacta a soporte si necesitas ayuda.');
+                    } else {
+                        mostrarMensaje('mensajeRegistro', 'error', '❌ ' + (data.error || 'Error al registrar'));
+                    }
+                }
+            } catch (error) {
+                setLoading('register', false);
+                console.error('Error:', error);
+                mostrarMensaje('mensajeRegistro', 'error', '❌ Error de conexión. Verifica tu internet.');
+            }
+        });
+
+        // ============================================
+        // VERIFICAR SESIÓN EXISTENTE
+        // ============================================
+        (function verificarSesion() {
+            const token = localStorage.getItem('gymrock_token');
+            const rol = localStorage.getItem('gymrock_rol');
+            
+            if (token && rol === 'gimnasio') {
+                window.location.href = 'dashboard.html';
+            }
+        })();
+
+        console.log('🏋️ GymRock - Panel del Gimnasio v2.2');
+        console.log('📡 API:', API_URL);
+        console.log('🎁 15 días de prueba gratis activos');
+    </script>
+</body>
+</html>
