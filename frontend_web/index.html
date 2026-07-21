@@ -116,47 +116,18 @@
                 </div>
                 <span class="chevron"><i class="fas fa-chevron-right"></i></span>
             </a>
-            <div class="card card-admin" onclick="abrirModal()">
-                <div class="icon-wrap"><i class="fas fa-shield-haltered"></i></div>
-                <div class="info">
-                    <h3 data-es="Admin" data-en="Admin">Admin</h3>
-                    <p data-es="Panel de control y métricas de la plataforma." data-en="Platform control panel and metrics.">Panel de control y métricas de la plataforma.</p>
-                    <span class="label" data-es="Privado" data-en="Private">Privado</span>
-                </div>
-                <span class="chevron"><i class="fas fa-chevron-right"></i></span>
-            </div>
+            
         </div>
         
         <p class="footer">GymRock © 2026 &nbsp;|&nbsp; Prototípica Estudio ©</p>
     </div>
     
-    <div class="modal" id="modalAdmin">
-        <div class="modal-box">
-            <h2>Gym<span>Rock</span></h2>
-            <p>Admin Access</p>
-            <input type="text" id="adminUser" placeholder="Usuario">
-            <input type="password" id="adminPass" placeholder="Contraseña">
-            <button class="btn-login" onclick="loginAdmin()">Entrar</button>
-            <p class="error" id="adminError">Credenciales inválidas</p>
-            <span class="modal-close" onclick="document.getElementById('modalAdmin').classList.remove('show')">Cancelar</span>
-        </div>
-    </div>
+    
     
     <script>
-        function abrirModal(){document.getElementById('modalAdmin').classList.add('show')}
-        document.getElementById('modalAdmin').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show')});
         
-        async function loginAdmin(){
-            const u=document.getElementById('adminUser').value.trim();
-            const p=document.getElementById('adminPass').value;
-            if(!u||!p)return;
-            try{
-                const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({usuario:u,password:p})});
-                const d=await r.json();
-                if(d.status==='success'){localStorage.setItem('adminToken',d.data.token);localStorage.setItem('adminUser',JSON.stringify(d.data));window.location.href='Super_admi/index.html'}
-                else{document.getElementById('adminError').style.display='block'}
-            }catch(e){alert('Error')}
-        }
+        
+        
         
         function switchLang(lang,btn){
             document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
