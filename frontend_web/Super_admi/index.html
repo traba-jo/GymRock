@@ -38,7 +38,7 @@
         .tag-green{background:rgba(56,217,169,0.1);color:var(--green)}
         .tag-amber{background:rgba(255,192,120,0.1);color:var(--amber)}
         .tag-blue{background:rgba(77,171,247,0.1);color:var(--blue)}
-        @media(max-width:768px){.sidebar{transform:translateX(-100%);position:fixed;z-index:99}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:16px}.kpi{grid-template-columns:1fr 1fr}.hamburger{display:block!important}}
+        @media(max-width:768px){.sidebar{transform:translateX(0)!important;position:fixed;z-index:99;width:260px}.main{margin-left:260px;padding:16px}.kpi{grid-template-columns:1fr 1fr}}
     </style>
 </head>
 <body>
@@ -51,7 +51,7 @@
             <a class="logout" onclick="salir()"><i class="fas fa-sign-out-alt"></i> Salir</a>
         </nav>
     </aside>
-    <button onclick="var s=document.getElementById('sidebar');s.classList.toggle('open')" style="display:none;position:fixed;top:16px;left:16px;z-index:100;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-size:20px;cursor:pointer" class="hamburger">☰</button>
+    
     <main class="main">
         <!-- DASHBOARD -->
         <div id="secDashboard">
