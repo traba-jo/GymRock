@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GymRock · Acceso Administrador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg:#06060c;--card:#0f0f1a;--text:#e8e8f0;--sub:#8888a0;--pink:#f06595;--purple:#9775fa;--border:#181828;--gradient:linear-gradient(135deg,#f06595,#9775fa)}
+        [data-theme="light"]{--bg:#f8f9fc;--card:#fff;--text:#1a1a2e;--sub:#6b7280;--pink:#d6336c;--purple:#7950f2;--border:#e5e7eb}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center}
+        .box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;width:90%;max-width:380px;text-align:center;position:relative;overflow:hidden}
+        .box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient)}
+        .box .icon{font-size:40px;margin-bottom:16px}
+        .box h1{font-family:'Space Grotesk',sans-serif;font-size:22px;margin-bottom:4px}
+        .box h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .box p{color:var(--sub);font-size:13px;margin-bottom:24px}
+        .box input{width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;margin-bottom:10px;outline:none;font-family:'Inter',sans-serif}
+        .box input:focus{border-color:var(--pink)}
+        .box button{width:100%;padding:12px;background:var(--gradient);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+        .box .error{color:#ff6b6b;font-size:12px;margin-top:8px;display:none}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="icon">🔐</div>
+        <h1>Gym<span>Rock</span></h1>
+        <p>Acceso Administrativo</p>
+        <input type="text" id="user" placeholder="Usuario" autocomplete="off">
+        <input type="password" id="pass" placeholder="Contraseña" autocomplete="off">
+        <button onclick="login()">Acceder</button>
+        <p class="error" id="error">Credenciales inválidas</p>
+    </div>
+    <script>
+        async function login(){
+            const u=document.getElementById('user').value.trim();
+            const p=document.getElementById('pass').value;
+            if(!u||!p)return;
+            const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({usuario:u,password:p})});
+            const d=await r.json();
+            if(d.status==='success'){localStorage.setItem('adminToken',d.data.token);window.location.href='index.html'}
+            else{document.getElementById('error').style.display='block'}
+        }
+    </script>
+</body>
+</html>
