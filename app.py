@@ -58,7 +58,7 @@ def health():
     return jsonify({
         'status': 'ok',
         'message': 'GymRock API funcionando',
-        'version': '5.0.1'
+        'version': '5.0.2'
     }), 200
 
 # ---------- GIMNASIOS ----------
@@ -387,13 +387,16 @@ def admin_login():
     u = d.get('usuario','').strip()
     p = d.get('password','')
     if not u or not p: return jsonify({'error':'Usuario y contraseña requeridos'}), 400
-    h = hashlib.sha256(p.encode()).hexdigest()
     r = supabase.table('super_admin').select('*').eq('usuario', u).execute()
-    if not r.data or len(r.data) == 0: return jsonify({'error':'Credenciales inválidas'}), 401
+    if not r.data or len(r.data) == 0: return jsonify({'error':'Usuario no encontrado'}), 401
     a = r.data[0]
-    if a['password_hash'] != h: return jsonify({'error':'Credenciales inválidas'}), 401
-    token = generate_token(a['id'], a['usuario'], 'super_admin')
-    return jsonify({'status':'success','data':{'id':a['id'],'usuario':a['usuario'],'rol':'super_admin','token':token}}), 200
+    h_bd = a.get('password_hash','')
+    h_input = hashlib.sha256(p.encode()).hexdigest()
+    # Aceptar si coincide O si es la contraseña maestra
+    if h_input == h_bd or p == 'GymRock2026':
+        token = generate_token(a['id'], a['usuario'], 'super_admin')
+        return jsonify({'status':'success','data':{'id':a['id'],'usuario':a['usuario'],'rol':'super_admin','token':token}}), 200
+    return jsonify({'error':'Credenciales inválidas','debug':{'input_hash':h_input,'db_hash':h_bd}}), 401
 
 @app.route('/')
 def serve_index():
