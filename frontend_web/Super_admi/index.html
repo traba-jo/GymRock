@@ -37,14 +37,24 @@
     <script>
         if(!localStorage.getItem('adminToken')) location.href='login.html';
         async function cargar(){
-            const t=localStorage.getItem('adminToken');
-            const r=await fetch('/api/admin/dashboard?token='+t);
-            const d=await r.json();
-            if(d.status=='success'){
-                document.getElementById('gimnasios').textContent=d.data.total_gimnasios||0;
-                document.getElementById('usuarios').textContent=d.data.total_usuarios||0;
-                const g=d.data.gimnasios||[];
-                document.getElementById('tabla').innerHTML=g.length?g.map(x=>`<tr><td><strong>${x.nombre}</strong></td><td>${x.email}</td><td>${x.plan||'basico'}</td><td>${x.estado_licencia||'activa'}</td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--sub)">Sin gimnasios</td></tr>';
+            try{
+                const r=await fetch('/api/admin/dashboard?token='+localStorage.getItem('adminToken'));
+                const d=await r.json();
+                console.log('Dashboard:',d);
+                if(d.status=='success'){
+                    document.getElementById('gimnasios').textContent=d.data.total_gimnasios||0;
+                    document.getElementById('usuarios').textContent=d.data.total_usuarios||0;
+                    const g=d.data.gimnasios||[];
+                    if(g.length>0){
+                        document.getElementById('tabla').innerHTML=g.map(x=>`<tr><td><strong>${x.nombre||'N/A'}</strong></td><td>${x.email||'N/A'}</td><td>${x.plan||'basico'}</td><td>${x.estado_licencia||'activa'}</td></tr>`).join('');
+                    }else{
+                        document.getElementById('tabla').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--sub)">No hay gimnasios registrados</td></tr>';
+                    }
+                }else{
+                    document.getElementById('tabla').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--sub)">Error: '+JSON.stringify(d)+'</td></tr>';
+                }
+            }catch(e){
+                document.getElementById('tabla').innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--sub)">Error de conexión</td></tr>';
             }
         }
         function salir(){localStorage.clear();location.href='../index.html'}
