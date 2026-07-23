@@ -117,6 +117,19 @@ def admin_dashboard():
     u = supabase.table('usuarios').select('*').execute()
     e = supabase.table('entrenadores').select('*').eq('activo',True).execute(); return jsonify({'status':'success','data':{'total_gimnasios':len(g.data or []),'total_usuarios':len(u.data or []),'total_entrenadores':len(e.data or []),'gimnasios':g.data or [],'entrenadores':e.data or []}}), 200
 
+
+@app.route('/api/entrenador/login', methods=['POST'])
+def entrenador_login():
+    if not supabase: return jsonify({'error':'No DB'}), 500
+    d = request.get_json()
+    codigo = d.get('codigo_acceso','').strip().upper()
+    if not codigo: return jsonify({'error':'Código requerido'}), 400
+    r = supabase.table('entrenadores').select('*').eq('codigo_acceso',codigo).eq('activo',True).execute()
+    if not r.data: return jsonify({'error':'Código inválido'}), 401
+    e = r.data[0]
+    token = generate_token(e['id'],e['email'],'entrenador')
+    return jsonify({'status':'success','data':{'id':e['id'],'nombre':e['nombre'],'email':e['email'],'codigo_acceso':e['codigo_acceso'],'token':token,'rol':'entrenador'}}),200
+
 @app.route('/')
 def index():
     return send_from_directory('frontend_web', 'index.html')
